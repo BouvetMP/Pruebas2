@@ -1,245 +1,306 @@
-#  TriDa
+# TriDa
 
 > **Sistema de Monitoreo de Transacciones con Inteligencia Artificial para Detección de Fraude**
 
 ---
 
-##  ¿Qué es TriDa?
+## ¿Qué es TriDa?
 
-**TriDa** es un **sistema inteligente de prevención de fraude** diseñado para instituciones financieras. Utiliza **Machine Learning** para analizar transacciones en tiempo real, detectar patrones anómalos y **prevenir fraudes ANTES de que ocurran** — no después.
+**TriDa** es un **sistema inteligente de prevención de fraude** diseñado para instituciones financieras. Analiza transacciones en tiempo real, detecta patrones anómalos mediante un motor de criticidad ponderado y **previene fraudes ANTES de que ocurran** — no después.
 
 Bloquea automáticamente operaciones de alto riesgo mientras mantiene una experiencia fluida para clientes legítimos, reduciendo falsos positivos mediante aprendizaje continuo de validaciones manuales de analistas.
 
 ---
 
-##  Características Principales
+## Características Principales
 
 | Característica | Descripción |
 | --- | --- |
-| ** Análisis en Tiempo Real** | Procesa ≥1.000 transacciones/segundo (latencia < 500ms) |
-| ** IA Adaptable** | Modelo ML que aprende de cada validación de analistas |
-| ** Alertas Inteligentes** | Tres niveles: baja (30–49%), media (50–79%), alta (80–95%) |
-| ** Bloqueo Automático** | Detiene transacciones con score > 95% antes de completarse |
-| ** Dashboard Intuitivo** | Interfaz web para que analistas validen y clasifiquen alertas |
-| ** Seguridad Bancaria** | PCI-DSS, ISO 27001, Ley 1581/2012 (Colombia) |
-| ** Auditoría Inmutable** | Registro permanente de todas las operaciones y decisiones |
-| ** Reportes Exportables** | PDF, Excel, CSV con KPIs de detección y rendimiento |
+| **Análisis en Tiempo Real** | Procesamiento de transacciones con latencia < 500ms |
+| **Motor de Criticidad** | 7 factores ponderados que calculan un score de riesgo 0–100 |
+| **Alertas Inteligentes** | Tres niveles: baja (30–49), media (50–79), alta (80–95) |
+| **Bloqueo Automático** | Detiene transacciones con score > 95 antes de completarse |
+| **Dashboard Intuitivo** | Interfaz web para que analistas validen y clasifiquen alertas |
+| **Seguridad Bancaria** | JWT + bcrypt, rutas protegidas, CORS restringido |
+| **Auditoría de Acceso** | Registro de último acceso y operaciones de usuarios |
+| **Reportes por Entidad** | Filtros por banco, tipo de transacción, ciudad y canal |
 
 ---
 
-##  Arquitectura
+## Arquitectura
+
+### Stack actual (MVP)
 
 ```
-Backend (Node.js + Express)
-├── API REST
-├── Ingesta de Transacciones
-├── Enriquecimiento de Datos
-├── Motor de Reglas
-├── Integración con Servicio de IA/ML
+Backend (Node.js 22 + Express.js + TypeScript)
+├── API REST con autenticación JWT
 ├── Prisma ORM
-└── Auditoría (PostgreSQL + MongoDB)
+├── Motor de Criticidad (7 factores deterministas)
+├── Generación automática de alertas
+└── PostgreSQL 17
 
-Servicio IA/ML (Python)
-├── TensorFlow
-├── Scikit-learn
+Frontend (React 18 + TypeScript)
+├── Vite 5
+├── Tailwind CSS 3
+├── Leaflet (mapas)
+└── Lucide React (iconos)
+```
+
+### Stack objetivo (v2.0 — fuera del alcance MVP)
+
+```
+Backend
+├── Caché: Redis 7+
+├── Auditoría inmutable: MongoDB 8 (append-only)
+└── Validación: Zod
+
+Servicio IA/ML (Python 3.12)
+├── TensorFlow 2.18
+├── Scikit-learn 1.6
 └── Predicción de fraude
 
-Frontend (React + TypeScript)
-
+DevOps
+├── Docker + Docker Compose (MVP)
+├── Kubernetes (v2.0)
+├── Prometheus + Grafana (v2.0)
+└── CI/CD: GitHub Actions
 ```
 
 ---
 
 ## Tecnologías Utilizadas
 
-### Backend
+### Backend (MVP)
 
-- **Runtime**: Node.js 22 LTS
-- **Framework**: Express.js + TypeScript 5
-- **Gestor de paquetes**: pnpm
-- **ORM**: Prisma ORM
-- **Base de datos principal**: PostgreSQL 17
-- **Base de datos de auditoría**: MongoDB 8 (append-only)
-- **Machine Learning**: Python 3.12 (TensorFlow 2.18 y Scikit-learn 1.6) como servicio independiente
-- **Caché**: Redis
-- **Autenticación**: JWT + bcrypt
-- **Validación**: Zod
+| Tecnología | Versión | Función |
+| --- | --- | --- |
+| Node.js | 22 LTS | Runtime |
+| Express.js | 4.x | Framework API REST |
+| TypeScript | 5.x | Tipado estático |
+| Prisma | 6.x | ORM |
+| PostgreSQL | 17 | Base de datos principal |
+| JWT | 9.x | Autenticación |
+| bcrypt | 5.x | Hash de contraseñas (coste 12) |
+| pnpm | 10+ | Gestor de paquetes |
 
-### Frontend
+### Frontend (MVP)
 
-- **Framework**: React 19 + TypeScript 5
-- **Bundler**: Vite 7
-- **Estilos**: Tailwind CSS 4
-- **Componentes UI**: shadcn/ui
-- **Iconos**: lucide-react
-- **Mapas**: Google Maps JavaScript API
+| Tecnología | Versión | Función |
+| --- | --- | --- |
+| React | 18.3 | UI |
+| TypeScript | 5.5 | Tipado estático |
+| Vite | 5.4 | Bundler |
+| Tailwind CSS | 3.4 | Estilos |
+| Leaflet | 1.9 | Mapas |
+| Lucide React | 0.453 | Iconos |
+| React Router | 6.28 | Navegación |
 
-### DevOps
-
-- **Contenedores**: Docker + Docker Compose
-- **Orquestación**: Kubernetes
-- **Monitoreo**: Prometheus + Grafana
-- **Logs**: Loki + Grafana
-- **CI/CD**: GitHub Actions
-- **Control de versiones**: Git + GitHub---
-
-##  Requisitos Mínimos
-
-- **Backend**: Node.js 22 LTS, PostgreSQL 17, Redis 7+
-- **Servicio IA**: Python 3.12 (TensorFlow y Scikit-learn)
-- **Frontend**: Node.js 22 LTS, pnpm 10+
-  
 ---
 
-##  Instalación Rápida
+## Requisitos Previos
 
-### 1. Clonar el repositorio
-```
-bash
+- **Node.js** 22 LTS
+- **pnpm** 10+ (`npm install -g pnpm`)
+- **PostgreSQL** 17
+- **Docker** y **Docker Compose** (opcional, vía recomendada)
+
+---
+
+## Instalación
+
+### Vía Docker (recomendada)
+
+```bash
 git clone https://github.com/isaias066/TriDa.git
 cd TriDa
 
+# Copiar variables de entorno
+cp .env.example .env
+# Editar .env con tus credenciales de PostgreSQL
+
+# Levantar todos los servicios
+docker compose up --build
+
+# Backend: http://localhost:3000
+# Frontend: http://localhost:5173
 ```
 
-### 2. Backend 
-```
-cd backend
+### Vía local (sin Docker)
 
-# Instalar dependencias
-pnpm install
-
-# Levantar servicios
-docker compose up -d
-
-# Ejecutar servidor
-pnpm dev
-
-# API disponible en http://localhost:3000
-
-```
-
-### 3. Frontend (React)
 ```bash
-cd frontend
+git clone https://github.com/isaias066/TriDa.git
+cd TriDa
 
-# Instalar dependencias
-pnpm install
+# 1. Base de datos
+createdb TriDa
+psql -d TriDa -f database/schema.sql
+psql -d TriDa -f database/seed.sql
 
-# Ejecutar servidor de desarrollo
-pnpm dev
-# Dashboard disponible en http://localhost:5173
-```
-
----
-
-##  Estructura del Proyecto
-
-```
-backend/
-├── src/
-│   ├── controllers/
-│   ├── routes/
-│   ├── services/
-│   ├── middlewares/
-│   ├── prisma/
-│   ├── validators/
-│   ├── config/
-│   ├── utils/
-│   └── server.ts
-├── prisma/
-├── tests/
-├── package.json
-├── tsconfig.json
-└── pnpm-lock.yaml
-
-frontend/
-├── src/
-│   ├── components/       # Componentes React
-│   ├── pages/           # Páginas del dashboard
-│   ├── hooks/           # Custom hooks
-│   ├── services/        # API client
-│   ├── styles/          # Configuración Tailwind
-│   └── App.tsx
-├── public/
-├── vite.config.ts
-└── package.json
-
-documentacion/
-├── ESPECIFICACION_REQUISITOS.md
-├── RESTRICCIONES.md
-├── ARQUITECTURA.md
-└── GUIA_CONTRIBUCIONES.md
-```
-
----
-
-##  Testing
-
-```
+# 2. Backend
 cd backend
+cp .env.example .env
+pnpm install
+pnpm prisma generate
+pnpm dev
+# API en http://localhost:3000
 
-pnpm test
-pnpm test:coverage
-
+# 3. Frontend (otra terminal)
 cd frontend
-
-pnpm test
-pnpm test:e2e
-
+pnpm install
+pnpm dev
+# Dashboard en http://localhost:5173
 ```
 
-**Cobertura requerida**: ≥ 85% (lógica de negocio), ≥ 70% (frontend)
+---
+
+## Variables de Entorno
+
+| Variable | Obligatoria | Ejemplo | Descripción |
+| --- | --- | --- | --- |
+| `DATABASE_URL` | ✅ Sí | `postgresql://user:pass@localhost:5432/TriDa` | Conexión a PostgreSQL |
+| `JWT_SECRET` | ✅ Sí | `tu_clave_secreta_min_32_chars` | Firma de tokens JWT |
+| `JWT_EXPIRES_IN` | No | `24h` | Expiración del token |
+| `PORT` | No | `3000` | Puerto del backend |
+| `FRONTEND_URL` | No | `http://localhost:5173` | Origen permitido (CORS) |
+| `EMAIL_USER` | No | `tu@gmail.com` | Correo para recuperación |
+| `EMAIL_PASS` | No | `app_password` | Contraseña de aplicación |
+| `EMAIL_FROM` | No | `TriDa <noreply@trida.com>` | Remitente de correos |
+
+> ⚠️ El servidor **NO** arranca si faltan `DATABASE_URL` o `JWT_SECRET`.
 
 ---
 
-##  Seguridad
+## Estructura del Proyecto
 
-- ✅ **PCI-DSS 4.0**: Cumplimiento de estándar de seguridad de tarjetas
-- ✅ **ISO 27001:2022**: Gestión de seguridad de la información
-- ✅ **Ley 1581/2012**: Protección de datos personales (Colombia)
-- ✅ **AES-256**: Cifrado de datos sensibles en reposo
-- ✅ **TLS 1.3**: Comunicaciones encriptadas en tránsito
-- ✅ mTLS: Autenticación mutua entre TriDa y Core Banking
-- ✅ **Auditoría inmutable**: Logs no modificables en MongoDB
-
-**Antes de producción**: escaneo OWASP ZAP + penetration test
+```
+TriDa/
+├── backend/
+│   ├── prisma/
+│   │   └── schema.prisma          # Modelo de datos
+│   ├── src/
+│   │   ├── config/
+│   │   │   └── env.ts             # Validación de variables de entorno
+│   │   ├── controllers/
+│   │   │   ├── authController.ts
+│   │   │   ├── dashboardController.ts
+│   │   │   ├── transactionsController.ts
+│   │   │   ├── alertsController.ts
+│   │   │   └── analyticsController.ts
+│   │   ├── middlewares/
+│   │   │   ├── auth.ts            # verifyToken, requireAdmin
+│   │   │   └── errorHandler.ts    # Manejador global de errores
+│   │   ├── routes/
+│   │   │   ├── authRoutes.ts
+│   │   │   ├── dashboardRoutes.ts
+│   │   │   ├── transactionRoutes.ts
+│   │   │   ├── alertRoutes.ts
+│   │   │   └── analyticsRoutes.ts
+│   │   ├── services/
+│   │   │   └── riskScoring.ts     # Motor de criticidad
+│   │   └── app.ts                 # Configuración de Express
+│   ├── package.json
+│   ├── tsconfig.json
+│   └── .env.example
+├── frontend/
+│   ├── src/
+│   │   ├── api/                   # Cliente HTTP y módulos por dominio
+│   │   ├── components/            # UI, shared, por dominio
+│   │   ├── hooks/                 # useTransactions, useAlerts, etc.
+│   │   ├── pages/                 # Dashboard, Transactions, Alerts, Map
+│   │   ├── constants/             # HTTP_STATUS, ERROR_MESSAGES
+│   │   └── App.tsx
+│   ├── package.json
+│   └── vite.config.ts
+├── database/
+│   ├── schema.sql                 # Esquema versionado (respaldo)
+│   └── seed.sql                   # Datos de prueba
+├── documentacion/
+│   ├── requisitos/
+│   ├── referencia-tecnica/
+│   ├── configuracion/
+│   └── proceso/
+├── docker-compose.yml
+├── pnpm-workspace.yaml
+└── README.md
+```
 
 ---
 
-##  Rendimiento
+## Primer Acceso
 
-| Métrica | Target | Status |
-| --- | --- | --- |
-| **Throughput** | ≥1.000 tx/seg | ✅ Testeado |
-| **Latencia p95** | < 500ms | ✅ Logrado |
-| **Uptime** | 99.5% | ✅ Objetivo del proyecto |
-| **Detección de fraudes** | > 90% | ✅ Validado |
-| **Falsos positivos** | < 5% | 🎯 Optimizando |
+```bash
+# Sembrar usuario administrador
+cd backend
+pnpm seed:admin
 
----
-
-##  Licencia
-
-Este proyecto está bajo licencia **MIT**. Ver archivo [LICENSE](./LICENSE) para más detalles.
+# Credenciales por defecto (cambiar en producción):
+# Email: admin@trida.com
+# Contraseña: (la que definas en .env)
+```
 
 ---
 
-##  Contacto
+## Seguridad
 
-- **Email**: 
-- **Documentación**: [Ver en `/documentacion`](./documentacion/)
-- **Issues**: [GitHub Issues](https://github.com/isaias066/TriDa/issues)
+| Práctica | Estado |
+| --- | --- |
+| JWT con expiración | ✅ Implementado |
+| bcrypt coste 12 | ✅ Implementado |
+| Rutas protegidas con `verifyToken` | ✅ Implementado |
+| CORS restringido por entorno | ✅ Implementado |
+| Helmet (cabeceras de seguridad) | ✅ Implementado |
+| Rate limiting en login | ✅ Implementado |
+| Contraseña mínima 10 caracteres | ✅ Implementado |
+| Recuperación sin enumeración | ✅ Implementado |
+| Token de reset con propósito y caducidad | ✅ Implementado |
+| SQL parametrizado (Prisma) | ✅ Implementado |
+
+**Objetivo v2.0:** PCI-DSS 4.0, ISO 27001, AES-256 en reposo, TLS 1.3, mTLS.
 
 ---
 
-##  Aprendizaje y Propósito
+## Flujo de Contribución
 
-TriDa nace como proyecto educativo de **especificación y desarrollo de sistemas críticos** en la banca. Cada decisión técnica está documentada con el formato **"¿Qué? ¿Para qué? ¿Impacto?"** para máxima claridad pedagógica.
+1. Crear rama desde `develop`: `git checkout -b feature/mi-cambio develop`
+2. Commits convencionales: `feat:`, `fix:`, `docs:`
+3. Abrir PR hacia `develop` con `Closes #n`
+4. Revisión + CI en verde → merge
+5. `develop` → `main` solo en releases
+
+---
+
+## Estado del Proyecto
+
+| Módulo | Estado |
+| --- | --- |
+| Autenticación (login, registro, reset) | ✅ Funcional |
+| Dashboard | ✅ Funcional |
+| Transacciones | ✅ Funcional |
+| Alertas | ✅ Funcional |
+| Mapa | ✅ Funcional |
+| Analítica | ✅ Funcional |
+| Motor de criticidad | ✅ Funcional |
+| Usuarios | ✅ Funcional |
+| Docker | ✅ Funcional |
+| Redis (caché) | 🔜 Planificado |
+| Python/ML | 🔜 Planificado |
+| MongoDB (auditoría) | 🔜 Planificado |
+
+---
+
+## Licencia
+
+MIT. Ver [LICENSE](LICENSE).
 
 ---
 
 <div align="center">
 
+**Protegiendo el futuro financiero con Inteligencia Artificial**
+
+*MVP 2026 · Revisión 1.0*
+
+</div>
 **Protegiendo el futuro financiero con Inteligencia Artificial** 
 
 *MVP 2026 · Revisión 0.6
