@@ -39,27 +39,26 @@ export function AlertDetail({
   showFactors = true,
   className = '',
 }: AlertDetailProps) {
-
   // ==============================================================================
   // ESTILOS
   // ==============================================================================
 
   const ringContainerStyle: React.CSSProperties = {
-    display:        'flex',
+    display: 'flex',
     justifyContent: 'center',
-    marginBottom:   '20px',
+    marginBottom: '20px',
   };
 
   const fraudIndicatorStyle: React.CSSProperties = {
-    color:      alert.isFraud ? '#EF4444' : '#34D399',
+    color: alert.isFraud ? '#EF4444' : '#34D399',
     fontWeight: 700,
   };
 
   const factorsTextStyle: React.CSSProperties = {
-    fontSize:   '12px',
-    color:      'var(--text-secondary)',
+    fontSize: '12px',
+    color: 'var(--text-secondary)',
     lineHeight: 1.5,
-    marginTop:  '6px',
+    marginTop: '6px',
   };
 
   // ==============================================================================
@@ -71,10 +70,7 @@ export function AlertDetail({
       {/* Score Ring grande centrado */}
       {showScoreRing && (
         <div style={ringContainerStyle}>
-          <ScoreRing
-            score={alert.riskScore}
-            size={scoreRingSize}
-          />
+          <ScoreRing score={alert.riskScore} size={scoreRingSize} />
         </div>
       )}
 
@@ -82,20 +78,14 @@ export function AlertDetail({
       <DetailGrid columns={2}>
         <DetailField label="Usuario" value={alert.user} />
         <DetailField label="Cuenta" value={alert.account} />
-        <DetailField
-          label="Banco"
-          value={<BankBadge bank={alert.bank} />}
-        />
+        <DetailField label="Banco" value={<BankBadge bank={alert.bank} />} />
         <DetailField label="Tipo" value={alert.type} />
         <DetailField
           label="Monto"
           value={formatCurrency(alert.amount)}
           valueStyle={{ fontSize: '16px', fontWeight: 800 }}
         />
-        <DetailField
-          label="Riesgo"
-          value={<RiskBadge score={alert.riskScore} mode="both" />}
-        />
+        <DetailField label="Riesgo" value={<RiskBadge score={alert.riskScore} mode="both" />} />
         <DetailField label="Ciudad" value={alert.location.city} />
         <DetailField label="Canal" value={alert.channel} />
         <DetailField label="Dispositivo" value={alert.device.type} />
@@ -105,16 +95,9 @@ export function AlertDetail({
         />
         <DetailField
           label="¿Fraude?"
-          value={
-            <span style={fraudIndicatorStyle}>
-              {alert.isFraud ? 'Sí' : 'No'}
-            </span>
-          }
+          value={<span style={fraudIndicatorStyle}>{alert.isFraud ? 'Sí' : 'No'}</span>}
         />
-        <DetailField
-          label="Fecha"
-          value={formatDateTime(alert.timestamp)}
-        />
+        <DetailField label="Fecha" value={formatDateTime(alert.timestamp)} />
       </DetailGrid>
 
       {/* Factores sospechosos */}

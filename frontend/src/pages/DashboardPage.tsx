@@ -14,11 +14,7 @@ import { useFormattedClock } from '@hooks/useClock';
 import { Button } from '@components/ui/Button';
 import { Spinner } from '@components/ui/Spinner';
 import { EmptyState } from '@components/ui/EmptyState';
-import {
-  StatsCardsGrid,
-  AlertsByLevelRings,
-  RecentAlertsPanel,
-} from '@components/dashboard';
+import { StatsCardsGrid, AlertsByLevelRings, RecentAlertsPanel } from '@components/dashboard';
 
 // ==============================================================================
 // TIPOS
@@ -71,10 +67,7 @@ export function DashboardPage() {
   // DATOS — Conteo de alertas por nivel (para los rings)
   // ==============================================================================
 
-  const {
-    counts: alertCounts,
-    loading: alertsLoading,
-  } = useAlerts(selectedBank);
+  const { counts: alertCounts, loading: alertsLoading } = useAlerts(selectedBank);
 
   // ==============================================================================
   // HANDLERS
@@ -85,7 +78,7 @@ export function DashboardPage() {
   };
 
   const handleToggleView = (): void => {
-    setViewMode(prev => prev === 'globe' ? 'map' : 'globe');
+    setViewMode((prev) => (prev === 'globe' ? 'map' : 'globe'));
   };
 
   const handleFraudClick = (): void => {
@@ -109,120 +102,120 @@ export function DashboardPage() {
   // ==============================================================================
 
   const pageStyle: React.CSSProperties = {
-    display:       'flex',
+    display: 'flex',
     flexDirection: 'column',
-    gap:           '20px',
-    padding:       '24px',
-    minHeight:     '100vh',
-    fontFamily:    'Inter, sans-serif',
+    gap: '20px',
+    padding: '24px',
+    minHeight: '100vh',
+    fontFamily: 'Inter, sans-serif',
   };
 
   const headerStyle: React.CSSProperties = {
-    display:        'flex',
-    alignItems:     'flex-start',
+    display: 'flex',
+    alignItems: 'flex-start',
     justifyContent: 'space-between',
-    gap:            '16px',
-    flexWrap:       'wrap',
+    gap: '16px',
+    flexWrap: 'wrap',
   };
 
   const headerLeftStyle: React.CSSProperties = {
-    display:       'flex',
+    display: 'flex',
     flexDirection: 'column',
-    gap:           '4px',
+    gap: '4px',
   };
 
   const titleStyle: React.CSSProperties = {
-    fontSize:      '24px',
-    fontWeight:    800,
-    color:         'var(--text-primary)',
-    margin:        0,
+    fontSize: '24px',
+    fontWeight: 800,
+    color: 'var(--text-primary)',
+    margin: 0,
     letterSpacing: '-0.02em',
   };
 
   const subtitleStyle: React.CSSProperties = {
     fontSize: '13px',
-    color:    'var(--text-secondary)',
-    margin:   0,
-    display:  'flex',
+    color: 'var(--text-secondary)',
+    margin: 0,
+    display: 'flex',
     alignItems: 'center',
-    gap:      '8px',
+    gap: '8px',
   };
 
   const headerRightStyle: React.CSSProperties = {
-    display:    'flex',
+    display: 'flex',
     alignItems: 'center',
-    gap:        '8px',
-    flexWrap:   'wrap',
+    gap: '8px',
+    flexWrap: 'wrap',
   };
 
   const clockStyle: React.CSSProperties = {
-    fontSize:           '12px',
-    fontWeight:         600,
-    color:              'var(--text-tertiary)',
+    fontSize: '12px',
+    fontWeight: 600,
+    color: 'var(--text-tertiary)',
     fontVariantNumeric: 'tabular-nums',
-    padding:            '6px 12px',
-    background:         'var(--bg-secondary)',
-    border:             '1px solid var(--border)',
-    borderRadius:       '8px',
+    padding: '6px 12px',
+    background: 'var(--bg-secondary)',
+    border: '1px solid var(--border)',
+    borderRadius: '8px',
   };
 
   const lastUpdatedStyle: React.CSSProperties = {
-    fontSize:   '10px',
-    color:      'var(--text-tertiary)',
-    fontStyle:  'italic',
+    fontSize: '10px',
+    color: 'var(--text-tertiary)',
+    fontStyle: 'italic',
   };
 
   const liveIndicatorStyle: React.CSSProperties = {
-    display:    'flex',
+    display: 'flex',
     alignItems: 'center',
-    gap:        '6px',
-    fontSize:   '10px',
+    gap: '6px',
+    fontSize: '10px',
     fontWeight: 700,
-    color:      isLive ? '#34D399' : 'var(--text-tertiary)',
-    padding:    '6px 12px',
+    color: isLive ? '#34D399' : 'var(--text-tertiary)',
+    padding: '6px 12px',
     background: isLive ? 'rgba(52, 211, 153, 0.1)' : 'var(--bg-secondary)',
-    border:     `1px solid ${isLive ? 'rgba(52, 211, 153, 0.25)' : 'var(--border)'}`,
+    border: `1px solid ${isLive ? 'rgba(52, 211, 153, 0.25)' : 'var(--border)'}`,
     borderRadius: '8px',
-    cursor:     'pointer',
+    cursor: 'pointer',
     transition: 'all 0.15s ease',
   };
 
   const liveDotStyle: React.CSSProperties = {
-    width:        '6px',
-    height:       '6px',
+    width: '6px',
+    height: '6px',
     borderRadius: '50%',
-    background:   isLive ? '#34D399' : '#6B7280',
-    animation:    isLive ? 'dashboard-live-pulse 2s ease-in-out infinite' : 'none',
+    background: isLive ? '#34D399' : '#6B7280',
+    animation: isLive ? 'dashboard-live-pulse 2s ease-in-out infinite' : 'none',
   };
 
   const bottomSectionStyle: React.CSSProperties = {
-    display:             'grid',
+    display: 'grid',
     gridTemplateColumns: '280px 1fr',
-    gap:                 '20px',
-    alignItems:          'start',
+    gap: '20px',
+    alignItems: 'start',
   };
 
   const bottomSectionMobileStyle: React.CSSProperties = {
-    display:       'flex',
+    display: 'flex',
     flexDirection: 'column',
-    gap:           '20px',
+    gap: '20px',
   };
 
   const ringsContainerStyle: React.CSSProperties = {
-    background:    'var(--bg-secondary)',
-    border:        '1px solid var(--border)',
-    borderRadius:  '12px',
-    padding:       '20px',
-    display:       'flex',
+    background: 'var(--bg-secondary)',
+    border: '1px solid var(--border)',
+    borderRadius: '12px',
+    padding: '20px',
+    display: 'flex',
     flexDirection: 'column',
-    gap:           '16px',
+    gap: '16px',
   };
 
   const ringsTitleStyle: React.CSSProperties = {
-    fontSize:   '13px',
+    fontSize: '13px',
     fontWeight: 700,
-    color:      'var(--text-primary)',
-    margin:     0,
+    color: 'var(--text-primary)',
+    margin: 0,
   };
 
   // Detectar si la ventana es angosta para responsive
@@ -274,7 +267,6 @@ export function DashboardPage() {
 
   return (
     <div style={pageStyle}>
-
       {/* ================================================================
           HEADER — Título + controles + reloj
           ================================================================ */}
@@ -301,7 +293,9 @@ export function DashboardPage() {
             type="button"
             style={liveIndicatorStyle}
             onClick={() => setIsLive(!isLive)}
-            aria-label={isLive ? 'Sistema en vivo. Click para pausar' : 'Sistema pausado. Click para reanudar'}
+            aria-label={
+              isLive ? 'Sistema en vivo. Click para pausar' : 'Sistema pausado. Click para reanudar'
+            }
             aria-pressed={isLive}
           >
             <span style={liveDotStyle} />

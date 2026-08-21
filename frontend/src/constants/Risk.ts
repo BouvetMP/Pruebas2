@@ -28,10 +28,10 @@ export interface RiskThreshold {
 // ==============================================================================
 
 export const RISK_COLORS: Record<RiskLevel, string> = {
-  low:      '#34D399', 
-  medium:   '#FBBF24', 
-  high:     '#F97316', 
-  critical: '#EF4444', 
+  low: '#34D399',
+  medium: '#FBBF24',
+  high: '#F97316',
+  critical: '#EF4444',
 };
 
 // ==============================================================================
@@ -40,23 +40,23 @@ export const RISK_COLORS: Record<RiskLevel, string> = {
 
 export const RISK_LEVELS: Record<RiskLevel, RiskLevelMetadata> = {
   low: {
-    label:       'Bajo',
-    color:       RISK_COLORS.low,
+    label: 'Bajo',
+    color: RISK_COLORS.low,
     description: 'Operación completamente legítima',
   },
   medium: {
-    label:       'Medio',
-    color:       RISK_COLORS.medium,
+    label: 'Medio',
+    color: RISK_COLORS.medium,
     description: 'Merece atención — revisión sugerida',
   },
   high: {
-    label:       'Alto',
-    color:       RISK_COLORS.high,
+    label: 'Alto',
+    color: RISK_COLORS.high,
     description: 'Alerta seria — requiere validación del analista',
   },
   critical: {
-    label:       'Crítico',
-    color:       RISK_COLORS.critical,
+    label: 'Crítico',
+    color: RISK_COLORS.critical,
     description: 'Máxima alerta — bloqueo automático',
   },
 };
@@ -65,11 +65,10 @@ export const RISK_LEVELS: Record<RiskLevel, RiskLevelMetadata> = {
 // UMBRALES DE SCORE DE RIESGO
 // ==============================================================================
 
-
 export const RISK_THRESHOLDS: Record<RiskLevel, RiskThreshold> = {
-  low:      { min: 0,  max: 29  },
-  medium:   { min: 30, max: 59  },
-  high:     { min: 60, max: 79  },
+  low: { min: 0, max: 29 },
+  medium: { min: 30, max: 59 },
+  high: { min: 60, max: 79 },
   critical: { min: 80, max: 100 },
 };
 
@@ -87,13 +86,13 @@ export const AUTO_BLOCK_THRESHOLD = 95;
  *            duplicada en `alerts.jsx`, `transactions.jsx`, `users.jsx` y `map.jsx`.
  * ¿Impacto? Cualquier ajuste de umbrales solo se hace aquí.
  *
- * @param score 
- * @returns 
+ * @param score
+ * @returns
  */
 export function getRiskLevel(score: number): RiskLevel {
   if (score >= RISK_THRESHOLDS.critical.min) return 'critical';
-  if (score >= RISK_THRESHOLDS.high.min)     return 'high';
-  if (score >= RISK_THRESHOLDS.medium.min)   return 'medium';
+  if (score >= RISK_THRESHOLDS.high.min) return 'high';
+  if (score >= RISK_THRESHOLDS.medium.min) return 'medium';
   return 'low';
 }
 

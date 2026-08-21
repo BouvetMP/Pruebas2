@@ -16,11 +16,7 @@ import {
   Circle,
   type LucideIcon,
 } from 'lucide-react';
-import type {
-  TransactionStatus,
-  AlertStatus,
-  UserStatus,
-} from '@app-types/index';
+import type { TransactionStatus, AlertStatus, UserStatus } from '@app-types/index';
 
 // ==============================================================================
 // TYPES
@@ -46,30 +42,32 @@ export interface StatusBadgeProps {
 interface StatusMeta {
   label: string;
   color: string;
-  icon:  LucideIcon;
+  icon: LucideIcon;
 }
 
 const TRANSACTION_STATUS_MAP: Record<TransactionStatus, StatusMeta> = {
-  approved: { label: 'Aprobada',  color: '#34D399', icon: CheckCircle },
-  flagged:  { label: 'Marcada',   color: '#FBBF24', icon: AlertTriangle },
-  blocked:  { label: 'Bloqueada', color: '#EF4444', icon: Ban },
-  pending:  { label: 'Pendiente', color: '#9CA3AF', icon: Clock },
+  approved: { label: 'Aprobada', color: '#34D399', icon: CheckCircle },
+  flagged: { label: 'Marcada', color: '#FBBF24', icon: AlertTriangle },
+  blocked: { label: 'Bloqueada', color: '#EF4444', icon: Ban },
+  pending: { label: 'Pendiente', color: '#9CA3AF', icon: Clock },
 };
 
 const ALERT_STATUS_MAP: Record<AlertStatus, StatusMeta> = {
-  active:    { label: 'Activa',      color: '#EF4444', icon: AlertTriangle },
+  active: { label: 'Activa', color: '#EF4444', icon: AlertTriangle },
   in_review: { label: 'En revisión', color: '#FBBF24', icon: Eye },
-  resolved:  { label: 'Resuelta',    color: '#34D399', icon: CheckCircle },
-  dismissed: { label: 'Descartada',  color: '#9CA3AF', icon: XCircle },
+  resolved: { label: 'Resuelta', color: '#34D399', icon: CheckCircle },
+  dismissed: { label: 'Descartada', color: '#9CA3AF', icon: XCircle },
 };
 
 const USER_STATUS_MAP: Record<UserStatus, StatusMeta> = {
-  active:   { label: 'Activo',   color: '#34D399', icon: UserCheck },
+  active: { label: 'Activo', color: '#34D399', icon: UserCheck },
   inactive: { label: 'Inactivo', color: '#9CA3AF', icon: UserX },
 };
 
 const UNKNOWN_STATUS: StatusMeta = {
-  label: 'Desconocido', color: '#9CA3AF', icon: Circle,
+  label: 'Desconocido',
+  color: '#9CA3AF',
+  icon: Circle,
 };
 
 // ==============================================================================

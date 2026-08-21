@@ -63,25 +63,21 @@ export interface DataTableProps<T> {
 // ==============================================================================
 
 const ALIGN_CLASSES: Record<string, string> = {
-  left:   'text-left',
+  left: 'text-left',
   center: 'text-center',
-  right:  'text-right',
+  right: 'text-right',
 };
 
 // ==============================================================================
 // HELPERS
 // ==============================================================================
 
-function sortData<T>(
-  data: T[],
-  sort: SortConfig<T>,
-  columns: DataTableColumn<T>[]
-): T[] {
+function sortData<T>(data: T[], sort: SortConfig<T>, columns: DataTableColumn<T>[]): T[] {
   const column = columns.find((col) => col.key === sort.field);
   if (!column) return data;
 
-  const accessor = column.sortAccessor
-    ?? ((item: T) => (item as Record<string, unknown>)[sort.field as string]);
+  const accessor =
+    column.sortAccessor ?? ((item: T) => (item as Record<string, unknown>)[sort.field as string]);
   const modifier = sort.direction === 'asc' ? 1 : -1;
 
   return [...data].sort((a, b) => {
@@ -99,10 +95,12 @@ function sortData<T>(
       return (aVal - bVal) * modifier;
     }
 
-    return String(aVal).localeCompare(String(bVal), 'es', {
-      numeric: true,
-      sensitivity: 'base',
-    }) * modifier;
+    return (
+      String(aVal).localeCompare(String(bVal), 'es', {
+        numeric: true,
+        sensitivity: 'base',
+      }) * modifier
+    );
   });
 }
 
@@ -129,7 +127,6 @@ export function DataTable<T>({
   autoSort = false,
   className = '',
 }: DataTableProps<T>) {
-
   // Sort
   const sortedData = useMemo(() => {
     if (!autoSort || !sort) return data;
@@ -165,7 +162,7 @@ export function DataTable<T>({
         className={cn(
           'w-full rounded-lg bg-[var(--bg-secondary)]',
           bordered && 'border border-[var(--border)]',
-          className
+          className,
         )}
       >
         <div className="py-[60px] px-5 flex justify-center">
@@ -182,7 +179,7 @@ export function DataTable<T>({
         className={cn(
           'w-full rounded-lg bg-[var(--bg-secondary)]',
           bordered && 'border border-[var(--border)]',
-          className
+          className,
         )}
       >
         <div className="py-10 px-5">
@@ -203,16 +200,15 @@ export function DataTable<T>({
       className={cn(
         'w-full overflow-x-auto rounded-lg bg-[var(--bg-secondary)]',
         bordered && 'border border-[var(--border)]',
-        className
+        className,
       )}
     >
       <table className="w-full border-collapse font-sans text-[13px]">
         {/* HEADER */}
         <thead>
-          <tr className={cn(
-            'bg-[var(--bg-tertiary)]',
-            bordered && 'border-b border-[var(--border)]'
-          )}>
+          <tr
+            className={cn('bg-[var(--bg-tertiary)]', bordered && 'border-b border-[var(--border)]')}
+          >
             {columns.map((col) => {
               const isSorted = sort?.field === col.key;
               const sortDirection = isSorted ? sort?.direction : null;
@@ -225,7 +221,7 @@ export function DataTable<T>({
                     'text-[var(--text-secondary)] select-none whitespace-nowrap',
                     ALIGN_CLASSES[col.align ?? 'left'],
                     col.sortable && 'cursor-pointer',
-                    col.headerClassName
+                    col.headerClassName,
                   )}
                   style={{
                     width: col.width,
@@ -235,8 +231,12 @@ export function DataTable<T>({
                   onClick={() => col.sortable && handleSort(col.key)}
                   aria-sort={
                     isSorted
-                      ? sortDirection === 'asc' ? 'ascending' : 'descending'
-                      : col.sortable ? 'none' : undefined
+                      ? sortDirection === 'asc'
+                        ? 'ascending'
+                        : 'descending'
+                      : col.sortable
+                        ? 'none'
+                        : undefined
                   }
                   role={col.sortable ? 'button' : undefined}
                   tabIndex={col.sortable ? 0 : undefined}
@@ -252,7 +252,7 @@ export function DataTable<T>({
                       'inline-flex items-center gap-1 w-full',
                       col.align === 'right' && 'justify-end',
                       col.align === 'center' && 'justify-center',
-                      (!col.align || col.align === 'left') && 'justify-start'
+                      (!col.align || col.align === 'left') && 'justify-start',
                     )}
                   >
                     {col.label}
@@ -288,7 +288,7 @@ export function DataTable<T>({
                   isSelected && 'bg-[var(--color-primary)]/[0.08]',
                   isClickable && 'cursor-pointer',
                   hoverable && !isSelected && 'hover:bg-[var(--bg-tertiary)]',
-                  customClass
+                  customClass,
                 )}
                 style={customStyle}
                 onClick={() => onRowClick?.(item, index)}
@@ -300,7 +300,7 @@ export function DataTable<T>({
                     className={cn(
                       'px-4 py-3 text-[var(--text-primary)]',
                       ALIGN_CLASSES[col.align ?? 'left'],
-                      col.cellClassName
+                      col.cellClassName,
                     )}
                     style={col.cellStyle}
                   >

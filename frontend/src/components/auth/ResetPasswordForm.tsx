@@ -6,21 +6,12 @@
 
 import { useEffect, useState, type FormEvent } from 'react';
 import { Link, useNavigate, useSearchParams } from 'react-router-dom';
-import {
-  KeyRound,
-  CheckCircle,
-  AlertTriangle,
-  AlertCircle,
-  ArrowLeft,
-} from 'lucide-react';
+import { KeyRound, CheckCircle, AlertTriangle, AlertCircle, ArrowLeft } from 'lucide-react';
 import { verifyResetToken, resetPassword } from '@api/Auth';
 import { Button } from '@components/ui/Button';
 import { Spinner } from '@components/ui/Spinner';
 import { PasswordInput } from './PasswordInput';
-import {
-  PasswordStrengthMeter,
-  analyzePassword,
-} from './PasswordStrengthMeter';
+import { PasswordStrengthMeter, analyzePassword } from './PasswordStrengthMeter';
 import { PUBLIC_ROUTES } from '@constants/Navigation';
 import { ApiError } from '@api/Client';
 
@@ -29,11 +20,7 @@ import { ApiError } from '@api/Client';
 // ==============================================================================
 
 /** Estados del flujo de reset password. */
-type ResetPasswordState =
-  | 'verifying'      
-  | 'invalid-token' 
-  | 'ready'          
-  | 'success';       
+type ResetPasswordState = 'verifying' | 'invalid-token' | 'ready' | 'success';
 
 export interface ResetPasswordFormProps {
   onSuccess?: (email: string) => void;
@@ -210,26 +197,26 @@ export function ResetPasswordForm({
   // ==============================================================================
 
   const wrapperStyle: React.CSSProperties = {
-    display:       'flex',
+    display: 'flex',
     flexDirection: 'column',
-    gap:           '18px',
-    fontFamily:    'Inter, sans-serif',
+    gap: '18px',
+    fontFamily: 'Inter, sans-serif',
   };
 
   const iconStyle: React.CSSProperties = {
     flexShrink: 0,
-    marginTop:  '1px',
+    marginTop: '1px',
   };
 
   const backLinkStyle: React.CSSProperties = {
-    display:        'inline-flex',
-    alignItems:     'center',
-    gap:            '4px',
-    fontSize:       '12px',
-    color:          'var(--text-secondary)',
+    display: 'inline-flex',
+    alignItems: 'center',
+    gap: '4px',
+    fontSize: '12px',
+    color: 'var(--text-secondary)',
     textDecoration: 'none',
-    fontWeight:     500,
-    transition:     'color 0.15s ease',
+    fontWeight: 500,
+    transition: 'color 0.15s ease',
     justifyContent: 'center',
   };
 
@@ -244,7 +231,7 @@ export function ResetPasswordForm({
         style={{
           ...wrapperStyle,
           alignItems: 'center',
-          padding:    '40px 20px',
+          padding: '40px 20px',
         }}
       >
         <Spinner size="lg" label="Verificando enlace..." />
@@ -258,33 +245,30 @@ export function ResetPasswordForm({
 
   if (state === 'invalid-token') {
     const invalidCardStyle: React.CSSProperties = {
-      display:       'flex',
+      display: 'flex',
       flexDirection: 'column',
-      alignItems:    'center',
-      gap:           '16px',
-      padding:       '24px',
-      background:    'rgba(239, 68, 68, 0.08)',
-      border:        '1px solid rgba(239, 68, 68, 0.25)',
-      borderRadius:  '12px',
-      textAlign:     'center',
+      alignItems: 'center',
+      gap: '16px',
+      padding: '24px',
+      background: 'rgba(239, 68, 68, 0.08)',
+      border: '1px solid rgba(239, 68, 68, 0.25)',
+      borderRadius: '12px',
+      textAlign: 'center',
     };
 
     const invalidIconStyle: React.CSSProperties = {
-      display:        'flex',
-      alignItems:     'center',
+      display: 'flex',
+      alignItems: 'center',
       justifyContent: 'center',
-      width:          '56px',
-      height:         '56px',
-      borderRadius:   '50%',
-      background:     'rgba(239, 68, 68, 0.15)',
-      color:          '#EF4444',
+      width: '56px',
+      height: '56px',
+      borderRadius: '50%',
+      background: 'rgba(239, 68, 68, 0.15)',
+      color: '#EF4444',
     };
 
     return (
-      <div
-        className={`reset-password-form-invalid ${className}`}
-        style={wrapperStyle}
-      >
+      <div className={`reset-password-form-invalid ${className}`} style={wrapperStyle}>
         <div style={invalidCardStyle} role="alert" aria-live="assertive">
           <div style={invalidIconStyle}>
             <AlertTriangle size={28} strokeWidth={2} />
@@ -345,33 +329,30 @@ export function ResetPasswordForm({
 
   if (state === 'success') {
     const successCardStyle: React.CSSProperties = {
-      display:       'flex',
+      display: 'flex',
       flexDirection: 'column',
-      alignItems:    'center',
-      gap:           '16px',
-      padding:       '24px',
-      background:    'rgba(52, 211, 153, 0.08)',
-      border:        '1px solid rgba(52, 211, 153, 0.25)',
-      borderRadius:  '12px',
-      textAlign:     'center',
+      alignItems: 'center',
+      gap: '16px',
+      padding: '24px',
+      background: 'rgba(52, 211, 153, 0.08)',
+      border: '1px solid rgba(52, 211, 153, 0.25)',
+      borderRadius: '12px',
+      textAlign: 'center',
     };
 
     const successIconStyle: React.CSSProperties = {
-      display:        'flex',
-      alignItems:     'center',
+      display: 'flex',
+      alignItems: 'center',
       justifyContent: 'center',
-      width:          '56px',
-      height:         '56px',
-      borderRadius:   '50%',
-      background:     'rgba(52, 211, 153, 0.15)',
-      color:          '#34D399',
+      width: '56px',
+      height: '56px',
+      borderRadius: '50%',
+      background: 'rgba(52, 211, 153, 0.15)',
+      color: '#34D399',
     };
 
     return (
-      <div
-        className={`reset-password-form-success ${className}`}
-        style={wrapperStyle}
-      >
+      <div className={`reset-password-form-success ${className}`} style={wrapperStyle}>
         <div style={successCardStyle} role="status" aria-live="polite">
           <div style={successIconStyle}>
             <CheckCircle size={28} strokeWidth={2} />
@@ -396,8 +377,8 @@ export function ResetPasswordForm({
               lineHeight: 1.5,
             }}
           >
-            Tu contraseña se cambió correctamente. Serás redirigido al
-            inicio de sesión en unos segundos.
+            Tu contraseña se cambió correctamente. Serás redirigido al inicio de sesión en unos
+            segundos.
           </p>
         </div>
 
@@ -415,34 +396,34 @@ export function ResetPasswordForm({
   // ==============================================================================
 
   const errorAlertStyle: React.CSSProperties = {
-    display:      'flex',
-    alignItems:   'flex-start',
-    gap:          '10px',
-    padding:      '12px 14px',
-    background:   'rgba(239, 68, 68, 0.1)',
-    border:       '1px solid rgba(239, 68, 68, 0.25)',
+    display: 'flex',
+    alignItems: 'flex-start',
+    gap: '10px',
+    padding: '12px 14px',
+    background: 'rgba(239, 68, 68, 0.1)',
+    border: '1px solid rgba(239, 68, 68, 0.25)',
     borderRadius: '8px',
-    fontSize:     '12px',
-    color:        '#EF4444',
-    fontWeight:   500,
-    lineHeight:   1.4,
+    fontSize: '12px',
+    color: '#EF4444',
+    fontWeight: 500,
+    lineHeight: 1.4,
   };
 
   const emailInfoStyle: React.CSSProperties = {
-    display:      'flex',
-    alignItems:   'center',
-    gap:          '8px',
-    padding:      '10px 12px',
-    background:   'var(--bg-tertiary)',
+    display: 'flex',
+    alignItems: 'center',
+    gap: '8px',
+    padding: '10px 12px',
+    background: 'var(--bg-tertiary)',
     borderRadius: '8px',
-    fontSize:     '12px',
-    color:        'var(--text-secondary)',
+    fontSize: '12px',
+    color: 'var(--text-secondary)',
   };
 
   const emailValueStyle: React.CSSProperties = {
-    color:      'var(--text-primary)',
+    color: 'var(--text-primary)',
     fontWeight: 700,
-    wordBreak:  'break-all',
+    wordBreak: 'break-all',
   };
 
   return (
@@ -465,8 +446,7 @@ export function ResetPasswordForm({
       <div style={emailInfoStyle}>
         <KeyRound size={14} />
         <span>
-          Cambiando contraseña para:{' '}
-          <span style={emailValueStyle}>{tokenEmail}</span>
+          Cambiando contraseña para: <span style={emailValueStyle}>{tokenEmail}</span>
         </span>
       </div>
 

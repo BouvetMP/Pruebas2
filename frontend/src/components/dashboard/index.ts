@@ -8,10 +8,7 @@
 // ==============================================================================
 
 export { StatsCard } from './StatsCards';
-export type {
-  StatsCardProps,
-  StatsCardVariant,
-} from './StatsCards';
+export type { StatsCardProps, StatsCardVariant } from './StatsCards';
 
 export { StatsCardsGrid } from './StatsCardsGrid';
 export type { StatsCardsGridProps } from './StatsCardsGrid';

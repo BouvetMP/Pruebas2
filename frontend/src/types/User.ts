@@ -44,14 +44,14 @@ export interface AuthUser {
  *       (coinciden con las columnas de la BD).
  */
 export interface SystemUserRaw {
-  id_usuario:              number;
-  nombre_completo:         string;
-  email:                   string;
-  rol:                     SystemRole;
-  estado:                  boolean;
-  fecha_creacion:          string;      // ISO 8601 timestamp
-  ultimo_acceso:           string | null;
-  id_usuario_generador?:   number | null;
+  id_usuario: number;
+  nombre_completo: string;
+  email: string;
+  rol: SystemRole;
+  estado: boolean;
+  fecha_creacion: string; // ISO 8601 timestamp
+  ultimo_acceso: string | null;
+  id_usuario_generador?: number | null;
 }
 
 /**
@@ -90,18 +90,18 @@ export type UserStatus = 'active' | 'inactive';
  * NOTE: Los campos vienen en snake_case (coinciden con columnas de la BD).
  */
 export interface BankClientRaw {
-  id_cliente:      number;
+  id_cliente: number;
   nombre_completo: string;
-  email:           string;
-  telefono:        string;
-  fecha_registro:  string;
-  estado:          boolean;
-  pais:            string;
-  ciudad:          string;
-  banco?:          string;       
-  banco_codigo?:   string;       
-  banco_color?:    string;       
-  riesgo?:         number;       
+  email: string;
+  telefono: string;
+  fecha_registro: string;
+  estado: boolean;
+  pais: string;
+  ciudad: string;
+  banco?: string;
+  banco_codigo?: string;
+  banco_color?: string;
+  riesgo?: number;
 }
 
 /**
@@ -122,8 +122,8 @@ export interface BankClient {
   status: UserStatus;
   registeredAt: string;
   bank: {
-    id:    string;
-    name:  string;
+    id: string;
+    name: string;
     color: string;
   };
   riskScore: number;
@@ -138,7 +138,7 @@ export interface BankClient {
  * NOTE: Los campos coinciden con lo que espera el backend.
  */
 export interface LoginPayload {
-  email:    string;
+  email: string;
   password: string;
 }
 
@@ -149,9 +149,9 @@ export interface LoginPayload {
  */
 export interface RegisterPayload {
   nombre_completo: string;
-  email:           string;
-  password:        string;
-  rol:             SystemRole;
+  email: string;
+  password: string;
+  rol: SystemRole;
 }
 
 /**
@@ -165,7 +165,7 @@ export interface ForgotPasswordPayload {
  * Payload para el endpoint `POST /api/auth/reset-password`.
  */
 export interface ResetPasswordPayload {
-  token:           string;
+  token: string;
   nuevaContrasena: string;
 }
 
@@ -179,7 +179,7 @@ export interface ResetPasswordPayload {
  */
 export interface LoginResponse {
   token: string;
-  user:  AuthUser;
+  user: AuthUser;
 }
 
 /**
@@ -188,10 +188,10 @@ export interface LoginResponse {
 export interface RegisterResponse {
   message: string;
   user: {
-    id:     number;
+    id: number;
     nombre: string;
-    email:  string;
-    rol:    SystemRole;
+    email: string;
+    rol: SystemRole;
     estado: boolean;
   };
 }
@@ -208,7 +208,7 @@ export interface ForgotPasswordResponse {
  */
 export interface ResetPasswordResponse {
   message: string;
-  email:   string;
+  email: string;
 }
 
 /**

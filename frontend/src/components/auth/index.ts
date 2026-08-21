@@ -11,10 +11,7 @@
 export { PasswordInput } from './PasswordInput';
 export type { PasswordInputProps } from './PasswordInput';
 
-export {
-  PasswordStrengthMeter,
-  analyzePassword,
-} from './PasswordStrengthMeter';
+export { PasswordStrengthMeter, analyzePassword } from './PasswordStrengthMeter';
 export type {
   PasswordStrengthMeterProps,
   PasswordStrength,

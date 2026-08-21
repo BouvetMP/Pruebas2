@@ -35,9 +35,7 @@ import { ALL_BANKS_ID } from '@app-types';
  * @returns Array de dispositivos normalizados.
  * @throws ApiError si la consulta falla.
  */
-export async function getDevices(
-  bankId: SelectedBankId = ALL_BANKS_ID
-): Promise<Device[]> {
+export async function getDevices(bankId: SelectedBankId = ALL_BANKS_ID): Promise<Device[]> {
   const params = bankId !== ALL_BANKS_ID ? { banco: bankId } : undefined;
 
   const raw = await get<DeviceRaw[]>('/dispositivos', params);
@@ -54,9 +52,7 @@ export async function getDevices(
  * @param bankId - Código del banco a filtrar, o 'all'.
  * @returns Cantidad total de dispositivos.
  */
-export async function getDevicesCount(
-  bankId: SelectedBankId = ALL_BANKS_ID
-): Promise<number> {
+export async function getDevicesCount(bankId: SelectedBankId = ALL_BANKS_ID): Promise<number> {
   const devices = await getDevices(bankId);
   return devices.length;
 }
@@ -74,7 +70,7 @@ export async function getDevicesCount(
  *
  */
 export async function getDevicesByClient(
-  bankId: SelectedBankId = ALL_BANKS_ID
+  bankId: SelectedBankId = ALL_BANKS_ID,
 ): Promise<DevicesByClient> {
   const devices = await getDevices(bankId);
   const grouped: DevicesByClient = new Map();
@@ -99,16 +95,16 @@ export async function getDevicesByClient(
  * @returns Objeto con conteos por categoría.
  */
 export async function getDevicesCountByCategory(
-  bankId: SelectedBankId = ALL_BANKS_ID
+  bankId: SelectedBankId = ALL_BANKS_ID,
 ): Promise<Record<DeviceCategory, number>> {
   const devices = await getDevices(bankId);
 
   const counts: Record<DeviceCategory, number> = {
-    mobile:  0,
+    mobile: 0,
     desktop: 0,
-    tablet:  0,
-    pos:     0,
-    atm:     0,
+    tablet: 0,
+    pos: 0,
+    atm: 0,
     unknown: 0,
   };
 
@@ -130,17 +126,15 @@ export async function getDevicesCountByCategory(
  * @param bankId - Código del banco a filtrar, o 'all'.
  * @returns Objeto con `total`, `byCategory` y `uniqueClients`.
  */
-export async function getDeviceStats(
-  bankId: SelectedBankId = ALL_BANKS_ID
-): Promise<DeviceStats> {
+export async function getDeviceStats(bankId: SelectedBankId = ALL_BANKS_ID): Promise<DeviceStats> {
   const devices = await getDevices(bankId);
 
   const byCategory: Record<DeviceCategory, number> = {
-    mobile:  0,
+    mobile: 0,
     desktop: 0,
-    tablet:  0,
-    pos:     0,
-    atm:     0,
+    tablet: 0,
+    pos: 0,
+    atm: 0,
     unknown: 0,
   };
 
@@ -152,7 +146,7 @@ export async function getDeviceStats(
   }
 
   return {
-    total:         devices.length,
+    total: devices.length,
     byCategory,
     uniqueClients: uniqueClientIds.size,
   };
@@ -170,10 +164,10 @@ export async function getDeviceStats(
  */
 export async function getDevicesByCategory(
   category: DeviceCategory,
-  bankId: SelectedBankId = ALL_BANKS_ID
+  bankId: SelectedBankId = ALL_BANKS_ID,
 ): Promise<Device[]> {
   const devices = await getDevices(bankId);
-  return devices.filter(device => device.category === category);
+  return devices.filter((device) => device.category === category);
 }
 
 /**
@@ -189,15 +183,15 @@ export async function getDevicesByCategory(
  */
 export async function getNewDevices(
   daysThreshold: number = 7,
-  bankId: SelectedBankId = ALL_BANKS_ID
+  bankId: SelectedBankId = ALL_BANKS_ID,
 ): Promise<Device[]> {
   const devices = await getDevices(bankId);
   const now = Date.now();
   const thresholdMs = daysThreshold * 24 * 60 * 60 * 1000;
 
-  return devices.filter(device => {
+  return devices.filter((device) => {
     if (!device.firstUsedAt) return false;
     const firstUse = new Date(device.firstUsedAt).getTime();
-    return (now - firstUse) < thresholdMs;
+    return now - firstUse < thresholdMs;
   });
 }

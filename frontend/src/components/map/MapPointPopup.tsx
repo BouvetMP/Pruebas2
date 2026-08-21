@@ -25,10 +25,14 @@ export interface MapPointPopupProps {
  */
 function getStatusLabel(status: string): string {
   switch (status) {
-    case 'blocked': return '🚫 Bloqueada';
-    case 'flagged': return '⚠️ Marcada';
-    case 'pending': return '⏱ Pendiente';
-    default:        return '✅ Aprobada';
+    case 'blocked':
+      return '🚫 Bloqueada';
+    case 'flagged':
+      return '⚠️ Marcada';
+    case 'pending':
+      return '⏱ Pendiente';
+    default:
+      return '✅ Aprobada';
   }
 }
 
@@ -44,55 +48,55 @@ export function MapPointPopup({ point, className = '' }: MapPointPopupProps) {
   // ==============================================================================
 
   const wrapperStyle: React.CSSProperties = {
-    fontFamily:    'Inter, sans-serif',
-    fontSize:      '12px',
-    minWidth:      '220px',
-    maxWidth:      '280px',
-    padding:       '4px',
+    fontFamily: 'Inter, sans-serif',
+    fontSize: '12px',
+    minWidth: '220px',
+    maxWidth: '280px',
+    padding: '4px',
   };
 
   const headerStyle: React.CSSProperties = {
-    display:        'flex',
-    alignItems:     'center',
+    display: 'flex',
+    alignItems: 'center',
     justifyContent: 'space-between',
-    gap:            '8px',
-    paddingBottom:  '8px',
-    marginBottom:   '8px',
-    borderBottom:   '1px solid rgba(0,0,0,0.1)',
+    gap: '8px',
+    paddingBottom: '8px',
+    marginBottom: '8px',
+    borderBottom: '1px solid rgba(0,0,0,0.1)',
   };
 
   const idStyle: React.CSSProperties = {
-    fontFamily:  'monospace',
-    fontWeight:  700,
-    fontSize:    '12px',
-    color:       '#1F2937',
+    fontFamily: 'monospace',
+    fontWeight: 700,
+    fontSize: '12px',
+    color: '#1F2937',
   };
 
   const scoreStyle: React.CSSProperties = {
-    fontWeight:  800,
-    fontSize:    '13px',
-    color:       color,
+    fontWeight: 800,
+    fontSize: '13px',
+    color: color,
   };
 
   const rowStyle: React.CSSProperties = {
-    display:        'flex',
+    display: 'flex',
     justifyContent: 'space-between',
-    alignItems:     'center',
-    gap:            '12px',
-    padding:        '3px 0',
+    alignItems: 'center',
+    gap: '12px',
+    padding: '3px 0',
   };
 
   const labelStyle: React.CSSProperties = {
-    fontSize:   '11px',
-    color:      '#6B7280',
+    fontSize: '11px',
+    color: '#6B7280',
     fontWeight: 500,
   };
 
   const valueStyle: React.CSSProperties = {
-    fontSize:   '11px',
+    fontSize: '11px',
     fontWeight: 600,
-    color:      '#1F2937',
-    textAlign:  'right',
+    color: '#1F2937',
+    textAlign: 'right',
   };
 
   // ==============================================================================
@@ -115,9 +119,7 @@ export function MapPointPopup({ point, className = '' }: MapPointPopupProps) {
 
       <div style={rowStyle}>
         <span style={labelStyle}>Banco</span>
-        <span style={{ ...valueStyle, color: point.bank.color }}>
-          {point.bank.name}
-        </span>
+        <span style={{ ...valueStyle, color: point.bank.color }}>{point.bank.name}</span>
       </div>
 
       <div style={rowStyle}>
@@ -144,9 +146,7 @@ export function MapPointPopup({ point, className = '' }: MapPointPopupProps) {
 
       <div style={rowStyle}>
         <span style={labelStyle}>Estado</span>
-        <span style={{ ...valueStyle, color }}>
-          {getStatusLabel(point.status)}
-        </span>
+        <span style={{ ...valueStyle, color }}>{getStatusLabel(point.status)}</span>
       </div>
     </div>
   );

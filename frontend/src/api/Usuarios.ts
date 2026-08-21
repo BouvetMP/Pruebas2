@@ -13,10 +13,7 @@
 // solo lugar (@api/Usuarios), simplificando los imports.
 
 // --- Usuarios INTERNOS del sistema (Admin, Analista, Operador, Auditor) ---
-export {
-  getSystemUsers,
-  register as createSystemUser,
-} from './Auth';
+export { getSystemUsers, register as createSystemUser } from './Auth';
 
 // --- CLIENTES bancarios (usuarios finales de los bancos) ---
 export {
@@ -61,9 +58,9 @@ export async function getSystemUsersCountByRole(): Promise<Record<SystemRole, nu
 
   const counts: Record<SystemRole, number> = {
     ADMINISTRADOR: 0,
-    ANALISTA:      0,
-    OPERADOR:      0,
-    AUDITOR:       0,
+    ANALISTA: 0,
+    OPERADOR: 0,
+    AUDITOR: 0,
   };
 
   for (const user of users) {
@@ -82,14 +79,14 @@ export async function getSystemUsersCountByRole(): Promise<Record<SystemRole, nu
  *
  */
 export async function getSystemUsersStatusCount(): Promise<{
-  active:   number;
+  active: number;
   inactive: number;
 }> {
   const users = await getSystemUsers();
 
   return {
-    active:   users.filter(u => u.status === 'active').length,
-    inactive: users.filter(u => u.status === 'inactive').length,
+    active: users.filter((u) => u.status === 'active').length,
+    inactive: users.filter((u) => u.status === 'inactive').length,
   };
 }
 
@@ -101,7 +98,7 @@ export async function getSystemUsersStatusCount(): Promise<{
  */
 export async function getSystemUsersByRole(role: SystemRole): Promise<SystemUser[]> {
   const users = await getSystemUsers();
-  return users.filter(user => user.role === role);
+  return users.filter((user) => user.role === role);
 }
 
 /**
@@ -114,7 +111,7 @@ export async function getSystemUsersByRole(role: SystemRole): Promise<SystemUser
  */
 export async function getActiveSystemUsers(): Promise<SystemUser[]> {
   const users = await getSystemUsers();
-  return users.filter(user => user.status === 'active');
+  return users.filter((user) => user.status === 'active');
 }
 
 /**
@@ -128,5 +125,5 @@ export async function getActiveSystemUsers(): Promise<SystemUser[]> {
  */
 export async function getSystemUsersNeverLogged(): Promise<SystemUser[]> {
   const users = await getSystemUsers();
-  return users.filter(user => user.lastLogin === null);
+  return users.filter((user) => user.lastLogin === null);
 }

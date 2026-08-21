@@ -20,22 +20,16 @@
  * @returns Iniciales en mayúscula.
  *
  */
-export function getInitials(
-  fullName: string | null | undefined,
-  maxLetters: number = 2
-): string {
+export function getInitials(fullName: string | null | undefined, maxLetters: number = 2): string {
   if (!fullName || typeof fullName !== 'string') return '?';
 
-  const parts = fullName
-    .trim()
-    .split(/\s+/)
-    .filter(Boolean);
+  const parts = fullName.trim().split(/\s+/).filter(Boolean);
 
   if (parts.length === 0) return '?';
 
   return parts
     .slice(0, maxLetters)
-    .map(part => part.charAt(0).toUpperCase())
+    .map((part) => part.charAt(0).toUpperCase())
     .join('');
 }
 
@@ -64,11 +58,7 @@ export function getFirstName(fullName: string | null | undefined): string {
  */
 export function getShortName(fullName: string | null | undefined): string {
   if (!fullName) return '';
-  return fullName
-    .trim()
-    .split(/\s+/)
-    .slice(0, 2)
-    .join(' ');
+  return fullName.trim().split(/\s+/).slice(0, 2).join(' ');
 }
 
 /**
@@ -94,7 +84,7 @@ export function getLastName(fullName: string | null | undefined): string {
 export function formatNameLastFirst(fullName: string | null | undefined): string {
   if (!fullName) return '';
   const first = getFirstName(fullName);
-  const last  = getLastName(fullName);
+  const last = getLastName(fullName);
   return last ? `${last}, ${first}` : first;
 }
 
@@ -114,10 +104,7 @@ export function formatNameLastFirst(fullName: string | null | undefined): string
  * @param visibleChars - Cantidad de caracteres visibles al inicio (default: 3).
  * @returns Email mascarado.
  */
-export function maskEmail(
-  email: string | null | undefined,
-  visibleChars: number = 3
-): string {
+export function maskEmail(email: string | null | undefined, visibleChars: number = 3): string {
   if (!email || !email.includes('@')) return '***';
 
   const [local, domain] = email.split('@');
@@ -134,10 +121,7 @@ export function maskEmail(
  * @param visibleDigits - Cantidad de dígitos visibles al final (default: 4).
  * @returns ID mascarado.
  */
-export function maskId(
-  id: string | number | null | undefined,
-  visibleDigits: number = 4
-): string {
+export function maskId(id: string | number | null | undefined, visibleDigits: number = 4): string {
   if (id === null || id === undefined) return '***';
 
   const str = String(id);
@@ -213,7 +197,7 @@ export function isValidEmail(email: string | null | undefined): boolean {
 export function isValidName(
   name: string | null | undefined,
   minLength: number = 2,
-  maxLength: number = 150
+  maxLength: number = 150,
 ): boolean {
   if (!name) return false;
   const trimmed = name.trim();
@@ -244,19 +228,18 @@ export function formatUserStatus(isActive: boolean | null | undefined): string {
  * @param user - Objeto con campos opcionales de nombre.
  * @returns Nombre de display o "Usuario Desconocido".
  */
-export function getDisplayName(user: {
-  nombre?: string | null;
-  name?: string | null;
-  fullName?: string | null;
-  email?: string | null;
-} | null | undefined): string {
+export function getDisplayName(
+  user:
+    | {
+        nombre?: string | null;
+        name?: string | null;
+        fullName?: string | null;
+        email?: string | null;
+      }
+    | null
+    | undefined,
+): string {
   if (!user) return 'Usuario Desconocido';
 
-  return (
-    user.nombre ??
-    user.name ??
-    user.fullName ??
-    user.email ??
-    'Usuario Desconocido'
-  );
+  return user.nombre ?? user.name ?? user.fullName ?? user.email ?? 'Usuario Desconocido';
 }

@@ -33,10 +33,7 @@ export const DEFAULT_DEBOUNCE_DELAY = 300;
  *
  *
  */
-export function useDebounce<T>(
-  value: T,
-  delay: number = DEFAULT_DEBOUNCE_DELAY
-): T {
+export function useDebounce<T>(value: T, delay: number = DEFAULT_DEBOUNCE_DELAY): T {
   const [debouncedValue, setDebouncedValue] = useState<T>(value);
 
   useEffect(() => {
@@ -74,7 +71,7 @@ export function useDebounce<T>(
 
 export function useDebouncedCallback<TArgs extends unknown[]>(
   callback: (...args: TArgs) => void,
-  delay: number = DEFAULT_DEBOUNCE_DELAY
+  delay: number = DEFAULT_DEBOUNCE_DELAY,
 ): (...args: TArgs) => void {
   const timerRef = useRef<number | null>(null);
   const callbackRef = useRef(callback);
@@ -106,6 +103,6 @@ export function useDebouncedCallback<TArgs extends unknown[]>(
         timerRef.current = null;
       }, delay);
     },
-    [delay]
+    [delay],
   );
 }

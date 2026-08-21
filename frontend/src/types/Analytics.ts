@@ -18,19 +18,19 @@ import type { TransactionChannel } from './Transaction';
  * Endpoint: `GET /api/analytics/metricas`
  */
 export interface AnalyticsMetricsRaw {
-  tasa_deteccion?:     number | string;
-  detection_rate?:     number | string;
-  falsos_positivos?:   number | string;
-  false_positives?:    number | string;
-  fp?:                 number | string;
-  monto_promedio?:     number | string;
-  avg_amount?:         number | string;
-  avg?:                number | string;
-  total_analizadas?:   number;
-  total?:              number;
-  count?:              number;
+  tasa_deteccion?: number | string;
+  detection_rate?: number | string;
+  falsos_positivos?: number | string;
+  false_positives?: number | string;
+  fp?: number | string;
+  monto_promedio?: number | string;
+  avg_amount?: number | string;
+  avg?: number | string;
+  total_analizadas?: number;
+  total?: number;
+  count?: number;
   tiempo_promedio_respuesta?: number;
-  monto_protegido?:    number;
+  monto_protegido?: number;
   fraudes_detectados?: number;
 }
 
@@ -93,10 +93,10 @@ export interface BankAggregation {
  * ¿Impacto? Cambios aquí requieren actualizar la página Analytics completa.
  */
 export interface AnalyticsAggregations {
-  porTipo:   TransactionTypeAggregation[];
+  porTipo: TransactionTypeAggregation[];
   porCiudad: CityStats[];
-  porCanal:  ChannelAggregation[];
-  porBanco:  BankAggregation[];
+  porCanal: ChannelAggregation[];
+  porBanco: BankAggregation[];
 }
 
 /**
@@ -104,12 +104,12 @@ export interface AnalyticsAggregations {
  * NOTE: Duplicado ligero para evitar dependencia circular.
  */
 export interface CityAggregationRaw {
-  ciudad?:   string;
-  city?:     string;
-  nombre?:   string;
-  count?:    number;
+  ciudad?: string;
+  city?: string;
+  nombre?: string;
+  count?: number;
   cantidad?: number;
-  total?:    number;
+  total?: number;
 }
 
 // ==============================================================================
@@ -195,31 +195,25 @@ export interface MapStats {
 /**
  * Tipos de reportes generados por el sistema.
  */
-export type ReportType =
-  | 'DIARIO'
-  | 'SEMANAL'
-  | 'MENSUAL'
-  | 'PERSONALIZADO';
-
+export type ReportType = 'DIARIO' | 'SEMANAL' | 'MENSUAL' | 'PERSONALIZADO';
 
 export type ExportFormat = 'csv' | 'pdf' | 'xlsx' | 'json';
 
-
 export interface ReportRaw {
-  id_reporte:                  number;
-  id_usuario_generador?:       number;
-  tipo_reporte:                ReportType;
-  fecha_inicio:                string;
-  fecha_fin:                   string;
-  total_transacciones?:        number;
-  total_alertas_generadas?:    number;
-  fraudes_detectados?:         number;
-  falsos_positivos?:           number;
-  tasa_deteccion?:             number | string;
-  tiempo_promedio_respuesta?:  number | string;
-  monto_protegido?:            number | string;
-  fecha_generacion:            string;
-  ruta_archivo:                string;
+  id_reporte: number;
+  id_usuario_generador?: number;
+  tipo_reporte: ReportType;
+  fecha_inicio: string;
+  fecha_fin: string;
+  total_transacciones?: number;
+  total_alertas_generadas?: number;
+  fraudes_detectados?: number;
+  falsos_positivos?: number;
+  tasa_deteccion?: number | string;
+  tiempo_promedio_respuesta?: number | string;
+  monto_protegido?: number | string;
+  fecha_generacion: string;
+  ruta_archivo: string;
 }
 
 export interface Report {
@@ -240,7 +234,6 @@ export interface Report {
     protectedAmount: number;
   };
 }
-
 
 export interface GenerateReportPayload {
   type: ReportType;
@@ -266,7 +259,6 @@ export interface ExportMetadata {
   sample: unknown[];
   filename?: string;
 }
-
 
 export interface ExportOptions {
   dateFrom?: string;

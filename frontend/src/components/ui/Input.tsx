@@ -42,7 +42,7 @@ export const Input = forwardRef<HTMLInputElement, InputProps>(
       className = '',
       ...rest
     },
-    ref
+    ref,
   ) => {
     // Generar ID único si no se proporciona (para vincular label ↔ input).
     const generatedId = useId();
@@ -55,11 +55,7 @@ export const Input = forwardRef<HTMLInputElement, InputProps>(
 
     return (
       <div
-        className={cn(
-          'flex flex-col gap-1.5 font-sans',
-          fullWidth && 'w-full',
-          wrapperClassName
-        )}
+        className={cn('flex flex-col gap-1.5 font-sans', fullWidth && 'w-full', wrapperClassName)}
       >
         {/* ================================================================
             LABEL
@@ -69,17 +65,12 @@ export const Input = forwardRef<HTMLInputElement, InputProps>(
             htmlFor={inputId}
             className={cn(
               'text-xs font-semibold flex items-center gap-1',
-              hasError
-                ? 'text-[var(--color-danger)]'
-                : 'text-[var(--text-secondary)]'
+              hasError ? 'text-[var(--color-danger)]' : 'text-[var(--text-secondary)]',
             )}
           >
             {label}
             {required && (
-              <span
-                className="text-[var(--color-danger)]"
-                aria-label="Campo requerido"
-              >
+              <span className="text-[var(--color-danger)]" aria-label="Campo requerido">
                 *
               </span>
             )}
@@ -90,16 +81,13 @@ export const Input = forwardRef<HTMLInputElement, InputProps>(
             INPUT CONTAINER (posiciona íconos absolutos)
             ================================================================ */}
         <div className="relative flex items-center">
-
           {/* Ícono izquierdo */}
           {leftIcon && (
             <span
               className={cn(
                 'absolute left-2.5 top-1/2 -translate-y-1/2',
                 'flex items-center justify-center pointer-events-none',
-                hasError
-                  ? 'text-[var(--color-danger)]'
-                  : 'text-[var(--text-tertiary)]'
+                hasError ? 'text-[var(--color-danger)]' : 'text-[var(--text-tertiary)]',
               )}
             >
               {leftIcon}
@@ -113,9 +101,7 @@ export const Input = forwardRef<HTMLInputElement, InputProps>(
             required={required}
             disabled={disabled}
             aria-invalid={hasError}
-            aria-describedby={
-              hasError ? errorId : showHelper ? helperId : undefined
-            }
+            aria-describedby={hasError ? errorId : showHelper ? helperId : undefined}
             className={cn(
               // Base
               'w-full py-2.5 text-sm font-sans rounded-lg outline-none',
@@ -140,7 +126,7 @@ export const Input = forwardRef<HTMLInputElement, InputProps>(
               rightIcon ? 'pr-9' : 'pr-3.5',
 
               // Clase externa
-              className
+              className,
             )}
             {...rest}
           />
@@ -151,9 +137,7 @@ export const Input = forwardRef<HTMLInputElement, InputProps>(
               className={cn(
                 'absolute right-2.5 top-1/2 -translate-y-1/2',
                 'flex items-center justify-center',
-                hasError
-                  ? 'text-[var(--color-danger)]'
-                  : 'text-[var(--text-tertiary)]'
+                hasError ? 'text-[var(--color-danger)]' : 'text-[var(--text-tertiary)]',
               )}
             >
               {rightIcon}
@@ -178,16 +162,13 @@ export const Input = forwardRef<HTMLInputElement, InputProps>(
 
         {/* Helper */}
         {showHelper && (
-          <span
-            id={helperId}
-            className="text-[11px] text-[var(--text-tertiary)] mt-0.5"
-          >
+          <span id={helperId} className="text-[11px] text-[var(--text-tertiary)] mt-0.5">
             {helperText}
           </span>
         )}
       </div>
     );
-  }
+  },
 );
 
 Input.displayName = 'Input';

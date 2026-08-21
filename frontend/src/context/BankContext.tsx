@@ -56,7 +56,8 @@ function getStoredSelectedBank(): SelectedBankId {
   try {
     const value = localStorage.getItem('trida-selected-bank');
     return value ?? ALL_BANKS_ID;
-  } catch {
+  } catch (error) {
+    console.warn('Error leyendo el banco seleccionado desde localStorage:', error);
     return ALL_BANKS_ID;
   }
 }
@@ -67,7 +68,8 @@ function getStoredSelectedBank(): SelectedBankId {
 function storeSelectedBank(bankId: SelectedBankId): void {
   try {
     localStorage.setItem('trida-selected-bank', bankId);
-  } catch {
+  } catch (error) {
+    console.warn('Error al guardar el banco seleccionado en localStorage:', error);
   }
 }
 
@@ -90,13 +92,10 @@ interface BankProviderProps {
  *            propia por archivo y consumo de la nueva capa API.
  * ¿Impacto? Debe montarse en App.tsx envolviendo las rutas protegidas
  *           (después del AuthProvider, ya que ambos son globales).
- *
  */
 export function BankProvider({ children }: BankProviderProps) {
   const [banks, setBanks] = useState<Bank[]>([]);
-  const [selectedBank, setSelectedBankState] = useState<SelectedBankId>(
-    getStoredSelectedBank
-  );
+  const [selectedBank, setSelectedBankState] = useState<SelectedBankId>(getStoredSelectedBank);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
@@ -136,19 +135,16 @@ export function BankProvider({ children }: BankProviderProps) {
   const getBankById = useCallback(
     (bankId: string): Bank | undefined => {
       if (bankId === ALL_BANKS_ID) return ALL_BANKS_OPTION;
-      return banks.find(bank => bank.id === bankId);
+      return banks.find((bank) => bank.id === bankId);
     },
-    [banks]
+    [banks],
   );
 
-  const banksWithAll = useMemo<Bank[]>(
-    () => [ALL_BANKS_OPTION, ...banks],
-    [banks]
-  );
+  const banksWithAll = useMemo<Bank[]>(() => [ALL_BANKS_OPTION, ...banks], [banks]);
 
   const selectedBankInfo = useMemo<Bank>(
     () => getBankById(selectedBank) ?? ALL_BANKS_OPTION,
-    [getBankById, selectedBank]
+    [getBankById, selectedBank],
   );
 
   const value = useMemo<BankContextValue>(
@@ -173,14 +169,10 @@ export function BankProvider({ children }: BankProviderProps) {
       setSelectedBank,
       refreshBanks,
       getBankById,
-    ]
+    ],
   );
 
-  return (
-    <BankContext.Provider value={value}>
-      {children}
-    </BankContext.Provider>
-  );
+  return <BankContext.Provider value={value}>{children}</BankContext.Provider>;
 }
 
 // ==============================================================================
@@ -196,15 +188,15 @@ export function BankProvider({ children }: BankProviderProps) {
  *
  * @returns Objeto con `banks`, `selectedBank`, `setSelectedBank`, etc.
  * @throws Error si se usa fuera del BankProvider.
- *
  */
+// eslint-disable-next-line react-refresh/only-export-components
 export function useBank(): BankContextValue {
   const context = useContext(BankContext);
 
   if (!context) {
     throw new Error(
       'useBank debe ser usado dentro de un <BankProvider>. ' +
-      'Envuelve tu aplicación con <BankProvider> en App.tsx.'
+        'Envuelve tu aplicación con <BankProvider> en App.tsx.',
     );
   }
 

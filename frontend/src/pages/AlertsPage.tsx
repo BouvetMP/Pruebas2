@@ -39,7 +39,7 @@ import type { Alert, ExportMetadata } from '@app-types';
 const LEVEL_ORDER: RiskLevel[] = ['critical', 'high', 'medium', 'low'];
 
 const STATUS_FILTERS = [
-  { value: 'all',     label: 'Todas' },
+  { value: 'all', label: 'Todas' },
   { value: 'blocked', label: '🚫 Bloqueadas' },
   { value: 'flagged', label: '⚠️ Marcadas' },
 ] as const;
@@ -50,74 +50,72 @@ const STATUS_FILTERS = [
 
 const TABLE_COLUMNS: DataTableColumn<Alert>[] = [
   {
-    key:      'id',
-    label:    'ID',
+    key: 'id',
+    label: 'ID',
     sortable: true,
-    width:    '80px',
-    render:   (alert) => (
+    width: '80px',
+    render: (alert) => (
       <span style={{ fontFamily: 'monospace', fontSize: '11px' }}>{alert.id}</span>
     ),
   },
   {
-    key:      'timestamp',
-    label:    'Hora',
+    key: 'timestamp',
+    label: 'Hora',
     sortable: true,
-    width:    '80px',
-    sortAccessor: (alert) => alert.timestamp ? new Date(alert.timestamp) : null,
-    render:   (alert) => (
+    width: '80px',
+    sortAccessor: (alert) => (alert.timestamp ? new Date(alert.timestamp) : null),
+    render: (alert) => (
       <span style={{ fontFamily: 'monospace', fontSize: '11px' }}>
         {formatTime(alert.timestamp)}
       </span>
     ),
   },
   {
-    key:    'user',
-    label:  'Usuario',
+    key: 'user',
+    label: 'Usuario',
     sortable: true,
     render: (alert) => <span style={{ fontWeight: 600 }}>{alert.user}</span>,
   },
   {
-    key:    'bank',
-    label:  'Banco',
+    key: 'bank',
+    label: 'Banco',
     render: (alert) => <BankBadge bank={alert.bank} size="sm" />,
   },
   {
-    key:    'type',
-    label:  'Tipo',
+    key: 'type',
+    label: 'Tipo',
     render: (alert) => alert.type,
   },
   {
-    key:      'amount',
-    label:    'Monto',
+    key: 'amount',
+    label: 'Monto',
     sortable: true,
-    align:    'right',
+    align: 'right',
     sortAccessor: (alert) => alert.amount,
-    render:   (alert) => (
+    render: (alert) => (
       <span style={{ fontFamily: 'monospace', fontWeight: 600 }}>
         {formatCurrency(alert.amount)}
       </span>
     ),
   },
   {
-    key:      'riskScore',
-    label:    'Riesgo',
+    key: 'riskScore',
+    label: 'Riesgo',
     sortable: true,
-    align:    'center',
+    align: 'center',
     sortAccessor: (alert) => alert.riskScore,
-    render:   (alert) => <RiskBadge score={alert.riskScore} size="sm" />,
+    render: (alert) => <RiskBadge score={alert.riskScore} size="sm" />,
   },
   {
-    key:    'location',
-    label:  'Ciudad',
+    key: 'location',
+    label: 'Ciudad',
     render: (alert) => alert.location.city,
   },
   {
-    key:    'status',
-    label:  'Estado',
-    align:  'center',
-    render: (alert) => (
-      <StatusBadge type="transaction" status={alert.status} size="sm" />
-    ),
+    key: 'status',
+    label: 'Estado',
+    align: 'center',
+    render: (alert) => <StatusBadge type="transaction" status={alert.status} size="sm" />,
   },
 ];
 
@@ -126,17 +124,17 @@ const TABLE_COLUMNS: DataTableColumn<Alert>[] = [
 // ==============================================================================
 
 const EXPORT_COLUMNS: ExportColumn<Alert>[] = [
-  { header: 'ID',      accessor: (a) => a.id },
-  { header: 'Fecha',   accessor: (a) => formatDateTime(a.timestamp) },
+  { header: 'ID', accessor: (a) => a.id },
+  { header: 'Fecha', accessor: (a) => formatDateTime(a.timestamp) },
   { header: 'Usuario', accessor: (a) => a.user },
-  { header: 'Banco',   accessor: (a) => a.bank.name },
-  { header: 'Tipo',    accessor: (a) => a.type },
-  { header: 'Monto',   accessor: (a) => a.amount },
-  { header: 'Riesgo',  accessor: (a) => `${a.riskScore}%` },
-  { header: 'Nivel',   accessor: (a) => a.alertLevel },
-  { header: 'Ciudad',  accessor: (a) => a.location.city },
-  { header: 'Canal',   accessor: (a) => a.channel },
-  { header: 'Estado',  accessor: (a) => a.status },
+  { header: 'Banco', accessor: (a) => a.bank.name },
+  { header: 'Tipo', accessor: (a) => a.type },
+  { header: 'Monto', accessor: (a) => a.amount },
+  { header: 'Riesgo', accessor: (a) => `${a.riskScore}%` },
+  { header: 'Nivel', accessor: (a) => a.alertLevel },
+  { header: 'Ciudad', accessor: (a) => a.location.city },
+  { header: 'Canal', accessor: (a) => a.channel },
+  { header: 'Estado', accessor: (a) => a.status },
 ];
 
 // ==============================================================================
@@ -159,13 +157,7 @@ export function AlertsPage() {
   // DATOS
   // ==============================================================================
 
-  const {
-    alerts,
-    loading,
-    error,
-    counts,
-    refetch,
-  } = useAlerts(selectedBank);
+  const { alerts, loading, error, counts, refetch } = useAlerts(selectedBank);
 
   // ==============================================================================
   // ESTADO LOCAL
@@ -178,7 +170,7 @@ export function AlertsPage() {
   const debouncedSearch = useDebounce(search, 300);
 
   const [sort, setSort] = useState<SortConfig<Alert>>({
-    field:     'timestamp',
+    field: 'timestamp',
     direction: 'desc',
   });
 
@@ -193,21 +185,22 @@ export function AlertsPage() {
     let result = alerts;
 
     if (filterLevel !== 'all') {
-      result = result.filter(a => a.alertLevel === filterLevel);
+      result = result.filter((a) => a.alertLevel === filterLevel);
     }
 
     if (filterStatus !== 'all') {
-      result = result.filter(a => a.status === filterStatus);
+      result = result.filter((a) => a.status === filterStatus);
     }
 
     if (debouncedSearch.trim()) {
       const query = debouncedSearch.toLowerCase();
-      result = result.filter(a =>
-        a.id.toLowerCase().includes(query) ||
-        a.user.toLowerCase().includes(query) ||
-        a.bank.name.toLowerCase().includes(query) ||
-        a.location.city.toLowerCase().includes(query) ||
-        a.type.toLowerCase().includes(query)
+      result = result.filter(
+        (a) =>
+          a.id.toLowerCase().includes(query) ||
+          a.user.toLowerCase().includes(query) ||
+          a.bank.name.toLowerCase().includes(query) ||
+          a.location.city.toLowerCase().includes(query) ||
+          a.type.toLowerCase().includes(query),
       );
     }
 
@@ -239,112 +232,118 @@ export function AlertsPage() {
 
   const hasActiveFilters = filterLevel !== 'all' || filterStatus !== 'all' || search.trim() !== '';
 
-  const handleExport = useCallback((format: 'csv' | 'pdf' | 'json' | 'xlsx'): void => {
-    exportData({
-      format,
-      data:           filteredAlerts,
-      columns:        EXPORT_COLUMNS,
-      filenamePrefix: 'alertas_trida',
-      title:          'ALERTAS — TriDa Sistema Antifraude',
-    });
-  }, [filteredAlerts]);
+  const handleExport = useCallback(
+    (format: 'csv' | 'pdf' | 'json' | 'xlsx'): void => {
+      exportData({
+        format,
+        data: filteredAlerts,
+        columns: EXPORT_COLUMNS,
+        filenamePrefix: 'alertas_trida',
+        title: 'ALERTAS — TriDa Sistema Antifraude',
+      });
+    },
+    [filteredAlerts],
+  );
 
-  const handlePreview = useCallback((format: 'csv' | 'pdf' | 'json' | 'xlsx'): void => {
-    const preview = buildExportPreview(format, filteredAlerts, 5, 'alertas_trida');
-    setExportPreview(preview);
-  }, [filteredAlerts]);
+  const handlePreview = useCallback(
+    (format: 'csv' | 'pdf' | 'json' | 'xlsx'): void => {
+      const preview = buildExportPreview(format, filteredAlerts, 5, 'alertas_trida');
+      setExportPreview(preview);
+    },
+    [filteredAlerts],
+  );
 
   // ==============================================================================
   // ESTILOS
   // ==============================================================================
 
   const pageStyle: React.CSSProperties = {
-    display:       'flex',
+    display: 'flex',
     flexDirection: 'column',
-    gap:           '16px',
-    padding:       '24px',
-    minHeight:     '100vh',
-    fontFamily:    'Inter, sans-serif',
+    gap: '16px',
+    padding: '24px',
+    minHeight: '100vh',
+    fontFamily: 'Inter, sans-serif',
   };
 
   const headerStyle: React.CSSProperties = {
-    display:        'flex',
-    alignItems:     'flex-start',
+    display: 'flex',
+    alignItems: 'flex-start',
     justifyContent: 'space-between',
-    gap:            '16px',
-    flexWrap:       'wrap',
+    gap: '16px',
+    flexWrap: 'wrap',
   };
 
   const headerLeftStyle: React.CSSProperties = {
-    display:       'flex',
+    display: 'flex',
     flexDirection: 'column',
-    gap:           '4px',
+    gap: '4px',
   };
 
   const titleStyle: React.CSSProperties = {
-    fontSize:      '24px',
-    fontWeight:    800,
-    color:         'var(--text-primary)',
-    margin:        0,
+    fontSize: '24px',
+    fontWeight: 800,
+    color: 'var(--text-primary)',
+    margin: 0,
     letterSpacing: '-0.02em',
-    display:       'flex',
-    alignItems:    'center',
-    gap:           '10px',
+    display: 'flex',
+    alignItems: 'center',
+    gap: '10px',
   };
 
   const subtitleStyle: React.CSSProperties = {
     fontSize: '13px',
-    color:    'var(--text-secondary)',
-    margin:   0,
+    color: 'var(--text-secondary)',
+    margin: 0,
   };
 
   const headerRightStyle: React.CSSProperties = {
-    display:    'flex',
+    display: 'flex',
     alignItems: 'center',
-    gap:        '8px',
+    gap: '8px',
   };
 
   const summaryStyle: React.CSSProperties = {
-    display:    'flex',
+    display: 'flex',
     alignItems: 'center',
-    gap:        '8px',
-    flexWrap:   'wrap',
+    gap: '8px',
+    flexWrap: 'wrap',
   };
 
   const filtersRowStyle: React.CSSProperties = {
-    display:    'flex',
+    display: 'flex',
     alignItems: 'center',
-    gap:        '12px',
-    flexWrap:   'wrap',
+    gap: '12px',
+    flexWrap: 'wrap',
   };
 
   const filterGroupStyle: React.CSSProperties = {
-    display:    'flex',
+    display: 'flex',
     alignItems: 'center',
-    gap:        '6px',
-    flexWrap:   'wrap',
+    gap: '6px',
+    flexWrap: 'wrap',
   };
 
   const filterLabelStyle: React.CSSProperties = {
-    fontSize:      '11px',
-    fontWeight:    600,
-    color:         'var(--text-tertiary)',
+    fontSize: '11px',
+    fontWeight: 600,
+    color: 'var(--text-tertiary)',
     textTransform: 'uppercase',
     letterSpacing: '0.05em',
   };
 
   const bodyStyle: React.CSSProperties = {
     display: 'flex',
-    gap:     '16px',
-    flex:    1,
+    gap: '16px',
+    flex: 1,
   };
 
   const tableContainerStyle: React.CSSProperties = {
-    flex:          1,
-    minWidth:      0,
-    display:       'flex',
+    flex: 1,
+    minWidth: 0,
+    display: 'flex',
     flexDirection: 'column',
-    gap:           '12px',
+    gap: '12px',
   };
 
   // ==============================================================================
@@ -385,7 +384,6 @@ export function AlertsPage() {
 
   return (
     <div style={pageStyle}>
-
       {/* ================================================================
           HEADER
           ================================================================ */}
@@ -396,9 +394,7 @@ export function AlertsPage() {
             <ShieldAlert size={24} />
             Centro de Alertas
           </h1>
-          <p style={subtitleStyle}>
-            Gestión de alertas de fraude detectadas por el modelo de IA
-          </p>
+          <p style={subtitleStyle}>Gestión de alertas de fraude detectadas por el modelo de IA</p>
         </div>
 
         <div style={headerRightStyle}>
@@ -435,7 +431,7 @@ export function AlertsPage() {
             active={filterLevel === 'all'}
             onClick={() => setFilterLevel('all')}
           />
-          {LEVEL_ORDER.map(level => (
+          {LEVEL_ORDER.map((level) => (
             <FilterChip
               key={level}
               label={RISK_LEVELS[level].label}
@@ -449,7 +445,7 @@ export function AlertsPage() {
 
         <div style={filterGroupStyle}>
           <span style={filterLabelStyle}>Estado:</span>
-          {STATUS_FILTERS.map(sf => (
+          {STATUS_FILTERS.map((sf) => (
             <FilterChip
               key={sf.value}
               label={sf.label}

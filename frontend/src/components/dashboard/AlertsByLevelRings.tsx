@@ -4,11 +4,7 @@
 // ¿Impacto? Se usa exclusivamente en DashboardPage para mostrar de un vistazo
 //           cuántas alertas hay en cada nivel.
 
-import {
-  RISK_COLORS,
-  RISK_LEVELS,
-  type RiskLevel,
-} from '@constants/Risk';
+import { RISK_COLORS, RISK_LEVELS, type RiskLevel } from '@constants/Risk';
 import type { AlertCriticality } from '@app-types';
 
 // ==============================================================================
@@ -29,40 +25,42 @@ export interface AlertsByLevelRingsProps {
 
 const LEVEL_ORDER: RiskLevel[] = ['critical', 'high', 'medium', 'low'];
 
-const SIZE_DIMENSIONS: Record<NonNullable<AlertsByLevelRingsProps['size']>, {
-  ringSize:     string;
-  borderWidth:  string;
-  countSize:    string;
-  labelSize:    string;
-  gap:          string;
-}> = {
+const SIZE_DIMENSIONS: Record<
+  NonNullable<AlertsByLevelRingsProps['size']>,
+  {
+    ringSize: string;
+    borderWidth: string;
+    countSize: string;
+    labelSize: string;
+    gap: string;
+  }
+> = {
   sm: {
-    ringSize:    '48px',
+    ringSize: '48px',
     borderWidth: '3px',
-    countSize:   '14px',
-    labelSize:   '9px',
-    gap:         '12px',
+    countSize: '14px',
+    labelSize: '9px',
+    gap: '12px',
   },
   md: {
-    ringSize:    '64px',
+    ringSize: '64px',
     borderWidth: '3px',
-    countSize:   '18px',
-    labelSize:   '10px',
-    gap:         '16px',
+    countSize: '18px',
+    labelSize: '10px',
+    gap: '16px',
   },
   lg: {
-    ringSize:    '80px',
+    ringSize: '80px',
     borderWidth: '4px',
-    countSize:   '22px',
-    labelSize:   '11px',
-    gap:         '20px',
+    countSize: '22px',
+    labelSize: '11px',
+    gap: '20px',
   },
 };
 
 // ==============================================================================
 // COMPONENTE
 // ==============================================================================
-
 
 export function AlertsByLevelRings({
   counts,
@@ -80,31 +78,31 @@ export function AlertsByLevelRings({
   // ==============================================================================
 
   const wrapperStyle: React.CSSProperties = {
-    display:       'flex',
+    display: 'flex',
     flexDirection: 'column',
-    alignItems:    'center',
-    gap:           dims.gap,
-    fontFamily:    'Inter, sans-serif',
+    alignItems: 'center',
+    gap: dims.gap,
+    fontFamily: 'Inter, sans-serif',
   };
 
   const gridStyle: React.CSSProperties = {
-    display:        'flex',
-    alignItems:     'center',
+    display: 'flex',
+    alignItems: 'center',
     justifyContent: 'center',
-    gap:            dims.gap,
-    flexWrap:       'wrap',
+    gap: dims.gap,
+    flexWrap: 'wrap',
   };
 
   const totalStyle: React.CSSProperties = {
-    fontSize:   '12px',
-    color:      'var(--text-tertiary)',
+    fontSize: '12px',
+    color: 'var(--text-tertiary)',
     fontWeight: 500,
-    textAlign:  'center',
+    textAlign: 'center',
   };
 
   const totalValueStyle: React.CSSProperties = {
-    fontWeight:         700,
-    color:              'var(--text-secondary)',
+    fontWeight: 700,
+    color: 'var(--text-secondary)',
     fontVariantNumeric: 'tabular-nums',
   };
 
@@ -158,7 +156,7 @@ interface LevelRingProps {
   count: number;
   color: string;
   label: string;
-  dims: typeof SIZE_DIMENSIONS['md'];
+  dims: (typeof SIZE_DIMENSIONS)['md'];
   clickable: boolean;
   onClick: () => void;
 }
@@ -166,16 +164,7 @@ interface LevelRingProps {
 /**
  * Anillo individual con conteo y label.
  */
-function LevelRing({
-  level,
-  count,
-  color,
-  label,
-  dims,
-  clickable,
-  onClick,
-}: LevelRingProps) {
-
+function LevelRing({ level, count, color, label, dims, clickable, onClick }: LevelRingProps) {
   // ==============================================================================
   // HANDLERS
   // ==============================================================================
@@ -193,43 +182,43 @@ function LevelRing({
   // ==============================================================================
 
   const itemStyle: React.CSSProperties = {
-    display:       'flex',
+    display: 'flex',
     flexDirection: 'column',
-    alignItems:    'center',
-    gap:           '6px',
-    cursor:        clickable ? 'pointer' : 'default',
-    transition:    'transform 0.15s ease',
-    outline:       'none',
+    alignItems: 'center',
+    gap: '6px',
+    cursor: clickable ? 'pointer' : 'default',
+    transition: 'transform 0.15s ease',
+    outline: 'none',
   };
 
   const ringStyle: React.CSSProperties = {
-    width:          dims.ringSize,
-    height:         dims.ringSize,
-    borderRadius:   '50%',
-    border:         `${dims.borderWidth} solid ${color}`,
-    display:        'flex',
-    alignItems:     'center',
+    width: dims.ringSize,
+    height: dims.ringSize,
+    borderRadius: '50%',
+    border: `${dims.borderWidth} solid ${color}`,
+    display: 'flex',
+    alignItems: 'center',
     justifyContent: 'center',
-    background:     `${color}08`,
-    transition:     'transform 0.15s ease, box-shadow 0.15s ease',
+    background: `${color}08`,
+    transition: 'transform 0.15s ease, box-shadow 0.15s ease',
   };
 
   const countStyle: React.CSSProperties = {
-    fontSize:           dims.countSize,
-    fontWeight:         800,
-    color:              color,
-    lineHeight:        1,
+    fontSize: dims.countSize,
+    fontWeight: 800,
+    color: color,
+    lineHeight: 1,
     fontVariantNumeric: 'tabular-nums',
   };
 
   const labelStyle: React.CSSProperties = {
-    fontSize:      dims.labelSize,
-    color:         'var(--text-tertiary)',
-    fontWeight:    600,
+    fontSize: dims.labelSize,
+    color: 'var(--text-tertiary)',
+    fontWeight: 600,
     textTransform: 'uppercase',
     letterSpacing: '0.05em',
-    textAlign:     'center',
-    lineHeight:    1.2,
+    textAlign: 'center',
+    lineHeight: 1.2,
   };
 
   // ==============================================================================

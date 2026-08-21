@@ -3,14 +3,7 @@
 // ¿Impacto? Todos los botones de exportación del sistema usan este componente.
 
 import { useRef, useState } from 'react';
-import {
-  Download,
-  FileText,
-  FileSpreadsheet,
-  Eye,
-  ChevronDown,
-  FileJson,
-} from 'lucide-react';
+import { Download, FileText, FileSpreadsheet, Eye, ChevronDown, FileJson } from 'lucide-react';
 import { Button } from '@components/ui/Button';
 import type { ButtonSize, ButtonVariant } from '@components/ui/Button';
 import { useClickOutside } from '@hooks/useClickOutside';
@@ -50,9 +43,9 @@ export interface ExportButtonProps {
 // ==============================================================================
 
 const DEFAULT_OPTIONS: ExportOption[] = [
-  { format: 'csv',  label: 'Exportar CSV',  icon: <FileSpreadsheet size={13} />, hasPreview: true },
-  { format: 'pdf',  label: 'Exportar PDF',  icon: <FileText size={13} />,        hasPreview: true },
-  { format: 'json', label: 'Exportar JSON', icon: <FileJson size={13} />,        hasPreview: false },
+  { format: 'csv', label: 'Exportar CSV', icon: <FileSpreadsheet size={13} />, hasPreview: true },
+  { format: 'pdf', label: 'Exportar PDF', icon: <FileText size={13} />, hasPreview: true },
+  { format: 'json', label: 'Exportar JSON', icon: <FileJson size={13} />, hasPreview: false },
 ];
 
 // ==============================================================================
@@ -74,10 +67,10 @@ export function ExportButton({
 }: ExportButtonProps) {
   const [open, setOpen] = useState(false);
   const triggerRef = useRef<HTMLDivElement>(null);
-  const menuRef = useClickOutside<HTMLDivElement>(
-    () => setOpen(false),
-    { enabled: open, additionalRefs: [triggerRef] }
-  );
+  const menuRef = useClickOutside<HTMLDivElement>(() => setOpen(false), {
+    enabled: open,
+    additionalRefs: [triggerRef],
+  });
 
   // Handlers
   const handleExport = (format: ExportFormat): void => {
@@ -107,10 +100,7 @@ export function ExportButton({
           showChevron ? (
             <ChevronDown
               size={14}
-              className={cn(
-                'transition-transform duration-200',
-                open && 'rotate-180'
-              )}
+              className={cn('transition-transform duration-200', open && 'rotate-180')}
             />
           ) : undefined
         }
@@ -132,7 +122,7 @@ export function ExportButton({
             'z-[100] p-1.5',
             'flex flex-col gap-0.5',
             'font-sans animate-dropdown-in',
-            align === 'right' ? 'right-0' : 'left-0'
+            align === 'right' ? 'right-0' : 'left-0',
           )}
           role="menu"
           aria-label="Opciones de exportación"
@@ -161,7 +151,7 @@ export function ExportButton({
                       'font-sans transition-colors duration-150',
                       opt.disabled
                         ? 'opacity-50 cursor-not-allowed'
-                        : 'cursor-pointer hover:bg-[var(--bg-tertiary)]'
+                        : 'cursor-pointer hover:bg-[var(--bg-tertiary)]',
                     )}
                   >
                     <span className="flex items-center text-[var(--text-secondary)] shrink-0">
@@ -198,7 +188,7 @@ export function ExportButton({
                 'font-sans transition-colors duration-150',
                 opt.disabled
                   ? 'opacity-50 cursor-not-allowed'
-                  : 'cursor-pointer hover:bg-[var(--bg-tertiary)]'
+                  : 'cursor-pointer hover:bg-[var(--bg-tertiary)]',
               )}
             >
               <span className="flex items-center text-[var(--text-secondary)] shrink-0">

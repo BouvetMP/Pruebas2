@@ -44,13 +44,7 @@ export interface NavItem {
   showLiveIndicator?: boolean;
 }
 
-export type SettingsTabKey =
-  | 'profile'
-  | 'users'
-  | 'model'
-  | 'notifications'
-  | 'roles'
-  | 'system';
+export type SettingsTabKey = 'profile' | 'users' | 'model' | 'notifications' | 'roles' | 'system';
 
 export interface SettingsTab {
   id: SettingsTabKey;
@@ -63,57 +57,56 @@ export interface SettingsTab {
 // NAVEGACIÓN PRINCIPAL (SIDEBAR)
 // ==============================================================================
 
-
 export const NAV_ITEMS: NavItem[] = [
   {
-    id:         'dashboard',
-    label:      'Dashboard',
-    icon:       LayoutDashboard,
-    path:       '/dashboard',
+    id: 'dashboard',
+    label: 'Dashboard',
+    icon: LayoutDashboard,
+    path: '/dashboard',
     permission: 'dashboard',
   },
   {
-    id:                'map',
-    label:             'Mapa en Vivo',
-    icon:              Globe,
-    path:              '/map',
-    permission:        'map',
+    id: 'map',
+    label: 'Mapa en Vivo',
+    icon: Globe,
+    path: '/map',
+    permission: 'map',
     showLiveIndicator: true,
   },
   {
-    id:         'transactions',
-    label:      'Transacciones',
-    icon:       Activity,
-    path:       '/transactions',
+    id: 'transactions',
+    label: 'Transacciones',
+    icon: Activity,
+    path: '/transactions',
     permission: 'transactions',
   },
   {
-    id:             'alerts',
-    label:          'Alertas',
-    icon:           Bell,
-    path:           '/alerts',
-    permission:     'alerts',
+    id: 'alerts',
+    label: 'Alertas',
+    icon: Bell,
+    path: '/alerts',
+    permission: 'alerts',
     showAlertBadge: true,
   },
   {
-    id:         'users',
-    label:      'Usuarios',
-    icon:       Users,
-    path:       '/users',
+    id: 'users',
+    label: 'Usuarios',
+    icon: Users,
+    path: '/users',
     permission: 'users',
   },
   {
-    id:         'analytics',
-    label:      'Analíticas',
-    icon:       BarChart3,
-    path:       '/analytics',
+    id: 'analytics',
+    label: 'Analíticas',
+    icon: BarChart3,
+    path: '/analytics',
     permission: 'analytics',
   },
   {
-    id:         'settings',
-    label:      'Configuración',
-    icon:       Settings,
-    path:       '/settings',
+    id: 'settings',
+    label: 'Configuración',
+    icon: Settings,
+    path: '/settings',
     permission: 'settings',
   },
 ];
@@ -123,7 +116,7 @@ export const NAV_ITEMS_MAP: Record<NavItemKey, NavItem> = NAV_ITEMS.reduce(
     acc[item.id] = item;
     return acc;
   },
-  {} as Record<NavItemKey, NavItem>
+  {} as Record<NavItemKey, NavItem>,
 );
 
 // ==============================================================================
@@ -132,37 +125,37 @@ export const NAV_ITEMS_MAP: Record<NavItemKey, NavItem> = NAV_ITEMS.reduce(
 
 export const SETTINGS_TABS: SettingsTab[] = [
   {
-    id:    'profile',
+    id: 'profile',
     label: 'Mi Perfil',
-    icon:  User,
+    icon: User,
   },
   {
-    id:         'users',
-    label:      'Usuarios',
-    icon:       UserPlus,
+    id: 'users',
+    label: 'Usuarios',
+    icon: UserPlus,
     permission: 'manageUsers',
   },
   {
-    id:         'model',
-    label:      'Modelo IA',
-    icon:       Brain,
+    id: 'model',
+    label: 'Modelo IA',
+    icon: Brain,
     permission: 'manageModel',
   },
   {
-    id:    'notifications',
+    id: 'notifications',
     label: 'Notificaciones',
-    icon:  Bell,
+    icon: Bell,
   },
   {
-    id:         'roles',
-    label:      'Roles y Permisos',
-    icon:       Lock,
+    id: 'roles',
+    label: 'Roles y Permisos',
+    icon: Lock,
     permission: 'manageRoles',
   },
   {
-    id:    'system',
+    id: 'system',
     label: 'Sistema',
-    icon:  SettingsIcon,
+    icon: SettingsIcon,
   },
 ];
 
@@ -171,29 +164,27 @@ export const SETTINGS_TABS_MAP: Record<SettingsTabKey, SettingsTab> = SETTINGS_T
     acc[tab.id] = tab;
     return acc;
   },
-  {} as Record<SettingsTabKey, SettingsTab>
+  {} as Record<SettingsTabKey, SettingsTab>,
 );
 
 // ==============================================================================
 // RUTAS PÚBLICAS Y PROTEGIDAS
 // ==============================================================================
 
-
 export const PUBLIC_ROUTES = {
-  LOGIN:           '/login',
+  LOGIN: '/login',
   FORGOT_PASSWORD: '/forgot-password',
-  RESET_PASSWORD:  '/reset-password',
+  RESET_PASSWORD: '/reset-password',
 } as const;
 
-
 export const PROTECTED_ROUTES = {
-  DASHBOARD:    '/dashboard',
-  MAP:          '/map',
+  DASHBOARD: '/dashboard',
+  MAP: '/map',
   TRANSACTIONS: '/transactions',
-  ALERTS:       '/alerts',
-  USERS:        '/users',
-  ANALYTICS:    '/analytics',
-  SETTINGS:     '/settings',
+  ALERTS: '/alerts',
+  USERS: '/users',
+  ANALYTICS: '/analytics',
+  SETTINGS: '/settings',
 } as const;
 
 export const DEFAULT_AUTHENTICATED_ROUTE = PROTECTED_ROUTES.DASHBOARD;

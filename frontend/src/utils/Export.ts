@@ -94,15 +94,10 @@ function downloadBlob(blob: Blob, filename: string): void {
  * @param columns - Definición de columnas.
  * @returns Contenido CSV como string.
  */
-export function generateCSV<T>(
-  data: T[],
-  columns: ExportColumn<T>[]
-): string {
-  const headers = columns.map(col => escapeCSV(col.header)).join(',');
+export function generateCSV<T>(data: T[], columns: ExportColumn<T>[]): string {
+  const headers = columns.map((col) => escapeCSV(col.header)).join(',');
 
-  const rows = data.map(item =>
-    columns.map(col => escapeCSV(col.accessor(item))).join(',')
-  );
+  const rows = data.map((item) => columns.map((col) => escapeCSV(col.accessor(item))).join(','));
 
   return [headers, ...rows].join('\n');
 }
@@ -153,7 +148,7 @@ export function generatePDFContent<T>(
   data: T[],
   columns: ExportColumn<T>[],
   title?: string,
-  rowLimit: number = 50
+  rowLimit: number = 50,
 ): string {
   const separator = '='.repeat(60);
   const header = title
@@ -162,18 +157,17 @@ export function generatePDFContent<T>(
 
   const limited = data.slice(0, rowLimit);
 
-  const rows = limited.map(item =>
+  const rows = limited.map((item) =>
     columns
-      .map(col => {
+      .map((col) => {
         const value = col.accessor(item);
         return value === null || value === undefined ? '—' : String(value);
       })
-      .join(' | ')
+      .join(' | '),
   );
 
-  const totalNote = data.length > rowLimit
-    ? `\n\nMostrando ${rowLimit} de ${data.length} registros.`
-    : '';
+  const totalNote =
+    data.length > rowLimit ? `\n\nMostrando ${rowLimit} de ${data.length} registros.` : '';
 
   return header + rows.join('\n') + totalNote;
 }
@@ -185,12 +179,7 @@ export function generatePDFContent<T>(
  *
  */
 export function exportToPDF<T>(config: ExportConfig<T>): void {
-  const content = generatePDFContent(
-    config.data,
-    config.columns,
-    config.title,
-    config.pdfRowLimit
-  );
+  const content = generatePDFContent(config.data, config.columns, config.title, config.pdfRowLimit);
 
   const blob = new Blob([content], { type: 'text/plain;charset=utf-8;' });
 
@@ -244,7 +233,7 @@ export function exportData<T>(config: ExportConfig<T>): void {
  */
 export function exportToJSON<T>(config: ExportConfig<T>): void {
   // Convierte los items usando las columnas para tener nombres consistentes
-  const structured = config.data.map(item => {
+  const structured = config.data.map((item) => {
     const obj: Record<string, string | number | null | undefined> = {};
     for (const col of config.columns) {
       obj[col.header] = col.accessor(item);
@@ -279,12 +268,12 @@ export function buildExportPreview<T>(
   format: ExportFormat,
   data: T[],
   sampleSize: number = 5,
-  filenamePrefix?: string
+  filenamePrefix?: string,
 ): ExportMetadata {
   return {
     format,
-    count:    data.length,
-    sample:   data.slice(0, sampleSize),
+    count: data.length,
+    sample: data.slice(0, sampleSize),
     filename: filenamePrefix ? generateFilename(filenamePrefix, format) : undefined,
   };
 }

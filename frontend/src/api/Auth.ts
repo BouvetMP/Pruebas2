@@ -4,6 +4,12 @@
 // ¿Impacto? Estas funciones son consumidas por AuthContext, LoginPage,
 //           ForgotPasswordPage, ResetPasswordPage y Settings.
 
+// ¿Qué? Capa API para todos los endpoints de autenticación del sistema TriDa.
+// ¿Para qué? Centralizar las llamadas al backend relacionadas con autenticación,
+//            recuperación de contraseña y gestión de usuarios del sistema.
+// ¿Impacto? Estas funciones son consumidas por AuthContext, LoginPage,
+//           ForgotPasswordPage, ResetPasswordPage y Settings.
+
 import { get, post } from './Client';
 import type {
   // Payloads
@@ -60,7 +66,6 @@ export async function login(payload: LoginPayload): Promise<LoginResponse> {
  * @param payload - Datos del nuevo usuario (nombre_completo, email, password, rol).
  * @returns Datos del usuario creado.
  * @throws ApiError si falla el registro.
-
  */
 export async function register(payload: RegisterPayload): Promise<RegisterResponse> {
   return post<RegisterResponse>('/auth/register', payload);
@@ -85,7 +90,7 @@ export async function register(payload: RegisterPayload): Promise<RegisterRespon
  * @returns Mensaje de confirmación (siempre exitoso).
  */
 export async function forgotPassword(
-  payload: ForgotPasswordPayload
+  payload: ForgotPasswordPayload,
 ): Promise<ForgotPasswordResponse> {
   return post<ForgotPasswordResponse>('/auth/forgot-password', payload, {
     skipAuth: true,
@@ -103,14 +108,8 @@ export async function forgotPassword(
  * @param token - Token recibido en el email de recuperación.
  * @returns Objeto con `valid: true/false` y opcionalmente `email` si es válido.
  */
-export async function verifyResetToken(
-  token: string
-): Promise<VerifyResetTokenResponse> {
-  return get<VerifyResetTokenResponse>(
-    '/auth/verify-reset-token',
-    { token },
-    { skipAuth: true }
-  );
+export async function verifyResetToken(token: string): Promise<VerifyResetTokenResponse> {
+  return get<VerifyResetTokenResponse>('/auth/verify-reset-token', { token }, { skipAuth: true });
 }
 
 /**
@@ -122,15 +121,13 @@ export async function verifyResetToken(
  *           la nueva contraseña. El token queda inutilizable.
  *
  * NOTE: La nueva contraseña debe cumplir con RS-003:
- *   - Mínimo 8 caracteres
+ *   - Mínimo 10 caracteres
  *   - Incluir mayúsculas, minúsculas, números y símbolos
  *
  * @param payload - Token de recuperación + nueva contraseña.
  * @returns Mensaje de confirmación.
  */
-export async function resetPassword(
-  payload: ResetPasswordPayload
-): Promise<ResetPasswordResponse> {
+export async function resetPassword(payload: ResetPasswordPayload): Promise<ResetPasswordResponse> {
   return post<ResetPasswordResponse>('/auth/reset-password', payload, {
     skipAuth: true,
   });
@@ -179,7 +176,8 @@ export function hasStoredToken(): boolean {
   try {
     const token = localStorage.getItem('trida-token');
     return token !== null && token.length > 0;
-  } catch {
+  } catch (error) {
+    console.warn('Error al verificar el token en localStorage:', error);
     return false;
   }
 }
@@ -192,7 +190,8 @@ export function hasStoredToken(): boolean {
 export function getStoredToken(): string | null {
   try {
     return localStorage.getItem('trida-token');
-  } catch {
+  } catch (error) {
+    console.warn('Error al consultar el token de localStorage:', error);
     return null;
   }
 }
@@ -205,8 +204,8 @@ export function getStoredToken(): string | null {
 export function storeToken(token: string): void {
   try {
     localStorage.setItem('trida-token', token);
-  } catch {
-    // Silenciar errores (ej: modo incógnito bloqueado)
+  } catch (error) {
+    console.warn('Error al guardar el token en localStorage:', error);
   }
 }
 
@@ -220,6 +219,7 @@ export function storeToken(token: string): void {
 export function clearToken(): void {
   try {
     localStorage.removeItem('trida-token');
-  } catch {
+  } catch (error) {
+    console.warn('Error al limpiar la sesión en localStorage:', error);
   }
 }

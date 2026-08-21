@@ -31,7 +31,7 @@ export const PasswordInput = forwardRef<HTMLInputElement, PasswordInputProps>(
       placeholder = '••••••••',
       ...rest
     },
-    ref
+    ref,
   ) => {
     const [visible, setVisible] = useState(false);
 
@@ -50,18 +50,18 @@ export const PasswordInput = forwardRef<HTMLInputElement, PasswordInputProps>(
     // ==============================================================================
 
     const toggleButtonStyle: React.CSSProperties = {
-      display:        'flex',
-      alignItems:     'center',
+      display: 'flex',
+      alignItems: 'center',
       justifyContent: 'center',
-      padding:        '4px',
-      background:     'transparent',
-      border:         'none',
-      cursor:         disableToggle ? 'not-allowed' : 'pointer',
-      color:          'var(--text-tertiary)',
-      borderRadius:   '4px',
-      transition:     'color 0.15s ease, background 0.15s ease',
-      opacity:        disableToggle ? 0.4 : 1,
-      outline:        'none',
+      padding: '4px',
+      background: 'transparent',
+      border: 'none',
+      cursor: disableToggle ? 'not-allowed' : 'pointer',
+      color: 'var(--text-tertiary)',
+      borderRadius: '4px',
+      transition: 'color 0.15s ease, background 0.15s ease',
+      opacity: disableToggle ? 0.4 : 1,
+      outline: 'none',
     };
 
     // ==============================================================================
@@ -105,7 +105,7 @@ export const PasswordInput = forwardRef<HTMLInputElement, PasswordInputProps>(
         rightIcon={toggleButton}
       />
     );
-  }
+  },
 );
 
 PasswordInput.displayName = 'PasswordInput';

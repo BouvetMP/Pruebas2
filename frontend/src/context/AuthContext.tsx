@@ -28,11 +28,7 @@ import { ApiError } from '@api/Client';
 import { SESSION_CONFIG } from '@constants/Api';
 import { hasPermission as checkPermission } from '@constants/Permissions';
 import { isAdminRole } from '@constants/Roles';
-import type {
-  AuthUser,
-  LoginPayload,
-  RegisterPayload,
-} from '@app-types';
+import type { AuthUser, LoginPayload, RegisterPayload } from '@app-types';
 import type { PermissionKey } from '@constants/Permissions';
 import type { SystemRole } from '@constants/Roles';
 
@@ -77,7 +73,6 @@ const AuthContext = createContext<AuthContextValue | null>(null);
  * ¿Impacto? La firma NO se verifica aquí — solo se lee el payload.
  *           El backend valida la firma en cada request protegida.
  *
- *
  * @param token - JWT completo.
  * @returns Payload decodificado o null si es inválido.
  */
@@ -90,7 +85,7 @@ function decodeJWTPayload(token: string): AuthUser | null {
     if (!payload) return null;
 
     const base64 = payload.replace(/-/g, '+').replace(/_/g, '/');
-    const padded = base64.padEnd(base64.length + (4 - (base64.length % 4)) % 4, '=');
+    const padded = base64.padEnd(base64.length + ((4 - (base64.length % 4)) % 4), '=');
 
     const decoded = atob(padded);
     const parsed = JSON.parse(decoded) as {
@@ -101,21 +96,18 @@ function decodeJWTPayload(token: string): AuthUser | null {
       exp?: number;
     };
 
-    if (
-      parsed.id_usuario === undefined ||
-      !parsed.email ||
-      !parsed.rol
-    ) {
+    if (parsed.id_usuario === undefined || !parsed.email || !parsed.rol) {
       return null;
     }
 
     return {
-      id:     parsed.id_usuario,
+      id: parsed.id_usuario,
       nombre: parsed.nombre ?? 'Usuario',
-      email:  parsed.email,
-      rol:    parsed.rol,
+      email: parsed.email,
+      rol: parsed.rol,
     };
-  } catch {
+  } catch (error) {
+    console.warn('Error al decodificar el payload del JWT:', error);
     return null;
   }
 }
@@ -135,13 +127,14 @@ function isTokenExpired(token: string): boolean {
     if (!payload) return true;
 
     const base64 = payload.replace(/-/g, '+').replace(/_/g, '/');
-    const padded = base64.padEnd(base64.length + (4 - (base64.length % 4)) % 4, '=');
+    const padded = base64.padEnd(base64.length + ((4 - (base64.length % 4)) % 4), '=');
     const parsed = JSON.parse(atob(padded)) as { exp?: number };
 
     if (!parsed.exp) return false; // Sin campo exp, asumir válido
 
     return parsed.exp * 1000 < Date.now();
-  } catch {
+  } catch (error) {
+    console.warn('Error al verificar la expiración del token JWT:', error);
     return true;
   }
 }
@@ -164,7 +157,6 @@ interface AuthProviderProps {
  * ¿Para qué? Reemplaza `AuthProvider` de `store/authcontext.jsx` corrigiendo
  *            bugs críticos y añadiendo cierre por inactividad (RS-003).
  * ¿Impacto? Debe montarse en App.tsx antes de las rutas.
- *
  */
 export function AuthProvider({ children }: AuthProviderProps) {
   const [user, setUser] = useState<AuthUser | null>(null);
@@ -276,17 +268,12 @@ export function AuthProvider({ children }: AuthProviderProps) {
   useEffect(() => {
     if (!token) return;
 
-    const events: (keyof WindowEventMap)[] = [
-      'mousedown',
-      'keydown',
-      'scroll',
-      'touchstart',
-    ];
+    const events: (keyof WindowEventMap)[] = ['mousedown', 'keydown', 'scroll', 'touchstart'];
 
     resetInactivityTimer();
 
     // Suscribir a eventos
-    events.forEach(event => {
+    events.forEach((event) => {
       window.addEventListener(event, resetInactivityTimer, { passive: true });
     });
 
@@ -294,7 +281,7 @@ export function AuthProvider({ children }: AuthProviderProps) {
       if (inactivityTimerRef.current !== null) {
         window.clearTimeout(inactivityTimerRef.current);
       }
-      events.forEach(event => {
+      events.forEach((event) => {
         window.removeEventListener(event, resetInactivityTimer);
       });
     };
@@ -329,17 +316,14 @@ export function AuthProvider({ children }: AuthProviderProps) {
   // HELPERS DE ROL Y PERMISOS
   // ==============================================================================
 
-  const isRole = useCallback(
-    (role: SystemRole): boolean => user?.rol === role,
-    [user]
-  );
+  const isRole = useCallback((role: SystemRole): boolean => user?.rol === role, [user]);
 
   const hasPermission = useCallback(
     (permission: PermissionKey): boolean => {
       if (!user) return false;
       return checkPermission(user.rol, permission);
     },
-    [user]
+    [user],
   );
 
   // ==============================================================================
@@ -366,14 +350,21 @@ export function AuthProvider({ children }: AuthProviderProps) {
       isRole,
       hasPermission,
     }),
-    [user, token, loading, isAuthenticated, isAdmin, login, logout, register, isRole, hasPermission]
+    [
+      user,
+      token,
+      loading,
+      isAuthenticated,
+      isAdmin,
+      login,
+      logout,
+      register,
+      isRole,
+      hasPermission,
+    ],
   );
 
-  return (
-    <AuthContext.Provider value={value}>
-      {children}
-    </AuthContext.Provider>
-  );
+  return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;
 }
 
 // ==============================================================================
@@ -389,15 +380,15 @@ export function AuthProvider({ children }: AuthProviderProps) {
  *
  * @returns Objeto con `user`, `login`, `logout`, `isAuthenticated`, etc.
  * @throws Error si se usa fuera del AuthProvider.
- *
  */
+// eslint-disable-next-line react-refresh/only-export-components
 export function useAuth(): AuthContextValue {
   const context = useContext(AuthContext);
 
   if (!context) {
     throw new Error(
       'useAuth debe ser usado dentro de un <AuthProvider>. ' +
-      'Envuelve tu aplicación con <AuthProvider> en App.tsx.'
+        'Envuelve tu aplicación con <AuthProvider> en App.tsx.',
     );
   }
 

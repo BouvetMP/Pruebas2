@@ -43,7 +43,6 @@ import {
 // COMPONENTE
 // ==============================================================================
 
-
 export default function App() {
   return (
     <BrowserRouter>
@@ -51,7 +50,6 @@ export default function App() {
         <AuthProvider>
           <BankProvider>
             <Routes>
-
               {/* ==============================================================
                   RUTAS PÚBLICAS (sin autenticación)
                   ============================================================== */}
@@ -90,7 +88,6 @@ export default function App() {
                   ============================================================== */}
 
               <Route path="*" element={<NotFoundPage />} />
-
             </Routes>
           </BankProvider>
         </AuthProvider>

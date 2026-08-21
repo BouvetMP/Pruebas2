@@ -45,7 +45,7 @@ function hexToRgba(hex: string, opacity: number): string {
   const cleaned = hex.replace('#', '');
   const bigint = parseInt(cleaned, 16);
   const r = (bigint >> 16) & 255;
-  const g = (bigint >>  8) & 255;
+  const g = (bigint >> 8) & 255;
   const b = bigint & 255;
   return `rgba(${r}, ${g}, ${b}, ${opacity})`;
 }
@@ -66,7 +66,6 @@ export function FilterChip({
   disabled = false,
   className = '',
 }: FilterChipProps) {
-
   // Handlers
   const handleClick = (): void => {
     if (disabled) return;
@@ -100,9 +99,7 @@ export function FilterChip({
         SIZE_CLASSES[size],
 
         // Estado activo vs inactivo
-        active
-          ? 'font-bold'
-          : 'font-medium',
+        active ? 'font-bold' : 'font-medium',
 
         // Deshabilitado
         disabled && 'opacity-50 cursor-not-allowed',
@@ -110,18 +107,18 @@ export function FilterChip({
         !disabled && !onClick && 'cursor-default',
 
         // Clase externa
-        className
+        className,
       )}
       style={
         active
           ? {
-              background:  hexToRgba(color, 0.15),
-              color:       color,
+              background: hexToRgba(color, 0.15),
+              color: color,
               borderColor: hexToRgba(color, 0.35),
             }
           : {
-              background:  'transparent',
-              color:       'var(--text-secondary)',
+              background: 'transparent',
+              color: 'var(--text-secondary)',
               borderColor: 'var(--border)',
             }
       }
@@ -142,7 +139,7 @@ export function FilterChip({
       {typeof count === 'number' && (
         <span
           className={cn(
-            'text-[10px] font-bold px-1.5 py-0.5 rounded-full min-w-[18px] text-center leading-none tabular-nums'
+            'text-[10px] font-bold px-1.5 py-0.5 rounded-full min-w-[18px] text-center leading-none tabular-nums',
           )}
           style={
             active
@@ -164,7 +161,7 @@ export function FilterChip({
             'inline-flex items-center justify-center',
             'p-0.5 -ml-1 -mr-1',
             'bg-transparent border-none rounded-full',
-            'cursor-pointer transition-colors duration-150'
+            'cursor-pointer transition-colors duration-150',
           )}
           style={{ color: active ? color : 'var(--text-secondary)' }}
           aria-label={`Remover ${typeof label === 'string' ? label : 'filtro'}`}

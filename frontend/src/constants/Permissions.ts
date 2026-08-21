@@ -10,7 +10,6 @@ import type { SystemRole } from './Roles';
 // TYPES / INTERFACES
 // ==============================================================================
 
-
 export type PermissionKey =
   | 'dashboard'
   | 'map'
@@ -39,76 +38,78 @@ export interface PermissionMetadata {
 
 export const PERMISSIONS: Record<PermissionKey, PermissionMetadata> = {
   dashboard: {
-    label:       'Dashboard',
-    category:    'section',
+    label: 'Dashboard',
+    category: 'section',
     description: 'Ver el panel principal con métricas y alertas recientes',
   },
   map: {
-    label:       'Mapa en Vivo',
-    category:    'section',
+    label: 'Mapa en Vivo',
+    category: 'section',
     description: 'Ver transacciones en tiempo real sobre el mapa mundial',
   },
   transactions: {
-    label:       'Transacciones',
-    category:    'section',
+    label: 'Transacciones',
+    category: 'section',
     description: 'Ver historial completo de transacciones del sistema',
   },
   alerts: {
-    label:       'Alertas',
-    category:    'section',
+    label: 'Alertas',
+    category: 'section',
     description: 'Ver y gestionar alertas de fraude detectadas',
   },
   users: {
-    label:       'Usuarios',
-    category:    'section',
+    label: 'Usuarios',
+    category: 'section',
     description: 'Ver clientes bancarios y sus dispositivos registrados',
   },
   analytics: {
-    label:       'Analíticas',
-    category:    'section',
+    label: 'Analíticas',
+    category: 'section',
     description: 'Ver métricas de efectividad del modelo de IA',
   },
   settings: {
-    label:       'Configuración',
-    category:    'section',
+    label: 'Configuración',
+    category: 'section',
     description: 'Ver el panel de configuración del sistema',
   },
 
   // Acciones
   export: {
-    label:       'Exportar',
-    category:    'action',
+    label: 'Exportar',
+    category: 'action',
     description: 'Exportar reportes en CSV, PDF u otros formatos',
   },
   manageUsers: {
-    label:       'Gestionar Usuarios',
-    category:    'action',
+    label: 'Gestionar Usuarios',
+    category: 'action',
     description: 'Crear, modificar y eliminar cuentas de usuarios del sistema',
   },
   manageRoles: {
-    label:       'Gestionar Roles',
-    category:    'action',
+    label: 'Gestionar Roles',
+    category: 'action',
     description: 'Configurar los permisos asignados a cada rol',
   },
   assignBanks: {
-    label:       'Asignar Bancos',
-    category:    'action',
+    label: 'Asignar Bancos',
+    category: 'action',
     description: 'Asignar bancos a usuarios y gestionar sus accesos',
   },
   manageModel: {
-    label:       'Configurar Modelo IA',
-    category:    'action',
+    label: 'Configurar Modelo IA',
+    category: 'action',
     description: 'Modificar umbrales, sensibilidad y parámetros del modelo',
   },
 };
 
 export const PERMISSION_KEYS: PermissionKey[] = Object.keys(PERMISSIONS) as PermissionKey[];
 
-export const SECTION_PERMISSIONS: PermissionKey[] = PERMISSION_KEYS
-  .filter(key => PERMISSIONS[key].category === 'section');
+export const SECTION_PERMISSIONS: PermissionKey[] = PERMISSION_KEYS.filter(
+  (key) => PERMISSIONS[key].category === 'section',
+);
 
-export const ACTION_PERMISSIONS: PermissionKey[] = PERMISSION_KEYS
-  .filter(key => PERMISSIONS[key].category === 'action');
+export const ACTION_PERMISSIONS: PermissionKey[] = PERMISSION_KEYS.filter(
+  (key) => PERMISSIONS[key].category === 'action',
+);
 
 // ==============================================================================
 // PERMISOS POR DEFECTO POR ROL
@@ -116,60 +117,60 @@ export const ACTION_PERMISSIONS: PermissionKey[] = PERMISSION_KEYS
 
 export const DEFAULT_ROLE_PERMISSIONS: Record<SystemRole, RolePermissions> = {
   ADMINISTRADOR: {
-    dashboard:    true,
-    map:          true,
+    dashboard: true,
+    map: true,
     transactions: true,
-    alerts:       true,
-    users:        true,
-    analytics:    true,
-    settings:     true,
-    export:       true,
-    manageUsers:  true,
-    manageRoles:  true,
-    assignBanks:  true,
-    manageModel:  true,
+    alerts: true,
+    users: true,
+    analytics: true,
+    settings: true,
+    export: true,
+    manageUsers: true,
+    manageRoles: true,
+    assignBanks: true,
+    manageModel: true,
   },
   ANALISTA: {
-    dashboard:    true,
-    map:          true,
+    dashboard: true,
+    map: true,
     transactions: true,
-    alerts:       true,
-    users:        true,
-    analytics:    true,
-    settings:     false,
-    export:       true,
-    manageUsers:  false,
-    manageRoles:  false,
-    assignBanks:  false,
-    manageModel:  false,
+    alerts: true,
+    users: true,
+    analytics: true,
+    settings: false,
+    export: true,
+    manageUsers: false,
+    manageRoles: false,
+    assignBanks: false,
+    manageModel: false,
   },
   OPERADOR: {
-    dashboard:    true,
-    map:          true,
+    dashboard: true,
+    map: true,
     transactions: true,
-    alerts:       true,
-    users:        false,
-    analytics:    false,
-    settings:     false,
-    export:       false,
-    manageUsers:  false,
-    manageRoles:  false,
-    assignBanks:  false,
-    manageModel:  false,
+    alerts: true,
+    users: false,
+    analytics: false,
+    settings: false,
+    export: false,
+    manageUsers: false,
+    manageRoles: false,
+    assignBanks: false,
+    manageModel: false,
   },
   AUDITOR: {
-    dashboard:    true,
-    map:          false,
+    dashboard: true,
+    map: false,
     transactions: true,
-    alerts:       true,
-    users:        false,
-    analytics:    true,
-    settings:     false,
-    export:       true,
-    manageUsers:  false,
-    manageRoles:  false,
-    assignBanks:  false,
-    manageModel:  false,
+    alerts: true,
+    users: false,
+    analytics: true,
+    settings: false,
+    export: true,
+    manageUsers: false,
+    manageRoles: false,
+    assignBanks: false,
+    manageModel: false,
   },
 };
 
@@ -201,7 +202,7 @@ export function hasPermission(role: SystemRole, permission: PermissionKey): bool
  * @returns Objeto con todos los permisos y sus valores booleanos.
  */
 export function getPermissionsForRole(role: SystemRole): RolePermissions {
-  return DEFAULT_ROLE_PERMISSIONS[role] ?? {} as RolePermissions;
+  return DEFAULT_ROLE_PERMISSIONS[role] ?? ({} as RolePermissions);
 }
 
 /**
@@ -215,7 +216,7 @@ export function getPermissionsForRole(role: SystemRole): RolePermissions {
  */
 export function getAllowedSections(role: SystemRole): PermissionKey[] {
   const permissions = getPermissionsForRole(role);
-  return SECTION_PERMISSIONS.filter(key => permissions[key]);
+  return SECTION_PERMISSIONS.filter((key) => permissions[key]);
 }
 
 /**

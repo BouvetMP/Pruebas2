@@ -23,10 +23,7 @@ export {
   ApiError,
 } from './Client';
 
-export type {
-  HttpMethod,
-  RequestConfig,
-} from './Client';
+export type { HttpMethod, RequestConfig } from './Client';
 
 // ==============================================================================
 // AUTENTICACIÓN
@@ -52,9 +49,7 @@ export {
 // BANCOS
 // ==============================================================================
 
-export {
-  getBanks,
-} from './Bancos';
+export { getBanks } from './Bancos';
 
 // ==============================================================================
 // CLIENTES BANCARIOS
@@ -150,9 +145,7 @@ export {
   getFraudRate,
 } from './Dashboard';
 
-export type {
-  DashboardData,
-} from './Dashboard';
+export type { DashboardData } from './Dashboard';
 
 // ==============================================================================
 // ANALYTICS
@@ -172,9 +165,7 @@ export {
   getTopBanksByFraud,
 } from './Analytics';
 
-export type {
-  AnalyticsData,
-} from './Analytics';
+export type { AnalyticsData } from './Analytics';
 
 // ==============================================================================
 // MAPA
@@ -192,6 +183,4 @@ export {
   getRecentMapPoints,
 } from './Mapa';
 
-export type {
-  MapData,
-} from './Mapa';
+export type { MapData } from './Mapa';

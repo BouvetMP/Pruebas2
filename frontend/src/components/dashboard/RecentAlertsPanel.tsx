@@ -48,83 +48,83 @@ export function RecentAlertsPanel({
   // ==============================================================================
 
   const panelStyle: React.CSSProperties = {
-    display:       'flex',
+    display: 'flex',
     flexDirection: 'column',
-    background:    'var(--bg-secondary)',
-    border:        '1px solid var(--border)',
-    borderRadius:  '12px',
-    fontFamily:    'Inter, sans-serif',
-    overflow:      'hidden',
-    minHeight:     '300px',
-    maxHeight:     '600px',
+    background: 'var(--bg-secondary)',
+    border: '1px solid var(--border)',
+    borderRadius: '12px',
+    fontFamily: 'Inter, sans-serif',
+    overflow: 'hidden',
+    minHeight: '300px',
+    maxHeight: '600px',
   };
 
   const headerStyle: React.CSSProperties = {
-    display:        'flex',
-    alignItems:     'center',
+    display: 'flex',
+    alignItems: 'center',
     justifyContent: 'space-between',
-    gap:            '12px',
-    padding:        '16px',
-    borderBottom:   '1px solid var(--border)',
-    flexShrink:     0,
+    gap: '12px',
+    padding: '16px',
+    borderBottom: '1px solid var(--border)',
+    flexShrink: 0,
   };
 
   const headerLeftStyle: React.CSSProperties = {
-    display:    'flex',
+    display: 'flex',
     alignItems: 'center',
-    gap:        '8px',
-    flex:       1,
+    gap: '8px',
+    flex: 1,
   };
 
   const headerIconStyle: React.CSSProperties = {
-    display:    'flex',
+    display: 'flex',
     alignItems: 'center',
-    color:      'var(--text-secondary)',
+    color: 'var(--text-secondary)',
   };
 
   const headerTitleStyle: React.CSSProperties = {
-    fontSize:   '13px',
+    fontSize: '13px',
     fontWeight: 700,
-    color:      'var(--text-primary)',
+    color: 'var(--text-primary)',
   };
 
   const countBadgeStyle: React.CSSProperties = {
-    fontSize:       '10px',
-    fontWeight:     700,
-    color:          '#818CF8',
-    background:     'rgba(99, 102, 241, 0.15)',
-    padding:        '3px 8px',
-    borderRadius:   '10px',
+    fontSize: '10px',
+    fontWeight: 700,
+    color: '#818CF8',
+    background: 'rgba(99, 102, 241, 0.15)',
+    padding: '3px 8px',
+    borderRadius: '10px',
     fontVariantNumeric: 'tabular-nums',
   };
 
   const liveIndicatorStyle: React.CSSProperties = {
-    display:    'flex',
+    display: 'flex',
     alignItems: 'center',
-    gap:        '4px',
-    fontSize:   '10px',
+    gap: '4px',
+    fontSize: '10px',
     fontWeight: 600,
-    color:      '#34D399',
+    color: '#34D399',
   };
 
   const liveDotStyle: React.CSSProperties = {
-    width:        '6px',
-    height:       '6px',
+    width: '6px',
+    height: '6px',
     borderRadius: '50%',
-    background:   '#34D399',
-    animation:    'recent-alerts-pulse 2s ease-in-out infinite',
+    background: '#34D399',
+    animation: 'recent-alerts-pulse 2s ease-in-out infinite',
   };
 
   const listStyle: React.CSSProperties = {
-    flex:       1,
-    overflowY:  'auto',
-    overflowX:  'hidden',
-    padding:    '4px 0',
+    flex: 1,
+    overflowY: 'auto',
+    overflowX: 'hidden',
+    padding: '4px 0',
   };
 
   const footerStyle: React.CSSProperties = {
-    padding:    '12px 16px',
-    borderTop:  '1px solid var(--border)',
+    padding: '12px 16px',
+    borderTop: '1px solid var(--border)',
     flexShrink: 0,
   };
 
@@ -164,10 +164,7 @@ export function RecentAlertsPanel({
             <Spinner label="Cargando alertas..." centered />
           </div>
         ) : visibleAlerts.length === 0 ? (
-          <EmptyState
-            preset="no-alerts"
-            size="sm"
-          />
+          <EmptyState preset="no-alerts" size="sm" />
         ) : (
           visibleAlerts.map((alert, index) => (
             <RecentAlertItem
@@ -227,89 +224,89 @@ function RecentAlertItem({ alert, onClick }: RecentAlertItemProps) {
   // ==============================================================================
 
   const itemStyle: React.CSSProperties = {
-    display:     'flex',
-    alignItems:  'flex-start',
-    gap:         '10px',
-    padding:     '10px 16px',
-    cursor:      isClickable ? 'pointer' : 'default',
-    transition:  'background 0.15s ease',
-    borderLeft:  'none',
+    display: 'flex',
+    alignItems: 'flex-start',
+    gap: '10px',
+    padding: '10px 16px',
+    cursor: isClickable ? 'pointer' : 'default',
+    transition: 'background 0.15s ease',
+    borderLeft: 'none',
   };
 
   const dotStyle: React.CSSProperties = {
-    width:        '8px',
-    height:       '8px',
+    width: '8px',
+    height: '8px',
     borderRadius: '50%',
-    background:   color,
-    flexShrink:   0,
-    marginTop:    '5px',
-    boxShadow:    `0 0 6px ${color}40`,
+    background: color,
+    flexShrink: 0,
+    marginTop: '5px',
+    boxShadow: `0 0 6px ${color}40`,
   };
 
   const contentStyle: React.CSSProperties = {
-    display:       'flex',
+    display: 'flex',
     flexDirection: 'column',
-    gap:           '3px',
-    flex:          1,
-    minWidth:      0,
+    gap: '3px',
+    flex: 1,
+    minWidth: 0,
   };
 
   const row1Style: React.CSSProperties = {
-    display:        'flex',
+    display: 'flex',
     justifyContent: 'space-between',
-    alignItems:     'center',
-    gap:            '8px',
+    alignItems: 'center',
+    gap: '8px',
   };
 
   const idStyle: React.CSSProperties = {
-    fontSize:           '11px',
-    fontWeight:         700,
-    color:              'var(--text-secondary)',
+    fontSize: '11px',
+    fontWeight: 700,
+    color: 'var(--text-secondary)',
     fontVariantNumeric: 'tabular-nums',
-    fontFamily:         'ui-monospace, monospace',
+    fontFamily: 'ui-monospace, monospace',
   };
 
   const timeStyle: React.CSSProperties = {
-    fontSize:           '10px',
-    color:              'var(--text-tertiary)',
+    fontSize: '10px',
+    color: 'var(--text-tertiary)',
     fontVariantNumeric: 'tabular-nums',
-    whiteSpace:         'nowrap',
+    whiteSpace: 'nowrap',
   };
 
   const descriptionStyle: React.CSSProperties = {
-    fontSize:     '12px',
-    color:        'var(--text-secondary)',
-    lineHeight:   1.4,
-    overflow:     'hidden',
+    fontSize: '12px',
+    color: 'var(--text-secondary)',
+    lineHeight: 1.4,
+    overflow: 'hidden',
     textOverflow: 'ellipsis',
-    whiteSpace:   'nowrap',
+    whiteSpace: 'nowrap',
   };
 
   const row3Style: React.CSSProperties = {
-    display:    'flex',
+    display: 'flex',
     alignItems: 'center',
-    gap:        '8px',
-    flexWrap:   'wrap',
+    gap: '8px',
+    flexWrap: 'wrap',
   };
 
   const amountStyle: React.CSSProperties = {
-    fontSize:           '11px',
-    fontWeight:         700,
-    color:              'var(--text-primary)',
+    fontSize: '11px',
+    fontWeight: 700,
+    color: 'var(--text-primary)',
     fontVariantNumeric: 'tabular-nums',
   };
 
   const levelStyle: React.CSSProperties = {
-    fontSize:      '9px',
-    fontWeight:    700,
-    color:         color,
+    fontSize: '9px',
+    fontWeight: 700,
+    color: color,
     textTransform: 'uppercase',
     letterSpacing: '0.05em',
   };
 
   const originStyle: React.CSSProperties = {
-    fontSize:  '10px',
-    color:     'var(--text-tertiary)',
+    fontSize: '10px',
+    color: 'var(--text-tertiary)',
   };
 
   // ==============================================================================

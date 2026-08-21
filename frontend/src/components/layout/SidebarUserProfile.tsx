@@ -58,76 +58,76 @@ export function SidebarUserProfile({ collapsed }: SidebarUserProfileProps) {
   // ==============================================================================
 
   const wrapperStyle: React.CSSProperties = {
-    padding:      collapsed ? '12px 8px' : '12px',
-    borderTop:    '1px solid var(--border)',
-    fontFamily:   'Inter, sans-serif',
+    padding: collapsed ? '12px 8px' : '12px',
+    borderTop: '1px solid var(--border)',
+    fontFamily: 'Inter, sans-serif',
   };
 
   const profileStyle: React.CSSProperties = {
-    display:        'flex',
-    alignItems:     'center',
-    gap:            '10px',
-    padding:        collapsed ? '4px' : '8px 10px',
-    background:     'var(--bg-tertiary)',
-    borderRadius:   '10px',
+    display: 'flex',
+    alignItems: 'center',
+    gap: '10px',
+    padding: collapsed ? '4px' : '8px 10px',
+    background: 'var(--bg-tertiary)',
+    borderRadius: '10px',
     justifyContent: collapsed ? 'center' : 'flex-start',
   };
 
   const infoStyle: React.CSSProperties = {
-    display:       'flex',
+    display: 'flex',
     flexDirection: 'column',
-    gap:           '2px',
-    flex:          1,
-    minWidth:      0,
+    gap: '2px',
+    flex: 1,
+    minWidth: 0,
   };
 
   const nameStyle: React.CSSProperties = {
-    fontSize:     '12px',
-    fontWeight:   700,
-    color:        'var(--text-primary)',
-    lineHeight:   1.2,
-    overflow:     'hidden',
+    fontSize: '12px',
+    fontWeight: 700,
+    color: 'var(--text-primary)',
+    lineHeight: 1.2,
+    overflow: 'hidden',
     textOverflow: 'ellipsis',
-    whiteSpace:   'nowrap',
+    whiteSpace: 'nowrap',
   };
 
   const roleStyle: React.CSSProperties = {
-    fontSize:      '10px',
-    color:         'var(--text-tertiary)',
-    fontWeight:    500,
+    fontSize: '10px',
+    color: 'var(--text-tertiary)',
+    fontWeight: 500,
     textTransform: 'uppercase',
     letterSpacing: '0.05em',
-    lineHeight:    1.2,
+    lineHeight: 1.2,
   };
 
   const logoutButtonStyle: React.CSSProperties = {
-    display:        'flex',
-    alignItems:     'center',
+    display: 'flex',
+    alignItems: 'center',
     justifyContent: 'center',
-    width:          '28px',
-    height:         '28px',
-    background:     'transparent',
-    border:         'none',
-    borderRadius:   '6px',
-    color:          'var(--text-tertiary)',
-    cursor:         'pointer',
-    transition:     'background 0.15s ease, color 0.15s ease',
-    flexShrink:     0,
+    width: '28px',
+    height: '28px',
+    background: 'transparent',
+    border: 'none',
+    borderRadius: '6px',
+    color: 'var(--text-tertiary)',
+    cursor: 'pointer',
+    transition: 'background 0.15s ease, color 0.15s ease',
+    flexShrink: 0,
   };
 
   const logoutButtonCollapsedStyle: React.CSSProperties = {
-    display:        'flex',
-    alignItems:     'center',
+    display: 'flex',
+    alignItems: 'center',
     justifyContent: 'center',
-    width:          '100%',
-    padding:        '8px',
-    marginTop:      '6px',
-    background:     'transparent',
-    border:         '1px solid var(--border)',
-    borderRadius:   '8px',
-    color:          'var(--text-tertiary)',
-    cursor:         'pointer',
-    transition:     'background 0.15s ease, color 0.15s ease, border-color 0.15s ease',
+    width: '100%',
+    padding: '8px',
+    marginTop: '6px',
+    background: 'transparent',
+    border: '1px solid var(--border)',
+    borderRadius: '8px',
+    color: 'var(--text-tertiary)',
+    cursor: 'pointer',
+    transition: 'background 0.15s ease, color 0.15s ease, border-color 0.15s ease',
   };
 
   // ==============================================================================
@@ -138,9 +138,7 @@ export function SidebarUserProfile({ collapsed }: SidebarUserProfileProps) {
     <div>
       <div style={{ fontWeight: 700, fontSize: '11px' }}>{displayName}</div>
       {userEmail && (
-        <div style={{ fontSize: '10px', opacity: 0.7, marginTop: '2px' }}>
-          {userEmail}
-        </div>
+        <div style={{ fontSize: '10px', opacity: 0.7, marginTop: '2px' }}>{userEmail}</div>
       )}
       <div style={{ fontSize: '10px', marginTop: '4px', color: '#818CF8', fontWeight: 600 }}>
         {roleLabel}
@@ -162,21 +160,12 @@ export function SidebarUserProfile({ collapsed }: SidebarUserProfileProps) {
         {collapsed ? (
           <Tooltip content={collapsedTooltipContent} position="right">
             <div style={profileStyle}>
-              <UserAvatar
-                name={displayName}
-                role={userRole}
-                size="sm"
-              />
+              <UserAvatar name={displayName} role={userRole} size="sm" />
             </div>
           </Tooltip>
         ) : (
           <div style={profileStyle}>
-            <UserAvatar
-              name={displayName}
-              role={userRole}
-              size="sm"
-              title={userEmail}
-            />
+            <UserAvatar name={displayName} role={userRole} size="sm" title={userEmail} />
 
             <div style={infoStyle}>
               <span style={nameStyle} title={displayName}>

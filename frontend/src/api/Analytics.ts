@@ -44,13 +44,13 @@ function toNumber(value: unknown, fallback: number = 0): number {
  */
 function normalizeAnalyticsMetrics(raw: AnalyticsMetricsRaw): AnalyticsMetrics {
   return {
-    detectionRate:       toNumber(raw.tasa_deteccion ?? raw.detection_rate, 0),
-    falsePositiveRate:   toNumber(raw.falsos_positivos ?? raw.false_positives ?? raw.fp, 0),
-    averageAmount:       toNumber(raw.monto_promedio ?? raw.avg_amount ?? raw.avg, 0),
-    totalAnalyzed:       toNumber(raw.total_analizadas ?? raw.total ?? raw.count, 0),
+    detectionRate: toNumber(raw.tasa_deteccion ?? raw.detection_rate, 0),
+    falsePositiveRate: toNumber(raw.falsos_positivos ?? raw.false_positives ?? raw.fp, 0),
+    averageAmount: toNumber(raw.monto_promedio ?? raw.avg_amount ?? raw.avg, 0),
+    totalAnalyzed: toNumber(raw.total_analizadas ?? raw.total ?? raw.count, 0),
     averageResponseTime: toNumber(raw.tiempo_promedio_respuesta, 0),
-    protectedAmount:     toNumber(raw.monto_protegido, 0),
-    fraudsDetected:      toNumber(raw.fraudes_detectados, 0),
+    protectedAmount: toNumber(raw.monto_protegido, 0),
+    fraudsDetected: toNumber(raw.fraudes_detectados, 0),
   };
 }
 
@@ -60,9 +60,9 @@ function normalizeAnalyticsMetrics(raw: AnalyticsMetricsRaw): AnalyticsMetrics {
 function normalizeTypeAggregation(raw: unknown): TransactionTypeAggregation {
   const r = raw as Record<string, unknown>;
   return {
-    type:   String(r.tipo ?? r.type ?? r.nombre ?? 'Desconocido'),
-    count:  toNumber(r.count ?? r.cantidad ?? r.total, 0),
-    fraud:  toNumber(r.fraud ?? r.fraude ?? r.fraudes, 0),
+    type: String(r.tipo ?? r.type ?? r.nombre ?? 'Desconocido'),
+    count: toNumber(r.count ?? r.cantidad ?? r.total, 0),
+    fraud: toNumber(r.fraud ?? r.fraude ?? r.fraudes, 0),
     amount: toNumber(r.amount ?? r.monto, 0),
   };
 }
@@ -72,10 +72,10 @@ function normalizeTypeAggregation(raw: unknown): TransactionTypeAggregation {
  */
 function normalizeCityAggregation(raw: CityAggregationRaw): CityStats {
   return {
-    city:             String(raw.ciudad ?? raw.city ?? raw.nombre ?? 'Desconocida'),
-    country:          '',
+    city: String(raw.ciudad ?? raw.city ?? raw.nombre ?? 'Desconocida'),
+    country: '',
     transactionCount: toNumber(raw.count ?? raw.cantidad ?? raw.total, 0),
-    fraudCount:       0,
+    fraudCount: 0,
   };
 }
 
@@ -86,8 +86,8 @@ function normalizeChannelAggregation(raw: unknown): ChannelAggregation {
   const r = raw as Record<string, unknown>;
   return {
     channel: String(r.canal ?? r.channel ?? r.nombre ?? 'web'),
-    count:   toNumber(r.count ?? r.cantidad ?? r.total, 0),
-    fraud:   toNumber(r.fraud ?? r.fraude, 0),
+    count: toNumber(r.count ?? r.cantidad ?? r.total, 0),
+    fraud: toNumber(r.fraud ?? r.fraude, 0),
   };
 }
 
@@ -97,11 +97,11 @@ function normalizeChannelAggregation(raw: unknown): ChannelAggregation {
 function normalizeBankAggregation(raw: unknown): BankAggregation {
   const r = raw as Record<string, unknown>;
   return {
-    bank:   String(r.banco ?? r.bank ?? r.name ?? r.nombre ?? 'Banco'),
+    bank: String(r.banco ?? r.bank ?? r.name ?? r.nombre ?? 'Banco'),
     bankId: r.bank_id ? String(r.bank_id) : undefined,
-    count:  toNumber(r.count ?? r.cantidad ?? r.total, 0),
-    fraud:  toNumber(r.fraud ?? r.fraude ?? r.fraudes, 0),
-    color:  String(r.color ?? DEFAULT_BANK_COLOR),
+    count: toNumber(r.count ?? r.cantidad ?? r.total, 0),
+    fraud: toNumber(r.fraud ?? r.fraude ?? r.fraudes, 0),
+    color: String(r.color ?? DEFAULT_BANK_COLOR),
   };
 }
 
@@ -109,16 +109,16 @@ function normalizeBankAggregation(raw: unknown): BankAggregation {
  * Normaliza la estructura completa de agregaciones del backend.
  */
 function normalizeAggregations(raw: {
-  porTipo?:   unknown[];
+  porTipo?: unknown[];
   porCiudad?: CityStatsRaw[];
-  porCanal?:  unknown[];
-  porBanco?:  unknown[];
+  porCanal?: unknown[];
+  porBanco?: unknown[];
 }): AnalyticsAggregations {
   return {
-    porTipo:   (raw.porTipo ?? []).map(normalizeTypeAggregation),
+    porTipo: (raw.porTipo ?? []).map(normalizeTypeAggregation),
     porCiudad: (raw.porCiudad ?? []).map(normalizeCityAggregation),
-    porCanal:  (raw.porCanal ?? []).map(normalizeChannelAggregation),
-    porBanco:  (raw.porBanco ?? []).map(normalizeBankAggregation),
+    porCanal: (raw.porCanal ?? []).map(normalizeChannelAggregation),
+    porBanco: (raw.porBanco ?? []).map(normalizeBankAggregation),
   };
 }
 
@@ -139,7 +139,7 @@ function normalizeAggregations(raw: {
  *
  */
 export async function getAnalyticsMetrics(
-  bankId: SelectedBankId = ALL_BANKS_ID
+  bankId: SelectedBankId = ALL_BANKS_ID,
 ): Promise<AnalyticsMetrics> {
   const params = bankId !== ALL_BANKS_ID ? { banco: bankId } : undefined;
 
@@ -160,15 +160,15 @@ export async function getAnalyticsMetrics(
  *
  */
 export async function getAnalyticsAggregations(
-  bankId: SelectedBankId = ALL_BANKS_ID
+  bankId: SelectedBankId = ALL_BANKS_ID,
 ): Promise<AnalyticsAggregations> {
   const params = bankId !== ALL_BANKS_ID ? { banco: bankId } : undefined;
 
   const raw = await get<{
-    porTipo?:   unknown[];
+    porTipo?: unknown[];
     porCiudad?: CityStatsRaw[];
-    porCanal?:  unknown[];
-    porBanco?:  unknown[];
+    porCanal?: unknown[];
+    porBanco?: unknown[];
   }>('/analytics/agregaciones', params);
 
   return normalizeAggregations(raw);
@@ -182,7 +182,7 @@ export async function getAnalyticsAggregations(
  * Payload completo de Analytics con métricas + agregaciones.
  */
 export interface AnalyticsData {
-  metrics:      AnalyticsMetrics;
+  metrics: AnalyticsMetrics;
   aggregations: AnalyticsAggregations;
 }
 
@@ -199,7 +199,7 @@ export interface AnalyticsData {
  *
  */
 export async function getAnalyticsData(
-  bankId: SelectedBankId = ALL_BANKS_ID
+  bankId: SelectedBankId = ALL_BANKS_ID,
 ): Promise<AnalyticsData> {
   const [metrics, aggregations] = await Promise.all([
     getAnalyticsMetrics(bankId),
@@ -219,9 +219,7 @@ export async function getAnalyticsData(
  * @param bankId - Código del banco a filtrar, o 'all'.
  * @returns Tasa de detección en porcentaje (0-100).
  */
-export async function getDetectionRate(
-  bankId: SelectedBankId = ALL_BANKS_ID
-): Promise<number> {
+export async function getDetectionRate(bankId: SelectedBankId = ALL_BANKS_ID): Promise<number> {
   const metrics = await getAnalyticsMetrics(bankId);
   return metrics.detectionRate;
 }
@@ -232,9 +230,7 @@ export async function getDetectionRate(
  * @param bankId - Código del banco a filtrar, o 'all'.
  * @returns Tasa de falsos positivos en porcentaje (0-100).
  */
-export async function getFalsePositiveRate(
-  bankId: SelectedBankId = ALL_BANKS_ID
-): Promise<number> {
+export async function getFalsePositiveRate(bankId: SelectedBankId = ALL_BANKS_ID): Promise<number> {
   const metrics = await getAnalyticsMetrics(bankId);
   return metrics.falsePositiveRate;
 }
@@ -245,9 +241,7 @@ export async function getFalsePositiveRate(
  * @param bankId - Código del banco a filtrar, o 'all'.
  * @returns Monto total protegido.
  */
-export async function getProtectedAmount(
-  bankId: SelectedBankId = ALL_BANKS_ID
-): Promise<number> {
+export async function getProtectedAmount(bankId: SelectedBankId = ALL_BANKS_ID): Promise<number> {
   const metrics = await getAnalyticsMetrics(bankId);
   return metrics.protectedAmount;
 }
@@ -264,7 +258,7 @@ export async function getProtectedAmount(
  */
 export async function getTopCities(
   limit: number = 10,
-  bankId: SelectedBankId = ALL_BANKS_ID
+  bankId: SelectedBankId = ALL_BANKS_ID,
 ): Promise<CityStats[]> {
   const aggs = await getAnalyticsAggregations(bankId);
   return [...aggs.porCiudad]
@@ -283,7 +277,5 @@ export async function getTopCities(
  */
 export async function getTopBanksByFraud(limit: number = 5): Promise<BankAggregation[]> {
   const aggs = await getAnalyticsAggregations(ALL_BANKS_ID);
-  return [...aggs.porBanco]
-    .sort((a, b) => b.fraud - a.fraud)
-    .slice(0, limit);
+  return [...aggs.porBanco].sort((a, b) => b.fraud - a.fraud).slice(0, limit);
 }

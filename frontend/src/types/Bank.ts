@@ -16,14 +16,14 @@
  *
  */
 export interface BankRaw {
-  id_banco?:      number;
-  codigo?:        string;
-  codigo_banco?:  string;
-  nombre?:        string;
-  nombre_banco?:  string;
-  name?:          string;
-  color?:         string;
-  estado?:        boolean;
+  id_banco?: number;
+  codigo?: string;
+  codigo_banco?: string;
+  nombre?: string;
+  nombre_banco?: string;
+  name?: string;
+  color?: string;
+  estado?: boolean;
   fecha_creacion?: string;
 }
 
@@ -72,8 +72,8 @@ export type SelectedBankId = string | AllBanksId;
  * Se agrega manualmente al inicio de la lista de bancos en el Sidebar.
  */
 export const ALL_BANKS_OPTION: Bank = {
-  id:    ALL_BANKS_ID,
-  name:  'Todos los bancos',
+  id: ALL_BANKS_ID,
+  name: 'Todos los bancos',
   color: '#6366F1', // Color índigo por defecto
 };
 

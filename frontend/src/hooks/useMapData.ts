@@ -7,11 +7,7 @@
 
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { getMapData } from '@api/Mapa';
-import type {
-  MapStats,
-  TransactionMapPoint,
-  SelectedBankId,
-} from '@app-types';
+import type { MapStats, TransactionMapPoint, SelectedBankId } from '@app-types';
 import type { RiskLevel } from '@constants/Risk';
 import { ALL_BANKS_ID } from '@app-types';
 
@@ -24,11 +20,11 @@ const DEFAULT_AUTO_REFRESH_MS = 10_000;
 const MAX_ACTIVE_PULSES = 6;
 
 const EMPTY_STATS: MapStats = {
-  total:    0,
+  total: 0,
   critical: 0,
-  high:     0,
+  high: 0,
   approved: 0,
-  blocked:  0,
+  blocked: 0,
 };
 
 // ==============================================================================
@@ -94,7 +90,7 @@ export interface UseMapDataResult {
 
 export function useMapData(
   bankId: SelectedBankId = ALL_BANKS_ID,
-  options: UseMapDataOptions = {}
+  options: UseMapDataOptions = {},
 ): UseMapDataResult {
   const {
     autoRefresh = false,
@@ -148,24 +144,22 @@ export function useMapData(
         // Detección de transacciones nuevas (para pulses)
         // ==============================================================
         if (enablePulses && !loading) {
-          const currentIds = new Set(data.points.map(p => p.id));
-          const newPoints = data.points.filter(
-            p => !previousPointIdsRef.current.has(p.id)
-          );
+          const currentIds = new Set(data.points.map((p) => p.id));
+          const newPoints = data.points.filter((p) => !previousPointIdsRef.current.has(p.id));
 
           if (newPoints.length > 0) {
             const timestamp = Date.now();
             const newPulses: MapPulse[] = newPoints
               .slice(0, MAX_ACTIVE_PULSES)
               .map((point, index) => ({
-                id:        `${point.id}-pulse-${timestamp}-${index}`,
-                latitude:  point.location.latitude,
+                id: `${point.id}-pulse-${timestamp}-${index}`,
+                latitude: point.location.latitude,
                 longitude: point.location.longitude,
-                level:     point.alertLevel,
+                level: point.alertLevel,
                 createdAt: timestamp,
               }));
 
-            setActivePulses(prev => [...newPulses, ...prev].slice(0, MAX_ACTIVE_PULSES * 2));
+            setActivePulses((prev) => [...newPulses, ...prev].slice(0, MAX_ACTIVE_PULSES * 2));
           }
 
           previousPointIdsRef.current = currentIds;
@@ -180,7 +174,7 @@ export function useMapData(
         setRefreshing(false);
       }
     },
-    [bankId, enablePulses, loading]
+    [bankId, enablePulses, loading],
   );
 
   // ==============================================================================
@@ -206,7 +200,7 @@ export function useMapData(
           setPoints(data.points);
           setLastUpdated(new Date());
 
-          previousPointIdsRef.current = new Set(data.points.map(p => p.id));
+          previousPointIdsRef.current = new Set(data.points.map((p) => p.id));
           previousPointsCountRef.current = data.points.length;
         }
       } catch (err) {
@@ -284,9 +278,7 @@ export function useMapData(
 
     const cleanupInterval = window.setInterval(() => {
       const now = Date.now();
-      setActivePulses(prev =>
-        prev.filter(pulse => (now - pulse.createdAt) < PULSE_LIFETIME_MS)
-      );
+      setActivePulses((prev) => prev.filter((pulse) => now - pulse.createdAt < PULSE_LIFETIME_MS));
     }, 1000);
 
     return () => window.clearInterval(cleanupInterval);
@@ -307,24 +299,22 @@ export function useMapData(
   /** Puntos limitados a `maxPoints` para no saturar el mapa. */
   const limitedPoints = useMemo<TransactionMapPoint[]>(
     () => points.slice(0, maxPoints),
-    [points, maxPoints]
+    [points, maxPoints],
   );
 
   const criticalPoints = useMemo<TransactionMapPoint[]>(
-    () => limitedPoints.filter(
-      p => p.alertLevel === 'critical' || p.alertLevel === 'high'
-    ),
-    [limitedPoints]
+    () => limitedPoints.filter((p) => p.alertLevel === 'critical' || p.alertLevel === 'high'),
+    [limitedPoints],
   );
 
   const blockedPoints = useMemo<TransactionMapPoint[]>(
-    () => limitedPoints.filter(p => p.status === 'blocked'),
-    [limitedPoints]
+    () => limitedPoints.filter((p) => p.status === 'blocked'),
+    [limitedPoints],
   );
 
   const recentPoints = useMemo<TransactionMapPoint[]>(
     () => limitedPoints.slice(0, 5),
-    [limitedPoints]
+    [limitedPoints],
   );
 
   // ==============================================================================

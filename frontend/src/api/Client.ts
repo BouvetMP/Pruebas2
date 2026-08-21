@@ -38,12 +38,7 @@ export class ApiError extends Error {
   public readonly code: string;
   public readonly details?: unknown;
 
-  constructor(
-    message: string,
-    status: number,
-    code: string = 'UNKNOWN_ERROR',
-    details?: unknown
-  ) {
+  constructor(message: string, status: number, code: string = 'UNKNOWN_ERROR', details?: unknown) {
     super(message);
     this.name = 'ApiError';
     this.status = status;
@@ -95,7 +90,7 @@ function clearAuthToken(): void {
  */
 function buildUrl(
   endpoint: string,
-  params?: Record<string, string | number | boolean | null | undefined>
+  params?: Record<string, string | number | boolean | null | undefined>,
 ): string {
   // Asegurar que el endpoint empiece con '/'
   const cleanEndpoint = endpoint.startsWith('/') ? endpoint : `/${endpoint}`;
@@ -122,7 +117,7 @@ function buildUrl(
  */
 function buildHeaders(
   skipAuth: boolean = false,
-  customHeaders?: Record<string, string>
+  customHeaders?: Record<string, string>,
 ): Record<string, string> {
   const headers: Record<string, string> = {
     ...DEFAULT_HEADERS,
@@ -150,16 +145,26 @@ function getErrorMessage(status: number, fallback?: string): string {
   if (fallback) return fallback;
 
   switch (status) {
-    case HTTP_STATUS.BAD_REQUEST:           return ERROR_MESSAGES.VALIDATION;
-    case HTTP_STATUS.UNAUTHORIZED:          return ERROR_MESSAGES.UNAUTHORIZED;
-    case HTTP_STATUS.FORBIDDEN:             return ERROR_MESSAGES.FORBIDDEN;
-    case HTTP_STATUS.NOT_FOUND:             return ERROR_MESSAGES.NOT_FOUND;
-    case HTTP_STATUS.CONFLICT:              return ERROR_MESSAGES.CONFLICT;
-    case HTTP_STATUS.UNPROCESSABLE_ENTITY:  return ERROR_MESSAGES.VALIDATION;
-    case HTTP_STATUS.TOO_MANY_REQUESTS:     return ERROR_MESSAGES.RATE_LIMIT;
-    case HTTP_STATUS.INTERNAL_SERVER_ERROR: return ERROR_MESSAGES.SERVER;
-    case HTTP_STATUS.SERVICE_UNAVAILABLE:   return ERROR_MESSAGES.SERVER;
-    default:                                return ERROR_MESSAGES.GENERIC;
+    case HTTP_STATUS.BAD_REQUEST:
+      return ERROR_MESSAGES.VALIDATION;
+    case HTTP_STATUS.UNAUTHORIZED:
+      return ERROR_MESSAGES.UNAUTHORIZED;
+    case HTTP_STATUS.FORBIDDEN:
+      return ERROR_MESSAGES.FORBIDDEN;
+    case HTTP_STATUS.NOT_FOUND:
+      return ERROR_MESSAGES.NOT_FOUND;
+    case HTTP_STATUS.CONFLICT:
+      return ERROR_MESSAGES.CONFLICT;
+    case HTTP_STATUS.UNPROCESSABLE_ENTITY:
+      return ERROR_MESSAGES.VALIDATION;
+    case HTTP_STATUS.TOO_MANY_REQUESTS:
+      return ERROR_MESSAGES.RATE_LIMIT;
+    case HTTP_STATUS.INTERNAL_SERVER_ERROR:
+      return ERROR_MESSAGES.SERVER;
+    case HTTP_STATUS.SERVICE_UNAVAILABLE:
+      return ERROR_MESSAGES.SERVER;
+    default:
+      return ERROR_MESSAGES.GENERIC;
   }
 }
 
@@ -174,11 +179,7 @@ async function handleResponse<T>(response: Response): Promise<T> {
   // Si es 401 (Unauthorized), limpiar token y forzar re-login
   if (response.status === HTTP_STATUS.UNAUTHORIZED) {
     clearAuthToken();
-    throw new ApiError(
-      ERROR_MESSAGES.UNAUTHORIZED,
-      HTTP_STATUS.UNAUTHORIZED,
-      'UNAUTHORIZED'
-    );
+    throw new ApiError(ERROR_MESSAGES.UNAUTHORIZED, HTTP_STATUS.UNAUTHORIZED, 'UNAUTHORIZED');
   }
 
   // Si es 204 (No Content), retornar undefined
@@ -193,11 +194,7 @@ async function handleResponse<T>(response: Response): Promise<T> {
   } catch {
     // Si el body no es JSON válido, usar mensaje genérico
     if (!response.ok) {
-      throw new ApiError(
-        getErrorMessage(response.status),
-        response.status,
-        'INVALID_RESPONSE'
-      );
+      throw new ApiError(getErrorMessage(response.status), response.status, 'INVALID_RESPONSE');
     }
     return undefined as T;
   }
@@ -212,7 +209,7 @@ async function handleResponse<T>(response: Response): Promise<T> {
       getErrorMessage(response.status, message),
       response.status,
       code ?? 'REQUEST_FAILED',
-      data
+      data,
     );
   }
 
@@ -238,7 +235,7 @@ async function handleResponse<T>(response: Response): Promise<T> {
  */
 export async function request<T = unknown>(
   endpoint: string,
-  config: RequestConfig = {}
+  config: RequestConfig = {},
 ): Promise<T> {
   const {
     method = 'GET',
@@ -271,11 +268,7 @@ export async function request<T = unknown>(
 
     // Si el error fue por timeout
     if (error instanceof DOMException && error.name === 'AbortError') {
-      throw new ApiError(
-        ERROR_MESSAGES.TIMEOUT,
-        HTTP_STATUS.SERVICE_UNAVAILABLE,
-        'TIMEOUT'
-      );
+      throw new ApiError(ERROR_MESSAGES.TIMEOUT, HTTP_STATUS.SERVICE_UNAVAILABLE, 'TIMEOUT');
     }
 
     // Si es un ApiError, propagarlo
@@ -285,11 +278,7 @@ export async function request<T = unknown>(
 
     // Si es error de red (backend caído, sin internet, etc.)
     if (error instanceof TypeError && error.message.includes('fetch')) {
-      throw new ApiError(
-        ERROR_MESSAGES.NETWORK,
-        HTTP_STATUS.SERVICE_UNAVAILABLE,
-        'NETWORK_ERROR'
-      );
+      throw new ApiError(ERROR_MESSAGES.NETWORK, HTTP_STATUS.SERVICE_UNAVAILABLE, 'NETWORK_ERROR');
     }
 
     // Cualquier otro error inesperado
@@ -297,7 +286,7 @@ export async function request<T = unknown>(
       ERROR_MESSAGES.GENERIC,
       HTTP_STATUS.INTERNAL_SERVER_ERROR,
       'UNKNOWN_ERROR',
-      error
+      error,
     );
   }
 }
@@ -312,7 +301,7 @@ export async function request<T = unknown>(
 export function get<T = unknown>(
   endpoint: string,
   params?: RequestConfig['params'],
-  options?: Omit<RequestConfig, 'method' | 'body' | 'params'>
+  options?: Omit<RequestConfig, 'method' | 'body' | 'params'>,
 ): Promise<T> {
   return request<T>(endpoint, { ...options, method: 'GET', params });
 }
@@ -324,7 +313,7 @@ export function get<T = unknown>(
 export function post<T = unknown>(
   endpoint: string,
   body?: unknown,
-  options?: Omit<RequestConfig, 'method' | 'body'>
+  options?: Omit<RequestConfig, 'method' | 'body'>,
 ): Promise<T> {
   return request<T>(endpoint, { ...options, method: 'POST', body });
 }
@@ -335,7 +324,7 @@ export function post<T = unknown>(
 export function put<T = unknown>(
   endpoint: string,
   body?: unknown,
-  options?: Omit<RequestConfig, 'method' | 'body'>
+  options?: Omit<RequestConfig, 'method' | 'body'>,
 ): Promise<T> {
   return request<T>(endpoint, { ...options, method: 'PUT', body });
 }
@@ -346,7 +335,7 @@ export function put<T = unknown>(
 export function patch<T = unknown>(
   endpoint: string,
   body?: unknown,
-  options?: Omit<RequestConfig, 'method' | 'body'>
+  options?: Omit<RequestConfig, 'method' | 'body'>,
 ): Promise<T> {
   return request<T>(endpoint, { ...options, method: 'PATCH', body });
 }
@@ -356,7 +345,7 @@ export function patch<T = unknown>(
  */
 export function del<T = unknown>(
   endpoint: string,
-  options?: Omit<RequestConfig, 'method' | 'body'>
+  options?: Omit<RequestConfig, 'method' | 'body'>,
 ): Promise<T> {
   return request<T>(endpoint, { ...options, method: 'DELETE' });
 }

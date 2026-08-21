@@ -3,12 +3,7 @@
 // ¿Impacto? Todas las tablas y listados paginados usan este componente.
 
 import { useMemo } from 'react';
-import {
-  ChevronLeft,
-  ChevronRight,
-  ChevronsLeft,
-  ChevronsRight,
-} from 'lucide-react';
+import { ChevronLeft, ChevronRight, ChevronsLeft, ChevronsRight } from 'lucide-react';
 import { Button } from '@components/ui/Button';
 import { cn } from '@utils/cn';
 
@@ -44,7 +39,7 @@ export interface PaginationProps {
 function getPageNumbers(
   currentPage: number,
   totalPages: number,
-  maxVisible: number
+  maxVisible: number,
 ): (number | 'ellipsis')[] {
   if (totalPages <= maxVisible + 2) {
     return Array.from({ length: totalPages }, (_, i) => i);
@@ -112,12 +107,12 @@ export function Pagination({
 
   const pageNumbers = useMemo(
     () => getPageNumbers(page, totalPages, maxVisiblePages),
-    [page, totalPages, maxVisiblePages]
+    [page, totalPages, maxVisiblePages],
   );
 
   const rangeText = useMemo(
     () => getRangeText(page, pageSize, totalItems),
-    [page, pageSize, totalItems]
+    [page, pageSize, totalItems],
   );
 
   // Handlers
@@ -140,13 +135,11 @@ export function Pagination({
         className={cn(
           'flex items-center gap-4 py-4 flex-wrap font-sans',
           centered ? 'justify-center' : 'justify-between',
-          className
+          className,
         )}
       >
         {showRangeInfo && (
-          <span className="text-xs text-[var(--text-tertiary)] font-medium">
-            {rangeText}
-          </span>
+          <span className="text-xs text-[var(--text-tertiary)] font-medium">{rangeText}</span>
         )}
 
         <div className="flex items-center gap-1">
@@ -190,13 +183,11 @@ export function Pagination({
       className={cn(
         'flex items-center gap-4 py-4 flex-wrap font-sans',
         centered ? 'justify-center' : 'justify-between',
-        className
+        className,
       )}
     >
       {showRangeInfo && (
-        <span className="text-xs text-[var(--text-tertiary)] font-medium">
-          {rangeText}
-        </span>
+        <span className="text-xs text-[var(--text-tertiary)] font-medium">{rangeText}</span>
       )}
 
       <div className="flex items-center gap-1">
@@ -213,7 +204,7 @@ export function Pagination({
               'transition-colors duration-150',
               isFirstPage
                 ? 'opacity-40 cursor-not-allowed'
-                : 'cursor-pointer hover:bg-[var(--bg-tertiary)]'
+                : 'cursor-pointer hover:bg-[var(--bg-tertiary)]',
             )}
             aria-label="Ir a la primera página"
             title="Primera página"
@@ -234,7 +225,7 @@ export function Pagination({
             'transition-colors duration-150',
             !hasPreviousPage
               ? 'opacity-40 cursor-not-allowed'
-              : 'cursor-pointer hover:bg-[var(--bg-tertiary)]'
+              : 'cursor-pointer hover:bg-[var(--bg-tertiary)]',
           )}
           aria-label="Página anterior"
           title="Anterior"
@@ -269,7 +260,7 @@ export function Pagination({
                 'transition-colors duration-150 cursor-pointer',
                 isActive
                   ? 'bg-[var(--color-primary)] text-white border-[var(--color-primary)]'
-                  : 'border-[var(--border)] text-[var(--text-secondary)] hover:bg-[var(--bg-tertiary)]'
+                  : 'border-[var(--border)] text-[var(--text-secondary)] hover:bg-[var(--bg-tertiary)]',
               )}
               aria-label={`Página ${pageNum + 1}${isActive ? ' (actual)' : ''}`}
               aria-current={isActive ? 'page' : undefined}
@@ -291,7 +282,7 @@ export function Pagination({
             'transition-colors duration-150',
             !hasNextPage
               ? 'opacity-40 cursor-not-allowed'
-              : 'cursor-pointer hover:bg-[var(--bg-tertiary)]'
+              : 'cursor-pointer hover:bg-[var(--bg-tertiary)]',
           )}
           aria-label="Página siguiente"
           title="Siguiente"
@@ -312,7 +303,7 @@ export function Pagination({
               'transition-colors duration-150',
               isLastPage
                 ? 'opacity-40 cursor-not-allowed'
-                : 'cursor-pointer hover:bg-[var(--bg-tertiary)]'
+                : 'cursor-pointer hover:bg-[var(--bg-tertiary)]',
             )}
             aria-label="Ir a la última página"
             title="Última página"

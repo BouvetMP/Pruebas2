@@ -43,9 +43,9 @@ export interface TooltipProps {
 
 const VARIANT_CLASSES: Record<TooltipVariant, string> = {
   default: 'bg-[var(--bg-tertiary)] text-[var(--text-primary)] border-[var(--border)]',
-  dark:    'bg-[#1F2937] text-[#F3F4F6] border-[#374151]',
+  dark: 'bg-[#1F2937] text-[#F3F4F6] border-[#374151]',
   primary: 'bg-[var(--color-primary)] text-white border-[var(--color-primary)]',
-  danger:  'bg-[var(--color-danger)] text-white border-[var(--color-danger)]',
+  danger: 'bg-[var(--color-danger)] text-white border-[var(--color-danger)]',
 };
 
 // ==============================================================================
@@ -59,7 +59,7 @@ function calculatePosition(
   triggerRect: DOMRect,
   tooltipRect: { width: number; height: number },
   position: TooltipPosition,
-  gap: number = 8
+  gap: number = 8,
 ): { top: number; left: number } {
   const centerX = triggerRect.left + triggerRect.width / 2;
   const centerY = triggerRect.top + triggerRect.height / 2;
@@ -67,22 +67,22 @@ function calculatePosition(
   switch (position) {
     case 'top':
       return {
-        top:  triggerRect.top - tooltipRect.height - gap,
+        top: triggerRect.top - tooltipRect.height - gap,
         left: centerX - tooltipRect.width / 2,
       };
     case 'bottom':
       return {
-        top:  triggerRect.bottom + gap,
+        top: triggerRect.bottom + gap,
         left: centerX - tooltipRect.width / 2,
       };
     case 'left':
       return {
-        top:  centerY - tooltipRect.height / 2,
+        top: centerY - tooltipRect.height / 2,
         left: triggerRect.left - tooltipRect.width - gap,
       };
     case 'right':
       return {
-        top:  centerY - tooltipRect.height / 2,
+        top: centerY - tooltipRect.height / 2,
         left: triggerRect.right + gap,
       };
   }
@@ -94,13 +94,13 @@ function calculatePosition(
 function clampToViewport(
   coords: { top: number; left: number },
   tooltipRect: { width: number; height: number },
-  padding: number = 8
+  padding: number = 8,
 ): { top: number; left: number } {
-  const maxLeft = window.innerWidth  - tooltipRect.width  - padding;
-  const maxTop  = window.innerHeight - tooltipRect.height - padding;
+  const maxLeft = window.innerWidth - tooltipRect.width - padding;
+  const maxTop = window.innerHeight - tooltipRect.height - padding;
 
   return {
-    top:  Math.max(padding, Math.min(coords.top,  maxTop)),
+    top: Math.max(padding, Math.min(coords.top, maxTop)),
     left: Math.max(padding, Math.min(coords.left, maxLeft)),
   };
 }
@@ -168,7 +168,7 @@ export function Tooltip({
 
     const triggerRect = triggerRef.current.getBoundingClientRect();
     const tooltipRect = {
-      width:  tooltipRef.current.offsetWidth,
+      width: tooltipRef.current.offsetWidth,
       height: tooltipRef.current.offsetHeight,
     };
 
@@ -249,17 +249,17 @@ export function Tooltip({
 
               // Visibilidad (fade in)
               coords ? 'opacity-100' : 'opacity-0',
-              'transition-opacity duration-150'
+              'transition-opacity duration-150',
             )}
             style={{
-              top:      coords?.top ?? -9999,
-              left:     coords?.left ?? -9999,
+              top: coords?.top ?? -9999,
+              left: coords?.left ?? -9999,
               maxWidth,
             }}
           >
             {content}
           </div>,
-          document.body
+          document.body,
         )}
     </>
   );

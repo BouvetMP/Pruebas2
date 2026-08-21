@@ -22,9 +22,27 @@ export function NotificationsTab() {
         <CardHeader title="Canales de Notificación" icon={<Bell size={16} />} />
         <CardBody>
           <div style={{ display: 'flex', flexDirection: 'column', gap: '12px' }}>
-            <Toggle label="Email" description="Alertas críticas por correo electrónico" icon={<Mail size={14} />} checked={emailAlerts} onChange={setEmailAlerts} />
-            <Toggle label="SMS" description="Alertas por mensaje de texto" icon={<MessageSquare size={14} />} checked={smsAlerts} onChange={setSmsAlerts} />
-            <Toggle label="Push In-App" description="Notificaciones en el dashboard" icon={<Smartphone size={14} />} checked={pushAlerts} onChange={setPushAlerts} />
+            <Toggle
+              label="Email"
+              description="Alertas críticas por correo electrónico"
+              icon={<Mail size={14} />}
+              checked={emailAlerts}
+              onChange={setEmailAlerts}
+            />
+            <Toggle
+              label="SMS"
+              description="Alertas por mensaje de texto"
+              icon={<MessageSquare size={14} />}
+              checked={smsAlerts}
+              onChange={setSmsAlerts}
+            />
+            <Toggle
+              label="Push In-App"
+              description="Notificaciones en el dashboard"
+              icon={<Smartphone size={14} />}
+              checked={pushAlerts}
+              onChange={setPushAlerts}
+            />
           </div>
         </CardBody>
       </Card>
@@ -33,10 +51,32 @@ export function NotificationsTab() {
         <CardHeader title="Niveles de Alerta" />
         <CardBody>
           <div style={{ display: 'flex', flexDirection: 'column', gap: '12px' }}>
-            <Toggle label="Críticas" description="Transacciones de alto riesgo" checked={criticalAlerts} onChange={setCriticalAlerts} variant="danger" />
-            <Toggle label="Altas" description="Transacciones sospechosas" checked={highAlerts} onChange={setHighAlerts} variant="danger" />
-            <Toggle label="Medias" description="Actividad inusual" checked={mediumAlerts} onChange={setMediumAlerts} />
-            <Toggle label="Bajas" description="Transacciones normales" checked={lowAlerts} onChange={setLowAlerts} />
+            <Toggle
+              label="Críticas"
+              description="Transacciones de alto riesgo"
+              checked={criticalAlerts}
+              onChange={setCriticalAlerts}
+              variant="danger"
+            />
+            <Toggle
+              label="Altas"
+              description="Transacciones sospechosas"
+              checked={highAlerts}
+              onChange={setHighAlerts}
+              variant="danger"
+            />
+            <Toggle
+              label="Medias"
+              description="Actividad inusual"
+              checked={mediumAlerts}
+              onChange={setMediumAlerts}
+            />
+            <Toggle
+              label="Bajas"
+              description="Transacciones normales"
+              checked={lowAlerts}
+              onChange={setLowAlerts}
+            />
           </div>
         </CardBody>
       </Card>

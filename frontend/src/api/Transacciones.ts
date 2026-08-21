@@ -30,7 +30,7 @@ import { ALL_BANKS_ID } from '@app-types';
  * @throws ApiError si la consulta falla.
  */
 export async function getTransactions(
-  bankId: SelectedBankId = ALL_BANKS_ID
+  bankId: SelectedBankId = ALL_BANKS_ID,
 ): Promise<Transaction[]> {
   const params = bankId !== ALL_BANKS_ID ? { banco: bankId } : undefined;
 
@@ -55,9 +55,7 @@ export async function getTransactions(
  * @param bankId - Código del banco a filtrar, o 'all'.
  * @returns Cantidad total de transacciones.
  */
-export async function getTransactionsCount(
-  bankId: SelectedBankId = ALL_BANKS_ID
-): Promise<number> {
+export async function getTransactionsCount(bankId: SelectedBankId = ALL_BANKS_ID): Promise<number> {
   const transactions = await getTransactions(bankId);
   return transactions.length;
 }
@@ -72,10 +70,10 @@ export async function getTransactionsCount(
  * @returns Cantidad de transacciones bloqueadas.
  */
 export async function getBlockedTransactionsCount(
-  bankId: SelectedBankId = ALL_BANKS_ID
+  bankId: SelectedBankId = ALL_BANKS_ID,
 ): Promise<number> {
   const transactions = await getTransactions(bankId);
-  return transactions.filter(tx => tx.status === 'blocked').length;
+  return transactions.filter((tx) => tx.status === 'blocked').length;
 }
 
 /**
@@ -88,10 +86,10 @@ export async function getBlockedTransactionsCount(
  * @returns Cantidad de fraudes confirmados.
  */
 export async function getFraudTransactionsCount(
-  bankId: SelectedBankId = ALL_BANKS_ID
+  bankId: SelectedBankId = ALL_BANKS_ID,
 ): Promise<number> {
   const transactions = await getTransactions(bankId);
-  return transactions.filter(tx => tx.isFraud).length;
+  return transactions.filter((tx) => tx.isFraud).length;
 }
 
 /**
@@ -107,9 +105,7 @@ export async function getFraudTransactionsCount(
  * @param bankId - Código del banco a filtrar, o 'all'.
  * @returns Monto total como número.
  */
-export async function getTotalAmount(
-  bankId: SelectedBankId = ALL_BANKS_ID
-): Promise<number> {
+export async function getTotalAmount(bankId: SelectedBankId = ALL_BANKS_ID): Promise<number> {
   const transactions = await getTransactions(bankId);
   return transactions.reduce((sum, tx) => sum + (tx.amount || 0), 0);
 }
@@ -125,10 +121,9 @@ export async function getTotalAmount(
  * @returns Cantidad de transacciones con alerta crítica o alta.
  */
 export async function getCriticalAlertsCount(
-  bankId: SelectedBankId = ALL_BANKS_ID
+  bankId: SelectedBankId = ALL_BANKS_ID,
 ): Promise<number> {
   const transactions = await getTransactions(bankId);
-  return transactions.filter(
-    tx => tx.alertLevel === 'critical' || tx.alertLevel === 'high'
-  ).length;
+  return transactions.filter((tx) => tx.alertLevel === 'critical' || tx.alertLevel === 'high')
+    .length;
 }

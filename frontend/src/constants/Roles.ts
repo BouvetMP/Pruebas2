@@ -23,34 +23,33 @@ export interface RoleMetadata {
 // DEFINICIÓN DE ROLES
 // ==============================================================================
 
-
 export const ROLES: Record<SystemRole, RoleMetadata> = {
   ADMINISTRADOR: {
-    id:          'ADMINISTRADOR',
-    label:       'Administrador',
-    shortLabel:  'Admin',
-    color:       '#E040FB',
+    id: 'ADMINISTRADOR',
+    label: 'Administrador',
+    shortLabel: 'Admin',
+    color: '#E040FB',
     description: 'Acceso total al sistema — configuración y gestión',
   },
   ANALISTA: {
-    id:          'ANALISTA',
-    label:       'Analista',
-    shortLabel:  'Analista',
-    color:       '#06B6D4',
+    id: 'ANALISTA',
+    label: 'Analista',
+    shortLabel: 'Analista',
+    color: '#06B6D4',
     description: 'Revisar, validar y gestionar alertas de fraude',
   },
   OPERADOR: {
-    id:          'OPERADOR',
-    label:       'Operador',
-    shortLabel:  'Operador',
-    color:       '#10B981',
+    id: 'OPERADOR',
+    label: 'Operador',
+    shortLabel: 'Operador',
+    color: '#10B981',
     description: 'Monitoreo en tiempo real — solo visualización y escalado',
   },
   AUDITOR: {
-    id:          'AUDITOR',
-    label:       'Auditor',
-    shortLabel:  'Auditor',
-    color:       '#F59E0B',
+    id: 'AUDITOR',
+    label: 'Auditor',
+    shortLabel: 'Auditor',
+    color: '#F59E0B',
     description: 'Solo lectura de registros, reportes e historial de auditoría',
   },
 };
@@ -79,10 +78,10 @@ export function getRoleMetadata(roleId: string): RoleMetadata {
 
   // Fallback para roles no reconocidos (no debería pasar si la BD está bien).
   return {
-    id:          roleId as SystemRole,
-    label:       roleId,
-    shortLabel:  roleId,
-    color:       '#6366F1',
+    id: roleId as SystemRole,
+    label: roleId,
+    shortLabel: roleId,
+    color: '#6366F1',
     description: 'Rol no definido',
   };
 }

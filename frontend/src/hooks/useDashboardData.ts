@@ -6,11 +6,7 @@
 
 import { useCallback, useEffect, useRef, useState } from 'react';
 import { getDashboardData } from '@api/Dashboard';
-import type {
-  DashboardStats,
-  RecentAlert,
-  SelectedBankId,
-} from '@app-types';
+import type { DashboardStats, RecentAlert, SelectedBankId } from '@app-types';
 import { ALL_BANKS_ID } from '@app-types';
 
 // ==============================================================================
@@ -21,15 +17,15 @@ const DEFAULT_AUTO_REFRESH_MS = 30_000;
 
 const EMPTY_STATS: DashboardStats = {
   totalTransactions: 0,
-  totalClients:      0,
-  totalFrauds:       0,
-  totalBlocked:      0,
-  totalAmount:       0,
-  fraudRate:         0,
+  totalClients: 0,
+  totalFrauds: 0,
+  totalBlocked: 0,
+  totalAmount: 0,
+  fraudRate: 0,
   alertsByLevel: {
-    low:      0,
-    medium:   0,
-    high:     0,
+    low: 0,
+    medium: 0,
+    high: 0,
     critical: 0,
   },
 };
@@ -76,13 +72,9 @@ export interface UseDashboardDataResult {
  */
 export function useDashboardData(
   bankId: SelectedBankId = ALL_BANKS_ID,
-  options: UseDashboardDataOptions = {}
+  options: UseDashboardDataOptions = {},
 ): UseDashboardDataResult {
-  const {
-    autoRefresh = false,
-    autoRefreshMs = DEFAULT_AUTO_REFRESH_MS,
-    enabled = true,
-  } = options;
+  const { autoRefresh = false, autoRefreshMs = DEFAULT_AUTO_REFRESH_MS, enabled = true } = options;
 
   // ==============================================================================
   // ESTADOS
@@ -128,7 +120,7 @@ export function useDashboardData(
         setRefreshing(false);
       }
     },
-    [bankId]
+    [bankId],
   );
 
   // ==============================================================================

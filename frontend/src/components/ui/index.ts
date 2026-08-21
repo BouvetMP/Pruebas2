@@ -9,59 +9,35 @@
 // ==============================================================================
 
 export { Spinner } from './Spinner';
-export type {
-  SpinnerProps,
-  SpinnerSize,
-  SpinnerVariant,
-} from './Spinner';
+export type { SpinnerProps, SpinnerSize, SpinnerVariant } from './Spinner';
 
 export { EmptyState } from './EmptyState';
-export type {
-  EmptyStateProps,
-  EmptyStatePreset,
-  EmptyStateVariant,
-} from './EmptyState';
+export type { EmptyStateProps, EmptyStatePreset, EmptyStateVariant } from './EmptyState';
 
 // ==============================================================================
 // FORMULARIOS
 // ==============================================================================
 
 export { Button } from './Button';
-export type {
-  ButtonProps,
-  ButtonVariant,
-  ButtonSize,
-} from './Button';
+export type { ButtonProps, ButtonVariant, ButtonSize } from './Button';
 
 export { Input } from './Input';
 export type { InputProps } from './Input';
 
 export { Select } from './Select';
-export type {
-  SelectProps,
-  SelectOption,
-} from './Select';
+export type { SelectProps, SelectOption } from './Select';
 
 export { Textarea } from './Textarea';
 export type { TextareaProps } from './Textarea';
 
 export { Toggle } from './Toggle';
-export type {
-  ToggleProps,
-  ToggleSize,
-  ToggleVariant,
-} from './Toggle';
+export type { ToggleProps, ToggleSize, ToggleVariant } from './Toggle';
 
 // ==============================================================================
 // CONTENEDORES
 // ==============================================================================
 
-export {
-  Card,
-  CardHeader,
-  CardBody,
-  CardFooter,
-} from './Card';
+export { Card, CardHeader, CardBody, CardFooter } from './Card';
 export type {
   CardProps,
   CardHeaderProps,
@@ -72,25 +48,14 @@ export type {
 } from './Card';
 
 export { Modal } from './Modal';
-export type {
-  ModalProps,
-  ModalSize,
-} from './Modal';
+export type { ModalProps, ModalSize } from './Modal';
 
 // ==============================================================================
 // INDICADORES
 // ==============================================================================
 
 export { Badge } from './Badge';
-export type {
-  BadgeProps,
-  BadgeVariant,
-  BadgeSize,
-} from './Badge';
+export type { BadgeProps, BadgeVariant, BadgeSize } from './Badge';
 
 export { Tooltip } from './Tooltip';
-export type {
-  TooltipProps,
-  TooltipPosition,
-  TooltipVariant,
-} from './Tooltip';
+export type { TooltipProps, TooltipPosition, TooltipVariant } from './Tooltip';

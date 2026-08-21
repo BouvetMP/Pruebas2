@@ -23,11 +23,7 @@ export interface DeviceCardProps {
 // COMPONENTE
 // ==============================================================================
 
-export function DeviceCard({
-  device,
-  detailed = false,
-  className = '',
-}: DeviceCardProps) {
+export function DeviceCard({ device, detailed = false, className = '' }: DeviceCardProps) {
   const emoji = getDeviceEmoji(device.type);
   const categoryLabel = getDeviceCategoryLabel(device.category);
 
@@ -36,52 +32,52 @@ export function DeviceCard({
   // ==============================================================================
 
   const cardStyle: React.CSSProperties = {
-    display:      'flex',
-    alignItems:   'flex-start',
-    gap:          '10px',
-    padding:      detailed ? '12px' : '8px 10px',
-    background:   detailed ? 'var(--bg-secondary)' : 'var(--bg-tertiary)',
-    border:       detailed ? '1px solid var(--border)' : 'none',
+    display: 'flex',
+    alignItems: 'flex-start',
+    gap: '10px',
+    padding: detailed ? '12px' : '8px 10px',
+    background: detailed ? 'var(--bg-secondary)' : 'var(--bg-tertiary)',
+    border: detailed ? '1px solid var(--border)' : 'none',
     borderRadius: '8px',
-    fontFamily:   'Inter, sans-serif',
+    fontFamily: 'Inter, sans-serif',
   };
 
   const emojiStyle: React.CSSProperties = {
-    fontSize:   '18px',
+    fontSize: '18px',
     flexShrink: 0,
     lineHeight: 1,
-    marginTop:  '1px',
+    marginTop: '1px',
   };
 
   const infoStyle: React.CSSProperties = {
-    display:       'flex',
+    display: 'flex',
     flexDirection: 'column',
-    gap:           '2px',
-    flex:          1,
-    minWidth:      0,
+    gap: '2px',
+    flex: 1,
+    minWidth: 0,
   };
 
   const typeStyle: React.CSSProperties = {
-    fontSize:     '12px',
-    fontWeight:   600,
-    color:        'var(--text-primary)',
-    overflow:     'hidden',
+    fontSize: '12px',
+    fontWeight: 600,
+    color: 'var(--text-primary)',
+    overflow: 'hidden',
     textOverflow: 'ellipsis',
-    whiteSpace:   'nowrap',
+    whiteSpace: 'nowrap',
   };
 
   const detailStyle: React.CSSProperties = {
     fontSize: '10px',
-    color:    'var(--text-tertiary)',
-    display:  'flex',
+    color: 'var(--text-tertiary)',
+    display: 'flex',
     alignItems: 'center',
-    gap:      '4px',
+    gap: '4px',
   };
 
   const bankStyle: React.CSSProperties = {
-    fontSize:   '10px',
+    fontSize: '10px',
     fontWeight: 600,
-    color:      device.bank.color,
+    color: device.bank.color,
   };
 
   // ==============================================================================
@@ -103,18 +99,14 @@ export function DeviceCard({
 
         <span style={detailStyle}>
           {device.operatingSystem}
-          {detailed && device.browser && device.browser !== 'N/D' && (
-            <> · {device.browser}</>
-          )}
+          {detailed && device.browser && device.browser !== 'N/D' && <> · {device.browser}</>}
         </span>
 
         {detailed && (
           <>
             <span style={detailStyle}>
               {categoryLabel}
-              {device.lastUsedAt && (
-                <> · Último uso: {formatDate(device.lastUsedAt)}</>
-              )}
+              {device.lastUsedAt && <> · Último uso: {formatDate(device.lastUsedAt)}</>}
             </span>
 
             {device.bank.name && device.bank.name !== 'Sin banco' && (

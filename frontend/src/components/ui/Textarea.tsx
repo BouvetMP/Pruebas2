@@ -37,8 +37,8 @@ export interface TextareaProps extends TextareaHTMLAttributes<HTMLTextAreaElemen
 function getCounterColorClass(current: number, max: number): string {
   const percentage = (current / max) * 100;
   if (percentage >= 100) return 'text-[var(--color-danger)]';
-  if (percentage >= 90)  return 'text-[var(--color-orange)]';
-  if (percentage >= 75)  return 'text-[var(--color-warning)]';
+  if (percentage >= 90) return 'text-[var(--color-orange)]';
+  if (percentage >= 75) return 'text-[var(--color-warning)]';
   return 'text-[var(--text-tertiary)]';
 }
 
@@ -64,7 +64,7 @@ export const Textarea = forwardRef<HTMLTextAreaElement, TextareaProps>(
       className = '',
       ...rest
     },
-    ref
+    ref,
   ) => {
     // Generar ID único si no se proporciona (para vincular label ↔ textarea).
     const generatedId = useId();
@@ -80,11 +80,7 @@ export const Textarea = forwardRef<HTMLTextAreaElement, TextareaProps>(
 
     return (
       <div
-        className={cn(
-          'flex flex-col gap-1.5 font-sans',
-          fullWidth && 'w-full',
-          wrapperClassName
-        )}
+        className={cn('flex flex-col gap-1.5 font-sans', fullWidth && 'w-full', wrapperClassName)}
       >
         {/* ================================================================
             LABEL
@@ -94,17 +90,12 @@ export const Textarea = forwardRef<HTMLTextAreaElement, TextareaProps>(
             htmlFor={textareaId}
             className={cn(
               'text-xs font-semibold flex items-center gap-1',
-              hasError
-                ? 'text-[var(--color-danger)]'
-                : 'text-[var(--text-secondary)]'
+              hasError ? 'text-[var(--color-danger)]' : 'text-[var(--text-secondary)]',
             )}
           >
             {label}
             {required && (
-              <span
-                className="text-[var(--color-danger)]"
-                aria-label="Campo requerido"
-              >
+              <span className="text-[var(--color-danger)]" aria-label="Campo requerido">
                 *
               </span>
             )}
@@ -152,7 +143,7 @@ export const Textarea = forwardRef<HTMLTextAreaElement, TextareaProps>(
             !hasError && 'focus:ring-2 focus:ring-[var(--color-primary)]/20',
 
             // Clase externa
-            className
+            className,
           )}
           style={{
             // minHeight calculada según rows (no hay clase Tailwind dinámica para esto)
@@ -166,7 +157,6 @@ export const Textarea = forwardRef<HTMLTextAreaElement, TextareaProps>(
             ================================================================ */}
         {(hasError || showHelper || showCounter) && (
           <div className="flex justify-between items-center gap-2">
-
             {/* Error */}
             {hasError && (
               <span
@@ -180,10 +170,7 @@ export const Textarea = forwardRef<HTMLTextAreaElement, TextareaProps>(
 
             {/* Helper */}
             {showHelper && (
-              <span
-                id={helperId}
-                className="text-[11px] text-[var(--text-tertiary)] flex-1"
-              >
+              <span id={helperId} className="text-[11px] text-[var(--text-tertiary)] flex-1">
                 {helperText}
               </span>
             )}
@@ -195,7 +182,7 @@ export const Textarea = forwardRef<HTMLTextAreaElement, TextareaProps>(
                 aria-live="polite"
                 className={cn(
                   'text-[11px] font-medium whitespace-nowrap tabular-nums',
-                  getCounterColorClass(currentLength, maxLength)
+                  getCounterColorClass(currentLength, maxLength),
                 )}
               >
                 {currentLength} / {maxLength}
@@ -205,7 +192,7 @@ export const Textarea = forwardRef<HTMLTextAreaElement, TextareaProps>(
         )}
       </div>
     );
-  }
+  },
 );
 
 Textarea.displayName = 'Textarea';

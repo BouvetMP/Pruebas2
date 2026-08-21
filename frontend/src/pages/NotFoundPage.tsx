@@ -9,10 +9,7 @@ import { Home, ArrowLeft, Search } from 'lucide-react';
 import { useAuth } from '@context/AuthContext';
 import { EmptyState } from '@components/ui/EmptyState';
 import { Button } from '@components/ui/Button';
-import {
-  PUBLIC_ROUTES,
-  DEFAULT_AUTHENTICATED_ROUTE,
-} from '@constants/Navigation';
+import { PUBLIC_ROUTES, DEFAULT_AUTHENTICATED_ROUTE } from '@constants/Navigation';
 
 // ==============================================================================
 // COMPONENTE
@@ -40,9 +37,7 @@ export function NotFoundPage() {
   };
 
   const handleGoHome = (): void => {
-    const destination = isAuthenticated
-      ? DEFAULT_AUTHENTICATED_ROUTE
-      : PUBLIC_ROUTES.LOGIN;
+    const destination = isAuthenticated ? DEFAULT_AUTHENTICATED_ROUTE : PUBLIC_ROUTES.LOGIN;
     navigate(destination, { replace: true });
   };
 
@@ -51,38 +46,38 @@ export function NotFoundPage() {
   // ==============================================================================
 
   const wrapperStyle: React.CSSProperties = {
-    minHeight:      '100vh',
-    display:        'flex',
-    alignItems:     'center',
+    minHeight: '100vh',
+    display: 'flex',
+    alignItems: 'center',
     justifyContent: 'center',
-    padding:        '40px 20px',
-    background:     'var(--bg-primary)',
-    fontFamily:     'Inter, sans-serif',
+    padding: '40px 20px',
+    background: 'var(--bg-primary)',
+    fontFamily: 'Inter, sans-serif',
   };
 
   const contentStyle: React.CSSProperties = {
-    maxWidth:       '520px',
-    width:          '100%',
-    textAlign:      'center',
+    maxWidth: '520px',
+    width: '100%',
+    textAlign: 'center',
   };
 
   const errorCodeStyle: React.CSSProperties = {
-    fontSize:      '96px',
-    fontWeight:    900,
-    color:         'var(--text-primary)',
-    lineHeight:    1,
-    margin:        '0 0 8px',
+    fontSize: '96px',
+    fontWeight: 900,
+    color: 'var(--text-primary)',
+    lineHeight: 1,
+    margin: '0 0 8px',
     letterSpacing: '-0.05em',
-    opacity:       0.15,
-    userSelect:    'none',
+    opacity: 0.15,
+    userSelect: 'none',
   };
 
   const buttonGroupStyle: React.CSSProperties = {
-    display:        'flex',
-    gap:            '10px',
+    display: 'flex',
+    gap: '10px',
     justifyContent: 'center',
-    marginTop:      '24px',
-    flexWrap:       'wrap',
+    marginTop: '24px',
+    flexWrap: 'wrap',
   };
 
   // ==============================================================================
@@ -108,19 +103,11 @@ export function NotFoundPage() {
 
         {/* Grupo de botones de acción */}
         <div style={buttonGroupStyle}>
-          <Button
-            variant="ghost"
-            leftIcon={<ArrowLeft size={16} />}
-            onClick={handleGoBack}
-          >
+          <Button variant="ghost" leftIcon={<ArrowLeft size={16} />} onClick={handleGoBack}>
             Volver atrás
           </Button>
 
-          <Button
-            variant="primary"
-            leftIcon={<Home size={16} />}
-            onClick={handleGoHome}
-          >
+          <Button variant="primary" leftIcon={<Home size={16} />} onClick={handleGoHome}>
             {isAuthenticated ? 'Ir al Dashboard' : 'Ir al inicio de sesión'}
           </Button>
         </div>

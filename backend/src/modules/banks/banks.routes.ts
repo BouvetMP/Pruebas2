@@ -1,14 +1,13 @@
-// ¿Qué? Rutas del módulo de bancos.
-// ¿Para qué? Exponer GET /api/banks.
-// ¿Impacto? Catálogo real de entidades financieras.
+// ¿Qué? Rutas del catálogo de bancos.
+// ¿Para qué? Permitir la consulta pública del listado de bancos para los filtros del sistema.
+// ¿Impacto? Permite que el selector de bancos de la interfaz cargue siempre sin bloquearse por autenticación.
 
 import { Router } from 'express';
-import { banksController } from './banks.controller.ts';
-import { requireAuth } from '../../middlewares/auth.middleware.ts';
+import { banksController } from './banks.controller.js';
 
 const router = Router();
 
-router.use(requireAuth);
+// El catálogo de bancos es de libre acceso para llenar los selectores
 router.get('/', banksController.list);
 
 export default router;

@@ -40,33 +40,36 @@ export interface ToggleProps {
  * Thumb = bolita que se mueve
  * Label/Desc = texto al lado
  */
-const SIZE_CONFIG: Record<ToggleSize, {
-  track: string;
-  thumb: string;
-  thumbTranslate: string;
-  label: string;
-  description: string;
-}> = {
+const SIZE_CONFIG: Record<
+  ToggleSize,
+  {
+    track: string;
+    thumb: string;
+    thumbTranslate: string;
+    label: string;
+    description: string;
+  }
+> = {
   sm: {
-    track:          'w-[30px] h-4',
-    thumb:          'w-3 h-3',
+    track: 'w-[30px] h-4',
+    thumb: 'w-3 h-3',
     thumbTranslate: 'translate-x-[14px]',
-    label:          'text-xs',
-    description:    'text-[10px]',
+    label: 'text-xs',
+    description: 'text-[10px]',
   },
   md: {
-    track:          'w-[38px] h-5',
-    thumb:          'w-3.5 h-3.5',
+    track: 'w-[38px] h-5',
+    thumb: 'w-3.5 h-3.5',
     thumbTranslate: 'translate-x-[18px]',
-    label:          'text-[13px]',
-    description:    'text-[11px]',
+    label: 'text-[13px]',
+    description: 'text-[11px]',
   },
   lg: {
-    track:          'w-12 h-[26px]',
-    thumb:          'w-5 h-5',
+    track: 'w-12 h-[26px]',
+    thumb: 'w-5 h-5',
     thumbTranslate: 'translate-x-[22px]',
-    label:          'text-sm',
-    description:    'text-xs',
+    label: 'text-sm',
+    description: 'text-xs',
   },
 };
 
@@ -77,7 +80,7 @@ const SIZE_CONFIG: Record<ToggleSize, {
 const VARIANT_ACTIVE_CLASSES: Record<ToggleVariant, string> = {
   primary: 'bg-[var(--color-primary)]',
   success: 'bg-[var(--color-success)]',
-  danger:  'bg-[var(--color-danger)]',
+  danger: 'bg-[var(--color-danger)]',
 };
 
 // ==============================================================================
@@ -139,7 +142,7 @@ export function Toggle({
         disabled ? 'opacity-50 cursor-not-allowed' : 'cursor-pointer',
 
         // Clase externa
-        className
+        className,
       )}
       onClick={handleClick}
       role="switch"
@@ -157,7 +160,7 @@ export function Toggle({
         <div
           className={cn(
             'flex gap-2.5 flex-1 min-w-0',
-            description ? 'items-start' : 'items-center'
+            description ? 'items-start' : 'items-center',
           )}
         >
           {/* Ícono */}
@@ -166,7 +169,7 @@ export function Toggle({
               className={cn(
                 'flex items-center shrink-0',
                 'text-[var(--text-secondary)]',
-                !!description && 'mt-0.5'
+                !!description && 'mt-0.5',
               )}
             >
               {icon}
@@ -179,7 +182,7 @@ export function Toggle({
               <span
                 className={cn(
                   'font-semibold text-[var(--text-primary)] leading-tight select-none',
-                  config.label
+                  config.label,
                 )}
               >
                 {label}
@@ -190,7 +193,7 @@ export function Toggle({
                 id={descriptionId}
                 className={cn(
                   'text-[var(--text-tertiary)] leading-snug select-none',
-                  config.description
+                  config.description,
                 )}
               >
                 {description}
@@ -211,9 +214,7 @@ export function Toggle({
           config.track,
 
           // Color del track según estado
-          checked
-            ? VARIANT_ACTIVE_CLASSES[variant]
-            : 'bg-[var(--border-strong)]'
+          checked ? VARIANT_ACTIVE_CLASSES[variant] : 'bg-[var(--border-strong)]',
         )}
       >
         {/* Thumb (bolita que se mueve) */}
@@ -228,8 +229,8 @@ export function Toggle({
 
             // Posición según estado
             checked
-              ? config.thumbTranslate  // Movido a la derecha
-              : 'translate-x-0.5'      // Posición izquierda (2px de margen)
+              ? config.thumbTranslate // Movido a la derecha
+              : 'translate-x-0.5', // Posición izquierda (2px de margen)
           )}
         />
       </div>

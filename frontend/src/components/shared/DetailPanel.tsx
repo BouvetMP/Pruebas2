@@ -59,10 +59,13 @@ export interface DetailSectionProps {
 // CLASES POR TAMAÑO
 // ==============================================================================
 
-const SIZE_CLASSES: Record<DetailPanelSize, {
-  open: string;
-  inner: string;
-}> = {
+const SIZE_CLASSES: Record<
+  DetailPanelSize,
+  {
+    open: string;
+    inner: string;
+  }
+> = {
   sm: { open: 'w-[320px]', inner: 'w-[320px]' },
   md: { open: 'w-[400px]', inner: 'w-[400px]' },
   lg: { open: 'w-[520px]', inner: 'w-[520px]' },
@@ -137,7 +140,7 @@ export function DetailPanel({
         open ? config.open : 'w-0',
 
         // Clase externa
-        className
+        className,
       )}
       role="complementary"
       aria-hidden={!open}
@@ -145,7 +148,6 @@ export function DetailPanel({
       tabIndex={-1}
     >
       <div className={cn('h-full flex flex-col overflow-hidden', config.inner)}>
-
         {/* ================================================================
             HEADER
             ================================================================ */}
@@ -171,7 +173,7 @@ export function DetailPanel({
                 'bg-transparent border-none rounded-md',
                 'text-[var(--text-tertiary)]',
                 'cursor-pointer transition-colors duration-150',
-                'hover:bg-[var(--bg-tertiary)] hover:text-[var(--text-secondary)]'
+                'hover:bg-[var(--bg-tertiary)] hover:text-[var(--text-secondary)]',
               )}
               aria-label="Cerrar panel de detalle"
               title="Cerrar (Esc)"
@@ -214,13 +216,7 @@ export function DetailField({
   className = '',
 }: DetailFieldProps) {
   return (
-    <div
-      className={cn(
-        'flex flex-col gap-1 min-w-0',
-        fullWidth && 'col-span-full',
-        className
-      )}
-    >
+    <div className={cn('flex flex-col gap-1 min-w-0', fullWidth && 'col-span-full', className)}>
       <span className="text-[10px] font-semibold text-[var(--text-tertiary)] uppercase tracking-wider flex items-center gap-1">
         {icon}
         {label}
@@ -239,22 +235,8 @@ export function DetailField({
 // SUB-COMPONENTE — DetailGrid
 // ==============================================================================
 
-export function DetailGrid({
-  children,
-  columns = 2,
-  className = '',
-}: DetailGridProps) {
-  return (
-    <div
-      className={cn(
-        'grid gap-4',
-        GRID_COLUMNS[columns],
-        className
-      )}
-    >
-      {children}
-    </div>
-  );
+export function DetailGrid({ children, columns = 2, className = '' }: DetailGridProps) {
+  return <div className={cn('grid gap-4', GRID_COLUMNS[columns], className)}>{children}</div>;
 }
 
 // ==============================================================================
@@ -262,9 +244,7 @@ export function DetailGrid({
 // ==============================================================================
 
 export function DetailDivider({ className = '' }: { className?: string }) {
-  return (
-    <hr className={cn('h-px bg-[var(--border)] my-4 border-none', className)} />
-  );
+  return <hr className={cn('h-px bg-[var(--border)] my-4 border-none', className)} />;
 }
 
 // ==============================================================================

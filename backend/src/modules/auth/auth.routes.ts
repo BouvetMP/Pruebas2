@@ -2,6 +2,10 @@
 // ¿Para qué? Mapear endpoints HTTP a controladores con sus middlewares de seguridad.
 // ¿Impacto? Expone de forma controlada login, registro, recuperación y gestión de usuarios.
 
+// ¿Qué? Rutas del módulo de autenticación con soporte para alias de usuarios del sistema.
+// ¿Para qué? Mapear login, registro y la lista de usuarios internos en español e inglés.
+// ¿Impacto? Resuelve el error al cargar la tabla de Gestión de Usuarios en la interfaz.
+
 import { Router } from 'express';
 import { authController } from './auth.controller.js';
 import { requireAuth, requireRoles } from '../../middlewares/auth.middleware.js';
@@ -18,6 +22,9 @@ router.post('/reset-password', authController.resetPassword);
 // Protegidas
 router.get('/me', requireAuth, authController.me);
 router.post('/register', requireAuth, requireRoles(['ADMINISTRADOR']), authController.register);
+
+// Lista de usuarios del sistema (Soporta inglés y español para el frontend)
 router.get('/users', requireAuth, requireRoles(['ADMINISTRADOR']), authController.listUsers);
+router.get('/usuarios-sistema', requireAuth, requireRoles(['ADMINISTRADOR']), authController.listUsers);
 
 export default router;

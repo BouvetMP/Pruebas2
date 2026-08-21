@@ -28,7 +28,6 @@ export interface SpinnerProps {
 // CLASES POR TAMAÑO
 // ==============================================================================
 
-
 const SIZE_CLASSES: Record<SpinnerSize, string> = {
   sm: 'w-4 h-4 border-2',
   md: 'w-6 h-6 border-2',
@@ -50,9 +49,9 @@ const SIZE_CLASSES: Record<SpinnerSize, string> = {
  * Se usan variables CSS para que los colores cambien con el tema.
  */
 const VARIANT_CLASSES: Record<SpinnerVariant, string> = {
-  primary:   'border-[var(--color-primary)]/20 border-t-[var(--color-primary)]',
+  primary: 'border-[var(--color-primary)]/20 border-t-[var(--color-primary)]',
   secondary: 'border-[var(--text-tertiary)]/20 border-t-[var(--text-tertiary)]',
-  white:     'border-white/20 border-t-white',
+  white: 'border-white/20 border-t-white',
 };
 
 // ==============================================================================
@@ -66,19 +65,17 @@ export function Spinner({
   centered = false,
   className = '',
 }: SpinnerProps) {
-
   // ==============================================================================
   // ELEMENTO DEL SPINNER
   // ==============================================================================
 
- 
   const spinnerElement = (
     <div
       className={cn(
         'rounded-full animate-spin',
         SIZE_CLASSES[size],
         VARIANT_CLASSES[variant],
-        className
+        className,
       )}
       role="status"
       aria-label={label ?? 'Cargando'}
@@ -94,13 +91,11 @@ export function Spinner({
       <div
         className={cn(
           'flex flex-col items-center gap-3',
-          centered && 'justify-center h-full min-h-[200px]'
+          centered && 'justify-center h-full min-h-[200px]',
         )}
       >
         {spinnerElement}
-        <span className="text-[13px] text-[var(--text-secondary)] font-sans">
-          {label}
-        </span>
+        <span className="text-[13px] text-[var(--text-secondary)] font-sans">{label}</span>
       </div>
     );
   }
@@ -111,9 +106,7 @@ export function Spinner({
 
   if (centered) {
     return (
-      <div className="flex items-center justify-center h-full min-h-[200px]">
-        {spinnerElement}
-      </div>
+      <div className="flex items-center justify-center h-full min-h-[200px]">{spinnerElement}</div>
     );
   }
 

@@ -57,7 +57,7 @@ export async function getAllClients(): Promise<BankClient[]> {
  
  */
 export async function getClientsByBank(
-  bankId: SelectedBankId = ALL_BANKS_ID
+  bankId: SelectedBankId = ALL_BANKS_ID,
 ): Promise<BankClient[]> {
   const params = bankId !== ALL_BANKS_ID ? { banco: bankId } : undefined;
 
@@ -96,5 +96,5 @@ export async function getClientsCount(): Promise<number> {
  */
 export async function getActiveClientsCount(): Promise<number> {
   const clients = await getAllClients();
-  return clients.filter(client => client.status === 'active').length;
+  return clients.filter((client) => client.status === 'active').length;
 }

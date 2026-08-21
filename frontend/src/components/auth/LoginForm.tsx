@@ -11,10 +11,7 @@ import { Input } from '@components/ui/Input';
 import { Button } from '@components/ui/Button';
 import { PasswordInput } from './PasswordInput';
 import { isValidEmail } from '@utils/User';
-import {
-  PUBLIC_ROUTES,
-  DEFAULT_AUTHENTICATED_ROUTE,
-} from '@constants/Navigation';
+import { PUBLIC_ROUTES, DEFAULT_AUTHENTICATED_ROUTE } from '@constants/Navigation';
 import { ApiError } from '@api/Client';
 
 // ==============================================================================
@@ -32,7 +29,6 @@ export interface LoginFormProps {
 // ==============================================================================
 // COMPONENTE
 // ==============================================================================
-
 
 export function LoginForm({
   onSuccess,
@@ -150,43 +146,43 @@ export function LoginForm({
   // ==============================================================================
 
   const formStyle: React.CSSProperties = {
-    display:       'flex',
+    display: 'flex',
     flexDirection: 'column',
-    gap:           '18px',
-    fontFamily:    'Inter, sans-serif',
+    gap: '18px',
+    fontFamily: 'Inter, sans-serif',
   };
 
   const errorAlertStyle: React.CSSProperties = {
-    display:      'flex',
-    alignItems:   'flex-start',
-    gap:          '10px',
-    padding:      '12px 14px',
-    background:   'rgba(239, 68, 68, 0.1)',
-    border:       '1px solid rgba(239, 68, 68, 0.25)',
+    display: 'flex',
+    alignItems: 'flex-start',
+    gap: '10px',
+    padding: '12px 14px',
+    background: 'rgba(239, 68, 68, 0.1)',
+    border: '1px solid rgba(239, 68, 68, 0.25)',
     borderRadius: '8px',
-    fontSize:     '12px',
-    color:        '#EF4444',
-    fontWeight:   500,
-    lineHeight:   1.4,
+    fontSize: '12px',
+    color: '#EF4444',
+    fontWeight: 500,
+    lineHeight: 1.4,
   };
 
   const errorIconStyle: React.CSSProperties = {
     flexShrink: 0,
-    marginTop:  '1px',
+    marginTop: '1px',
   };
 
   const forgotLinkContainerStyle: React.CSSProperties = {
-    display:        'flex',
+    display: 'flex',
     justifyContent: 'center',
-    marginTop:      '4px',
+    marginTop: '4px',
   };
 
   const forgotLinkStyle: React.CSSProperties = {
-    fontSize:       '12px',
-    color:          'var(--text-secondary)',
+    fontSize: '12px',
+    color: 'var(--text-secondary)',
     textDecoration: 'none',
-    fontWeight:     500,
-    transition:     'color 0.15s ease',
+    fontWeight: 500,
+    transition: 'color 0.15s ease',
   };
 
   // ==============================================================================

@@ -13,13 +13,13 @@ import { cn } from '@utils/cn';
 
 /** Variantes de color predefinidas del badge. */
 export type BadgeVariant =
-  | 'default'   // Gris neutro
-  | 'primary'   // Azul/índigo (info)
-  | 'success'   // Verde (éxito, aprobado)
-  | 'warning'   // Amarillo (advertencia, medio)
-  | 'danger'    // Rojo (error, crítico, bloqueado)
-  | 'info'      // Cian (informativo)
-  | 'custom';   // Color personalizado (usa color prop)
+  | 'default' // Gris neutro
+  | 'primary' // Azul/índigo (info)
+  | 'success' // Verde (éxito, aprobado)
+  | 'warning' // Amarillo (advertencia, medio)
+  | 'danger' // Rojo (error, crítico, bloqueado)
+  | 'info' // Cian (informativo)
+  | 'custom'; // Color personalizado (usa color prop)
 
 /** Tamaños disponibles del badge. */
 export type BadgeSize = 'sm' | 'md' | 'lg';
@@ -45,12 +45,16 @@ export interface BadgeProps extends HTMLAttributes<HTMLSpanElement> {
  * Se usan variables CSS para que los colores cambien con el tema.
  */
 const VARIANT_CLASSES: Record<Exclude<BadgeVariant, 'custom'>, string> = {
-  default: 'bg-[var(--text-tertiary)]/15 text-[var(--text-tertiary)] border-[var(--text-tertiary)]/30',
-  primary: 'bg-[var(--color-primary)]/15 text-[var(--color-primary-light)] border-[var(--color-primary)]/30',
-  success: 'bg-[var(--color-success)]/15 text-[var(--color-success)] border-[var(--color-success)]/30',
-  warning: 'bg-[var(--color-warning)]/15 text-[var(--color-warning)] border-[var(--color-warning)]/30',
-  danger:  'bg-[var(--color-danger)]/15 text-[var(--color-danger)] border-[var(--color-danger)]/30',
-  info:    'bg-[var(--color-info)]/15 text-[var(--color-info)] border-[var(--color-info)]/30',
+  default:
+    'bg-[var(--text-tertiary)]/15 text-[var(--text-tertiary)] border-[var(--text-tertiary)]/30',
+  primary:
+    'bg-[var(--color-primary)]/15 text-[var(--color-primary-light)] border-[var(--color-primary)]/30',
+  success:
+    'bg-[var(--color-success)]/15 text-[var(--color-success)] border-[var(--color-success)]/30',
+  warning:
+    'bg-[var(--color-warning)]/15 text-[var(--color-warning)] border-[var(--color-warning)]/30',
+  danger: 'bg-[var(--color-danger)]/15 text-[var(--color-danger)] border-[var(--color-danger)]/30',
+  info: 'bg-[var(--color-info)]/15 text-[var(--color-info)] border-[var(--color-info)]/30',
 };
 
 // ==============================================================================
@@ -89,7 +93,7 @@ function hexToRgba(hex: string, opacity: number): string {
   const cleaned = hex.replace('#', '');
   const bigint = parseInt(cleaned, 16);
   const r = (bigint >> 16) & 255;
-  const g = (bigint >>  8) & 255;
+  const g = (bigint >> 8) & 255;
   const b = bigint & 255;
   return `rgba(${r}, ${g}, ${b}, ${opacity})`;
 }
@@ -110,12 +114,10 @@ export function Badge({
   style,
   ...rest
 }: BadgeProps) {
-
   // ==============================================================================
   // DETERMINAR CLASES Y ESTILOS
   // ==============================================================================
 
-  
   const isCustom = variant === 'custom' && color;
 
   const variantClasses = !isCustom
@@ -124,8 +126,8 @@ export function Badge({
 
   const customStyles: React.CSSProperties | undefined = isCustom
     ? {
-        background:  hexToRgba(color, 0.15),
-        color:       color,
+        background: hexToRgba(color, 0.15),
+        color: color,
         borderColor: hexToRgba(color, 0.3),
         ...style,
       }
@@ -150,7 +152,7 @@ export function Badge({
         variantClasses,
 
         // Clase externa
-        className
+        className,
       )}
       style={customStyles}
       {...rest}
@@ -161,7 +163,7 @@ export function Badge({
           className={cn(
             'rounded-full shrink-0 animate-pulse-slow',
             DOT_SIZE_CLASSES[size],
-            isCustom ? '' : 'bg-current'
+            isCustom ? '' : 'bg-current',
           )}
           style={isCustom ? { background: color } : undefined}
           aria-hidden="true"
@@ -169,11 +171,7 @@ export function Badge({
       )}
 
       {/* Ícono (opcional) */}
-      {icon && (
-        <span className="inline-flex shrink-0">
-          {icon}
-        </span>
-      )}
+      {icon && <span className="inline-flex shrink-0">{icon}</span>}
 
       {/* Contenido */}
       {children}

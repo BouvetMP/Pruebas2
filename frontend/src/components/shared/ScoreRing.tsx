@@ -34,16 +34,29 @@ export interface ScoreRingProps {
 // CLASES Y DIMENSIONES POR TAMAÑO
 // ==============================================================================
 
-const SIZE_CONFIG: Record<ScoreRingSize, {
-  wrapper:    string;
-  fontSize:   string;
-  fontWeight: string;
-  pixels:     number;
-}> = {
-  sm: { wrapper: 'w-12 h-12',  fontSize: 'text-[11px]', fontWeight: 'font-bold',      pixels: 48 },
-  md: { wrapper: 'w-20 h-20',  fontSize: 'text-base',   fontWeight: 'font-bold',      pixels: 80 },
-  lg: { wrapper: 'w-[120px] h-[120px]', fontSize: 'text-[22px]', fontWeight: 'font-extrabold', pixels: 120 },
-  xl: { wrapper: 'w-[180px] h-[180px]', fontSize: 'text-[32px]', fontWeight: 'font-extrabold', pixels: 180 },
+const SIZE_CONFIG: Record<
+  ScoreRingSize,
+  {
+    wrapper: string;
+    fontSize: string;
+    fontWeight: string;
+    pixels: number;
+  }
+> = {
+  sm: { wrapper: 'w-12 h-12', fontSize: 'text-[11px]', fontWeight: 'font-bold', pixels: 48 },
+  md: { wrapper: 'w-20 h-20', fontSize: 'text-base', fontWeight: 'font-bold', pixels: 80 },
+  lg: {
+    wrapper: 'w-[120px] h-[120px]',
+    fontSize: 'text-[22px]',
+    fontWeight: 'font-extrabold',
+    pixels: 120,
+  },
+  xl: {
+    wrapper: 'w-[180px] h-[180px]',
+    fontSize: 'text-[32px]',
+    fontWeight: 'font-extrabold',
+    pixels: 180,
+  },
 };
 
 // ==============================================================================
@@ -64,10 +77,13 @@ function clampScore(score: number): number {
 function formatScore(score: number, format: NonNullable<ScoreRingProps['scoreFormat']>): string {
   const clamped = clampScore(score);
   switch (format) {
-    case 'raw':     return String(Math.round(clamped));
-    case 'compact': return `${Math.round(clamped)}%`;
+    case 'raw':
+      return String(Math.round(clamped));
+    case 'compact':
+      return `${Math.round(clamped)}%`;
     case 'percent':
-    default:        return formatRiskScore(clamped);
+    default:
+      return formatRiskScore(clamped);
   }
 }
 
@@ -113,11 +129,7 @@ export function ScoreRing({
 
   return (
     <div
-      className={cn(
-        'relative inline-flex shrink-0',
-        config.wrapper,
-        className
-      )}
+      className={cn('relative inline-flex shrink-0', config.wrapper, className)}
       role="progressbar"
       aria-valuenow={clampedScore}
       aria-valuemin={0}
@@ -125,17 +137,9 @@ export function ScoreRing({
       aria-label={`Score de riesgo: ${formatScore(clampedScore, scoreFormat)}`}
     >
       {/* SVG con el anillo */}
-      <svg
-        viewBox={`0 0 ${VIEW_BOX} ${VIEW_BOX}`}
-        className="w-full h-full -rotate-90"
-      >
+      <svg viewBox={`0 0 ${VIEW_BOX} ${VIEW_BOX}`} className="w-full h-full -rotate-90">
         {/* Círculo de fondo (track) */}
-        <path
-          d={PATH}
-          fill="none"
-          stroke="rgba(255, 255, 255, 0.08)"
-          strokeWidth={strokeWidth}
-        />
+        <path d={PATH} fill="none" stroke="rgba(255, 255, 255, 0.08)" strokeWidth={strokeWidth} />
         {/* Círculo animado (progreso) */}
         <path
           d={PATH}
@@ -146,9 +150,7 @@ export function ScoreRing({
           strokeDashoffset={dashOffset}
           strokeLinecap="round"
           style={{
-            transition: animate
-              ? `stroke-dashoffset ${animationDuration}ms ease-out`
-              : 'none',
+            transition: animate ? `stroke-dashoffset ${animationDuration}ms ease-out` : 'none',
           }}
         />
       </svg>
@@ -161,7 +163,7 @@ export function ScoreRing({
             'flex items-center justify-center',
             'font-sans select-none leading-none',
             config.fontSize,
-            config.fontWeight
+            config.fontWeight,
           )}
           style={{ color: finalColor }}
         >

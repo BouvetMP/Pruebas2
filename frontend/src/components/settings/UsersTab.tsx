@@ -46,9 +46,7 @@ const COLUMNS: DataTableColumn<SystemUser>[] = [
     render: (u) => {
       const meta = getRoleMetadata(u.role);
       return (
-        <span style={{ color: meta.color, fontWeight: 600, fontSize: '12px' }}>
-          {meta.label}
-        </span>
+        <span style={{ color: meta.color, fontWeight: 600, fontSize: '12px' }}>{meta.label}</span>
       );
     },
   },
@@ -56,7 +54,7 @@ const COLUMNS: DataTableColumn<SystemUser>[] = [
     key: 'lastLogin',
     label: 'Último acceso',
     sortable: true,
-    sortAccessor: (u) => u.lastLogin ? new Date(u.lastLogin) : null,
+    sortAccessor: (u) => (u.lastLogin ? new Date(u.lastLogin) : null),
     render: (u) => (
       <span style={{ fontSize: '11px', color: 'var(--text-tertiary)' }}>
         {u.lastLogin ? formatRelativeTime(u.lastLogin) : 'Nunca'}
@@ -98,7 +96,7 @@ export function UsersTab() {
     fetchUsers();
   }, []);
 
-  const activeCount = users.filter(u => u.status === 'active').length;
+  const activeCount = users.filter((u) => u.status === 'active').length;
 
   return (
     <div style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
@@ -125,7 +123,11 @@ export function UsersTab() {
             <EmptyState
               preset="error"
               description={error}
-              action={<Button variant="primary" onClick={fetchUsers}>Reintentar</Button>}
+              action={
+                <Button variant="primary" onClick={fetchUsers}>
+                  Reintentar
+                </Button>
+              }
             />
           ) : (
             <DataTable<SystemUser>
@@ -139,11 +141,7 @@ export function UsersTab() {
         </CardBody>
       </Card>
 
-      <NewUserModal
-        open={modalOpen}
-        onClose={() => setModalOpen(false)}
-        onSuccess={fetchUsers}
-      />
+      <NewUserModal open={modalOpen} onClose={() => setModalOpen(false)} onSuccess={fetchUsers} />
     </div>
   );
 }

@@ -60,17 +60,19 @@ interface UnauthorizedScreenProps {
 }
 
 function UnauthorizedScreen({ reason, redirectPath }: UnauthorizedScreenProps) {
-  const iconElement = reason === 'role'
-    ? <Lock size={48} strokeWidth={1.5} />
-    : <ShieldAlert size={48} strokeWidth={1.5} />;
+  const iconElement =
+    reason === 'role' ? (
+      <Lock size={48} strokeWidth={1.5} />
+    ) : (
+      <ShieldAlert size={48} strokeWidth={1.5} />
+    );
 
-  const title = reason === 'role'
-    ? 'Acceso restringido por rol'
-    : 'Permiso insuficiente';
+  const title = reason === 'role' ? 'Acceso restringido por rol' : 'Permiso insuficiente';
 
-  const description = reason === 'role'
-    ? 'Tu rol actual no tiene acceso a esta sección del sistema. Contacta a un administrador si necesitas acceso.'
-    : 'No tienes el permiso específico requerido para acceder a esta funcionalidad.';
+  const description =
+    reason === 'role'
+      ? 'Tu rol actual no tiene acceso a esta sección del sistema. Contacta a un administrador si necesitas acceso.'
+      : 'No tienes el permiso específico requerido para acceder a esta funcionalidad.';
 
   return (
     <div
@@ -86,10 +88,7 @@ function UnauthorizedScreen({ reason, redirectPath }: UnauthorizedScreenProps) {
           variant="danger"
           size="lg"
           action={
-            <Button
-              variant="primary"
-              onClick={() => (window.location.href = redirectPath)}
-            >
+            <Button variant="primary" onClick={() => (window.location.href = redirectPath)}>
               Volver al inicio
             </Button>
           }
@@ -112,14 +111,7 @@ export function ProtectedRoute({
   silentRedirect = false,
   unauthorizedRedirect = '/',
 }: ProtectedRouteProps) {
-  const {
-    isAuthenticated,
-    isAdmin,
-    loading,
-    user,
-    isRole,
-    hasPermission,
-  } = useAuth();
+  const { isAuthenticated, isAdmin, loading, user, isRole, hasPermission } = useAuth();
   const location = useLocation();
 
   // 1. Loading
@@ -129,13 +121,7 @@ export function ProtectedRoute({
 
   // 2. No autenticado
   if (!isAuthenticated) {
-    return (
-      <Navigate
-        to={redirectTo}
-        state={{ from: location.pathname }}
-        replace
-      />
-    );
+    return <Navigate to={redirectTo} state={{ from: location.pathname }} replace />;
   }
 
   // 3. Admin only

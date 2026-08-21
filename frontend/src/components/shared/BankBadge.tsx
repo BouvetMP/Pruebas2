@@ -34,18 +34,18 @@ export interface BankBadgeProps {
 function resolveBank(
   bank?: Bank | null,
   name?: string,
-  color?: string
+  color?: string,
 ): { name: string; color: string; isAll: boolean } {
   if (bank) {
     return {
-      name:  bank.name,
+      name: bank.name,
       color: bank.color ?? DEFAULT_BANK_COLOR,
       isAll: bank.id === ALL_BANKS_ID,
     };
   }
 
   return {
-    name:  name  ?? 'Sin banco',
+    name: name ?? 'Sin banco',
     color: color ?? DEFAULT_BANK_COLOR,
     isAll: false,
   };
@@ -87,14 +87,10 @@ export function BankBadge({
   if (dotOnly) {
     return (
       <span
-        className={cn(
-          'inline-block rounded-full shrink-0',
-          DOT_SIZE_CLASSES[size],
-          className
-        )}
+        className={cn('inline-block rounded-full shrink-0', DOT_SIZE_CLASSES[size], className)}
         style={{
           background: resolved.color,
-          boxShadow:  `0 0 0 2px ${resolved.color}20`,
+          boxShadow: `0 0 0 2px ${resolved.color}20`,
         }}
         title={resolved.name}
         aria-label={`Banco: ${resolved.name}`}

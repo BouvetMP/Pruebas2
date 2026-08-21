@@ -40,14 +40,10 @@ export interface UseClockOptions {
  * @param options - Configuración opcional del hook.
  * @returns Objeto Date con la hora actual.
  *
- * 
+ *
  */
 export function useClock(options: UseClockOptions = {}): Date {
-  const {
-    intervalMs = DEFAULT_INTERVAL_MS,
-    enabled = true,
-    pauseWhenHidden = true,
-  } = options;
+  const { intervalMs = DEFAULT_INTERVAL_MS, enabled = true, pauseWhenHidden = true } = options;
 
   const [now, setNow] = useState<Date>(() => new Date());
 
@@ -146,10 +142,10 @@ export function useFormattedClock(options: UseClockOptions = {}): FormattedClock
   const now = useClock(options);
 
   return {
-    date:            now,
-    time:            formatTime(now, false),
+    date: now,
+    time: formatTime(now, false),
     timeWithSeconds: formatTime(now, true),
-    date_:           formatDate(now),
-    dateTime:        formatDateTime(now),
+    date_: formatDate(now),
+    dateTime: formatDateTime(now),
   };
 }

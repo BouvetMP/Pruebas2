@@ -12,11 +12,7 @@ import type {
   TransactionRaw,
   SelectedBankId,
 } from '@app-types';
-import {
-  ALL_BANKS_ID,
-  DEFAULT_BANK_COLOR,
-  hasValidCoordinates,
-} from '@app-types';
+import { ALL_BANKS_ID, DEFAULT_BANK_COLOR, hasValidCoordinates } from '@app-types';
 import { getRiskLevel, mapTransactionStatusRaw } from '@utils/Risk';
 
 // ==============================================================================
@@ -40,11 +36,11 @@ function toNumber(value: unknown, fallback: number = 0): number {
  */
 function normalizeMapStats(raw: MapStatsRaw): MapStats {
   return {
-    total:    toNumber(raw.total_transacciones ?? raw.total, 0),
+    total: toNumber(raw.total_transacciones ?? raw.total, 0),
     critical: toNumber(raw.total_criticas ?? raw.crit, 0),
-    high:     toNumber(raw.total_altas ?? raw.high, 0),
+    high: toNumber(raw.total_altas ?? raw.high, 0),
     approved: toNumber(raw.total_aprobadas ?? raw.app, 0),
-    blocked:  toNumber(raw.total_bloqueadas ?? raw.blk, 0),
+    blocked: toNumber(raw.total_bloqueadas ?? raw.blk, 0),
   };
 }
 
@@ -62,22 +58,22 @@ function toMapPoint(raw: TransactionRaw): TransactionMapPoint {
   const level = getRiskLevel(score);
 
   return {
-    id:         String(raw.id_transaccion),
-    riskScore:  score,
+    id: String(raw.id_transaccion),
+    riskScore: score,
     alertLevel: level,
-    status:     mapTransactionStatusRaw(raw.estado_transaccion),
-    user:       raw.cliente ?? raw.nombre_completo ?? 'Desconocido',
-    type:       raw.tipo_transaccion ?? 'Sin tipo',
-    amount:     toNumber(raw.monto, 0),
-    currency:   raw.moneda ?? 'COP',
-    channel:    raw.canal ?? 'web',
+    status: mapTransactionStatusRaw(raw.estado_transaccion),
+    user: raw.cliente ?? raw.nombre_completo ?? 'Desconocido',
+    type: raw.tipo_transaccion ?? 'Sin tipo',
+    amount: toNumber(raw.monto, 0),
+    currency: raw.moneda ?? 'COP',
+    channel: raw.canal ?? 'web',
     bank: {
-      name:  raw.banco ?? 'Sin banco',
+      name: raw.banco ?? 'Sin banco',
       color: raw.banco_color ?? raw.color_banco ?? DEFAULT_BANK_COLOR,
     },
     location: {
-      city:      raw.ciudad ?? 'Desconocida',
-      latitude:  toNumber(raw.latitud, 0),
+      city: raw.ciudad ?? 'Desconocida',
+      latitude: toNumber(raw.latitud, 0),
       longitude: toNumber(raw.longitud, 0),
     },
   };
@@ -99,9 +95,7 @@ function toMapPoint(raw: TransactionRaw): TransactionMapPoint {
  * @returns Estadísticas normalizadas del mapa.
  *
  */
-export async function getMapStats(
-  bankId: SelectedBankId = ALL_BANKS_ID
-): Promise<MapStats> {
+export async function getMapStats(bankId: SelectedBankId = ALL_BANKS_ID): Promise<MapStats> {
   const params = bankId !== ALL_BANKS_ID ? { banco: bankId } : undefined;
 
   const raw = await get<MapStatsRaw>('/mapa/stats', params);
@@ -123,14 +117,14 @@ export async function getMapStats(
  *
  */
 export async function getMapPoints(
-  bankId: SelectedBankId = ALL_BANKS_ID
+  bankId: SelectedBankId = ALL_BANKS_ID,
 ): Promise<TransactionMapPoint[]> {
   const params = bankId !== ALL_BANKS_ID ? { banco: bankId } : undefined;
 
   const raw = await get<TransactionRaw[]>('/mapa/ubicaciones', params);
 
   return (raw ?? [])
-    .filter(item => hasValidCoordinates(item.latitud, item.longitud))
+    .filter((item) => hasValidCoordinates(item.latitud, item.longitud))
     .map(toMapPoint);
 }
 
@@ -142,7 +136,7 @@ export async function getMapPoints(
  * Payload completo del Mapa con stats + puntos geográficos.
  */
 export interface MapData {
-  stats:  MapStats;
+  stats: MapStats;
   points: TransactionMapPoint[];
 }
 
@@ -158,13 +152,8 @@ export interface MapData {
  * @returns Objeto con stats y puntos del mapa.
  *
  */
-export async function getMapData(
-  bankId: SelectedBankId = ALL_BANKS_ID
-): Promise<MapData> {
-  const [stats, points] = await Promise.all([
-    getMapStats(bankId),
-    getMapPoints(bankId),
-  ]);
+export async function getMapData(bankId: SelectedBankId = ALL_BANKS_ID): Promise<MapData> {
+  const [stats, points] = await Promise.all([getMapStats(bankId), getMapPoints(bankId)]);
 
   return { stats, points };
 }
@@ -184,12 +173,10 @@ export async function getMapData(
  * @returns Array de puntos con nivel crítico o alto.
  */
 export async function getCriticalMapPoints(
-  bankId: SelectedBankId = ALL_BANKS_ID
+  bankId: SelectedBankId = ALL_BANKS_ID,
 ): Promise<TransactionMapPoint[]> {
   const points = await getMapPoints(bankId);
-  return points.filter(
-    point => point.alertLevel === 'critical' || point.alertLevel === 'high'
-  );
+  return points.filter((point) => point.alertLevel === 'critical' || point.alertLevel === 'high');
 }
 
 /**
@@ -202,10 +189,10 @@ export async function getCriticalMapPoints(
  * @returns Array de puntos con estado bloqueado.
  */
 export async function getBlockedMapPoints(
-  bankId: SelectedBankId = ALL_BANKS_ID
+  bankId: SelectedBankId = ALL_BANKS_ID,
 ): Promise<TransactionMapPoint[]> {
   const points = await getMapPoints(bankId);
-  return points.filter(point => point.status === 'blocked');
+  return points.filter((point) => point.status === 'blocked');
 }
 
 /**
@@ -222,7 +209,7 @@ export async function getBlockedMapPoints(
  */
 export async function getRecentMapPoints(
   limit: number = 6,
-  bankId: SelectedBankId = ALL_BANKS_ID
+  bankId: SelectedBankId = ALL_BANKS_ID,
 ): Promise<TransactionMapPoint[]> {
   const points = await getMapPoints(bankId);
   return points.slice(0, limit);

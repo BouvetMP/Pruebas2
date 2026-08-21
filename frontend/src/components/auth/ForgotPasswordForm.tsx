@@ -6,14 +6,7 @@
 
 import { useState, type FormEvent } from 'react';
 import { Link } from 'react-router-dom';
-import {
-  Mail,
-  Send,
-  CheckCircle,
-  ArrowLeft,
-  AlertCircle,
-  Info,
-} from 'lucide-react';
+import { Mail, Send, CheckCircle, ArrowLeft, AlertCircle, Info } from 'lucide-react';
 import { forgotPassword } from '@api/Auth';
 import { Input } from '@components/ui/Input';
 import { Button } from '@components/ui/Button';
@@ -43,7 +36,6 @@ export function ForgotPasswordForm({
   expirationMinutes = 15,
   className = '',
 }: ForgotPasswordFormProps) {
-
   // ==============================================================================
   // ESTADO
   // ==============================================================================
@@ -126,7 +118,6 @@ export function ForgotPasswordForm({
     }
   };
 
-
   const handleTryAgain = (): void => {
     setSent(false);
     setEmail('');
@@ -140,46 +131,46 @@ export function ForgotPasswordForm({
   // ==============================================================================
 
   const wrapperStyle: React.CSSProperties = {
-    display:       'flex',
+    display: 'flex',
     flexDirection: 'column',
-    gap:           '20px',
-    fontFamily:    'Inter, sans-serif',
+    gap: '20px',
+    fontFamily: 'Inter, sans-serif',
   };
 
   const errorAlertStyle: React.CSSProperties = {
-    display:      'flex',
-    alignItems:   'flex-start',
-    gap:          '10px',
-    padding:      '12px 14px',
-    background:   'rgba(239, 68, 68, 0.1)',
-    border:       '1px solid rgba(239, 68, 68, 0.25)',
+    display: 'flex',
+    alignItems: 'flex-start',
+    gap: '10px',
+    padding: '12px 14px',
+    background: 'rgba(239, 68, 68, 0.1)',
+    border: '1px solid rgba(239, 68, 68, 0.25)',
     borderRadius: '8px',
-    fontSize:     '12px',
-    color:        '#EF4444',
-    fontWeight:   500,
-    lineHeight:   1.4,
+    fontSize: '12px',
+    color: '#EF4444',
+    fontWeight: 500,
+    lineHeight: 1.4,
   };
 
   const iconStyle: React.CSSProperties = {
     flexShrink: 0,
-    marginTop:  '1px',
+    marginTop: '1px',
   };
 
   const backLinkContainerStyle: React.CSSProperties = {
-    display:        'flex',
+    display: 'flex',
     justifyContent: 'center',
-    marginTop:      '4px',
+    marginTop: '4px',
   };
 
   const backLinkStyle: React.CSSProperties = {
-    display:        'inline-flex',
-    alignItems:     'center',
-    gap:            '4px',
-    fontSize:       '12px',
-    color:          'var(--text-secondary)',
+    display: 'inline-flex',
+    alignItems: 'center',
+    gap: '4px',
+    fontSize: '12px',
+    color: 'var(--text-secondary)',
     textDecoration: 'none',
-    fontWeight:     500,
-    transition:     'color 0.15s ease',
+    fontWeight: 500,
+    transition: 'color 0.15s ease',
   };
 
   // ==============================================================================
@@ -188,68 +179,65 @@ export function ForgotPasswordForm({
 
   if (sent) {
     const successCardStyle: React.CSSProperties = {
-      display:       'flex',
+      display: 'flex',
       flexDirection: 'column',
-      alignItems:    'center',
-      gap:           '16px',
-      padding:       '24px',
-      background:    'rgba(52, 211, 153, 0.08)',
-      border:        '1px solid rgba(52, 211, 153, 0.25)',
-      borderRadius:  '12px',
-      textAlign:     'center',
+      alignItems: 'center',
+      gap: '16px',
+      padding: '24px',
+      background: 'rgba(52, 211, 153, 0.08)',
+      border: '1px solid rgba(52, 211, 153, 0.25)',
+      borderRadius: '12px',
+      textAlign: 'center',
     };
 
     const successIconStyle: React.CSSProperties = {
-      display:        'flex',
-      alignItems:     'center',
+      display: 'flex',
+      alignItems: 'center',
       justifyContent: 'center',
-      width:          '56px',
-      height:         '56px',
-      borderRadius:   '50%',
-      background:     'rgba(52, 211, 153, 0.15)',
-      color:          '#34D399',
+      width: '56px',
+      height: '56px',
+      borderRadius: '50%',
+      background: 'rgba(52, 211, 153, 0.15)',
+      color: '#34D399',
     };
 
     const successTitleStyle: React.CSSProperties = {
-      fontSize:   '16px',
+      fontSize: '16px',
       fontWeight: 700,
-      color:      'var(--text-primary)',
-      margin:     0,
+      color: 'var(--text-primary)',
+      margin: 0,
       lineHeight: 1.3,
     };
 
     const successMessageStyle: React.CSSProperties = {
-      fontSize:   '13px',
-      color:      'var(--text-secondary)',
-      margin:     0,
+      fontSize: '13px',
+      color: 'var(--text-secondary)',
+      margin: 0,
       lineHeight: 1.5,
     };
 
     const emailHighlightStyle: React.CSSProperties = {
-      color:      '#34D399',
+      color: '#34D399',
       fontWeight: 700,
-      wordBreak:  'break-all',
+      wordBreak: 'break-all',
     };
 
     const infoNoteStyle: React.CSSProperties = {
-      display:      'flex',
-      alignItems:   'flex-start',
-      gap:          '8px',
-      padding:      '10px 12px',
-      background:   'rgba(99, 102, 241, 0.08)',
-      border:       '1px solid rgba(99, 102, 241, 0.2)',
+      display: 'flex',
+      alignItems: 'flex-start',
+      gap: '8px',
+      padding: '10px 12px',
+      background: 'rgba(99, 102, 241, 0.08)',
+      border: '1px solid rgba(99, 102, 241, 0.2)',
       borderRadius: '8px',
-      fontSize:     '11px',
-      color:        'var(--text-secondary)',
-      lineHeight:   1.5,
-      textAlign:    'left',
+      fontSize: '11px',
+      color: 'var(--text-secondary)',
+      lineHeight: 1.5,
+      textAlign: 'left',
     };
 
     return (
-      <div
-        className={`forgot-password-form-sent ${className}`}
-        style={wrapperStyle}
-      >
+      <div className={`forgot-password-form-sent ${className}`} style={wrapperStyle}>
         <div style={successCardStyle} role="status" aria-live="polite">
           <div style={successIconStyle}>
             <CheckCircle size={28} strokeWidth={2} />
@@ -258,25 +246,20 @@ export function ForgotPasswordForm({
           <h3 style={successTitleStyle}>Correo enviado</h3>
 
           <p style={successMessageStyle}>
-            Si <span style={emailHighlightStyle}>{sentToEmail}</span> está
-            registrado en el sistema, recibirás un enlace para restablecer
-            tu contraseña.
+            Si <span style={emailHighlightStyle}>{sentToEmail}</span> está registrado en el sistema,
+            recibirás un enlace para restablecer tu contraseña.
           </p>
 
           <div style={infoNoteStyle}>
             <Info size={13} style={iconStyle} strokeWidth={2} />
             <span>
-              El enlace expira en <strong>{expirationMinutes} minutos</strong>.
-              Revisa tu bandeja de entrada y la carpeta de spam.
+              El enlace expira en <strong>{expirationMinutes} minutos</strong>. Revisa tu bandeja de
+              entrada y la carpeta de spam.
             </span>
           </div>
         </div>
 
-        <Button
-          variant="ghost"
-          onClick={handleTryAgain}
-          fullWidth
-        >
+        <Button variant="ghost" onClick={handleTryAgain} fullWidth>
           Enviar a otro correo
         </Button>
 
@@ -322,14 +305,14 @@ export function ForgotPasswordForm({
       {/* Descripción */}
       <p
         style={{
-          fontSize:   '13px',
-          color:      'var(--text-secondary)',
-          margin:     0,
+          fontSize: '13px',
+          color: 'var(--text-secondary)',
+          margin: 0,
           lineHeight: 1.5,
         }}
       >
-        Ingresa el correo asociado a tu cuenta y te enviaremos un enlace
-        para restablecer tu contraseña.
+        Ingresa el correo asociado a tu cuenta y te enviaremos un enlace para restablecer tu
+        contraseña.
       </p>
 
       {/* Campo Email */}

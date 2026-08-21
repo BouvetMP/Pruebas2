@@ -25,9 +25,9 @@ export interface MapPointMarkerProps {
 function getMarkerRadius(level: RiskLevel, isRecent: boolean): number {
   const base = {
     critical: 8,
-    high:     6,
-    medium:   4,
-    low:      3,
+    high: 6,
+    medium: 4,
+    low: 3,
   };
   return isRecent ? base[level] + 2 : base[level];
 }
@@ -36,11 +36,7 @@ function getMarkerRadius(level: RiskLevel, isRecent: boolean): number {
 // COMPONENTE
 // ==============================================================================
 
-export function MapPointMarker({
-  point,
-  isRecent = false,
-  onClick,
-}: MapPointMarkerProps) {
+export function MapPointMarker({ point, isRecent = false, onClick }: MapPointMarkerProps) {
   const level = point.alertLevel as RiskLevel;
   const color = RISK_COLORS[level] ?? '#6366F1';
   const radius = getMarkerRadius(level, isRecent);
@@ -51,10 +47,10 @@ export function MapPointMarker({
       radius={radius}
       pathOptions={{
         color,
-        fillColor:   color,
+        fillColor: color,
         fillOpacity: isRecent ? 0.9 : 0.5,
-        weight:      isRecent ? 2.5 : 1,
-        opacity:     isRecent ? 1 : 0.6,
+        weight: isRecent ? 2.5 : 1,
+        opacity: isRecent ? 1 : 0.6,
       }}
       eventHandlers={{
         click: () => onClick?.(point),

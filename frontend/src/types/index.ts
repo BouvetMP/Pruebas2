@@ -39,19 +39,9 @@ export type {
 // BANCOS
 // ==============================================================================
 
-export type {
-  Bank,
-  BankRaw,
-  AllBanksId,
-  SelectedBankId,
-} from './Bank';
+export type { Bank, BankRaw, AllBanksId, SelectedBankId } from './Bank';
 
-export {
-  ALL_BANKS_ID,
-  ALL_BANKS_OPTION,
-  DEFAULT_BANK_COLOR,
-  UNASSIGNED_BANK_ID,
-} from './Bank';
+export { ALL_BANKS_ID, ALL_BANKS_OPTION, DEFAULT_BANK_COLOR, UNASSIGNED_BANK_ID } from './Bank';
 
 // ==============================================================================
 // TRANSACCIONES
@@ -60,18 +50,14 @@ export {
 export type {
   Transaction,
   TransactionRaw,
-
   TransactionStatus,
   TransactionStatusRaw,
   TransactionChannel,
   CurrencyCode,
-
   TransactionFilters,
   TransactionSort,
   TransactionSortField,
-
   TransactionStats,
-
   TransactionMapPoint,
 } from './Transaction';
 
@@ -83,18 +69,15 @@ export type {
   Alert,
   AlertRaw,
   RecentAlert,
-
   AlertCriticality,
   AlertCriticalityRaw,
   AlertStatus,
   AlertStatusRaw,
   AlertClassification,
   AlertClassificationRaw,
-
   Validation,
   ValidationRaw,
   ValidateAlertPayload,
-
   AlertFilters,
   AlertStats,
 } from './Alert';
@@ -112,10 +95,7 @@ export type {
   DeviceFilters,
 } from './Device';
 
-export {
-  MOBILE_KEYWORDS,
-  TABLET_KEYWORDS,
-} from './Device';
+export { MOBILE_KEYWORDS, TABLET_KEYWORDS } from './Device';
 
 // ==============================================================================
 // UBICACIONES GEOGRÁFICAS

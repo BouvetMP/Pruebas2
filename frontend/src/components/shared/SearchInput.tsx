@@ -13,7 +13,8 @@ import type { InputProps } from '@components/ui/Input';
 // ==============================================================================
 
 /** Props del SearchInput. */
-export interface SearchInputProps extends Omit<InputProps, 'onChange' | 'value' | 'leftIcon' | 'rightIcon' | 'type'> {
+export interface SearchInputProps
+  extends Omit<InputProps, 'onChange' | 'value' | 'leftIcon' | 'rightIcon' | 'type'> {
   value: string;
   onSearch: (debouncedValue: string) => void;
   onChange?: (value: string) => void;

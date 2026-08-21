@@ -4,11 +4,7 @@
 // ¿Impacto? Todos los componentes que muestren íconos, labels o filtren por
 //           tipo de dispositivo usan estas funciones de forma consistente.
 
-import {
-  MOBILE_KEYWORDS,
-  TABLET_KEYWORDS,
-  type DeviceCategory,
-} from '@app-types/Device';
+import { MOBILE_KEYWORDS, TABLET_KEYWORDS, type DeviceCategory } from '@app-types/Device';
 
 // ==============================================================================
 // PALABRAS CLAVE PARA CLASIFICACIÓN
@@ -72,11 +68,11 @@ export function getDeviceCategory(typeString: string | null | undefined): Device
 
   // Se evalúan en orden de especificidad (tablet ANTES de mobile para evitar
   // que "galaxy tab" caiga en mobile por la palabra "galaxy").
-  if (TABLET_KEYWORDS.some(kw => value.includes(kw)))  return 'tablet';
-  if (MOBILE_KEYWORDS.some(kw => value.includes(kw)))  return 'mobile';
-  if (POS_KEYWORDS.some(kw => value.includes(kw)))     return 'pos';
-  if (ATM_KEYWORDS.some(kw => value.includes(kw)))     return 'atm';
-  if (DESKTOP_KEYWORDS.some(kw => value.includes(kw))) return 'desktop';
+  if (TABLET_KEYWORDS.some((kw) => value.includes(kw))) return 'tablet';
+  if (MOBILE_KEYWORDS.some((kw) => value.includes(kw))) return 'mobile';
+  if (POS_KEYWORDS.some((kw) => value.includes(kw))) return 'pos';
+  if (ATM_KEYWORDS.some((kw) => value.includes(kw))) return 'atm';
+  if (DESKTOP_KEYWORDS.some((kw) => value.includes(kw))) return 'desktop';
 
   return 'unknown';
 }
@@ -113,11 +109,11 @@ export function isMobileDevice(typeString: string | null | undefined): boolean {
  */
 export function getDeviceCategoryLabel(category: DeviceCategory): string {
   const labels: Record<DeviceCategory, string> = {
-    mobile:  'Móvil',
-    tablet:  'Tablet',
+    mobile: 'Móvil',
+    tablet: 'Tablet',
     desktop: 'Computador',
-    pos:     'Punto de Venta',
-    atm:     'Cajero Automático',
+    pos: 'Punto de Venta',
+    atm: 'Cajero Automático',
     unknown: 'Desconocido',
   };
 
@@ -142,11 +138,11 @@ export function getDeviceCategoryLabel(category: DeviceCategory): string {
  */
 export function getDeviceCategoryEmoji(category: DeviceCategory): string {
   const emojis: Record<DeviceCategory, string> = {
-    mobile:  '📱',
-    tablet:  '📱',
+    mobile: '📱',
+    tablet: '📱',
     desktop: '💻',
-    pos:     '💳',
-    atm:     '🏧',
+    pos: '💳',
+    atm: '🏧',
     unknown: '❓',
   };
 
@@ -170,13 +166,7 @@ export function getDeviceEmoji(typeString: string | null | undefined): string {
 /**
  * Categorías de sistemas operativos.
  */
-export type OperatingSystemCategory =
-  | 'ios'
-  | 'android'
-  | 'windows'
-  | 'macos'
-  | 'linux'
-  | 'unknown';
+export type OperatingSystemCategory = 'ios' | 'android' | 'windows' | 'macos' | 'linux' | 'unknown';
 
 /**
  * Clasifica un sistema operativo a partir de su nombre.
@@ -190,11 +180,12 @@ export function getOSCategory(osString: string | null | undefined): OperatingSys
 
   const value = String(osString).toLowerCase().trim();
 
-  if (value.includes('ios') || value.includes('iphone') || value.includes('ipad'))    return 'ios';
-  if (value.includes('android'))                                                       return 'android';
-  if (value.includes('windows') || value.includes('win '))                             return 'windows';
-  if (value.includes('mac') || value.includes('darwin'))                               return 'macos';
-  if (value.includes('linux') || value.includes('ubuntu') || value.includes('debian')) return 'linux';
+  if (value.includes('ios') || value.includes('iphone') || value.includes('ipad')) return 'ios';
+  if (value.includes('android')) return 'android';
+  if (value.includes('windows') || value.includes('win ')) return 'windows';
+  if (value.includes('mac') || value.includes('darwin')) return 'macos';
+  if (value.includes('linux') || value.includes('ubuntu') || value.includes('debian'))
+    return 'linux';
 
   return 'unknown';
 }
@@ -207,11 +198,11 @@ export function getOSCategory(osString: string | null | undefined): OperatingSys
  */
 export function getOSCategoryLabel(category: OperatingSystemCategory): string {
   const labels: Record<OperatingSystemCategory, string> = {
-    ios:     'iOS',
+    ios: 'iOS',
     android: 'Android',
     windows: 'Windows',
-    macos:   'macOS',
-    linux:   'Linux',
+    macos: 'macOS',
+    linux: 'Linux',
     unknown: 'Desconocido',
   };
 
@@ -225,13 +216,7 @@ export function getOSCategoryLabel(category: OperatingSystemCategory): string {
 /**
  * Categorías de navegadores.
  */
-export type BrowserCategory =
-  | 'chrome'
-  | 'firefox'
-  | 'safari'
-  | 'edge'
-  | 'opera'
-  | 'unknown';
+export type BrowserCategory = 'chrome' | 'firefox' | 'safari' | 'edge' | 'opera' | 'unknown';
 
 /**
  * Clasifica un navegador a partir de su nombre.
@@ -240,18 +225,16 @@ export type BrowserCategory =
  * @returns Categoría del navegador.
  *
  */
-export function getBrowserCategory(
-  browserString: string | null | undefined
-): BrowserCategory {
+export function getBrowserCategory(browserString: string | null | undefined): BrowserCategory {
   if (!browserString) return 'unknown';
 
   const value = String(browserString).toLowerCase().trim();
 
   if (value.includes('chrome') && !value.includes('edge')) return 'chrome';
-  if (value.includes('firefox'))                            return 'firefox';
+  if (value.includes('firefox')) return 'firefox';
   if (value.includes('safari') && !value.includes('chrome')) return 'safari';
-  if (value.includes('edge'))                               return 'edge';
-  if (value.includes('opera'))                              return 'opera';
+  if (value.includes('edge')) return 'edge';
+  if (value.includes('opera')) return 'opera';
 
   return 'unknown';
 }
@@ -280,12 +263,12 @@ export function isSuspiciousDevice(device: {
 }): boolean {
   if (!device.type || !device.operatingSystem) return true;
 
-  if (getDeviceCategory(device.type) === 'unknown')      return true;
+  if (getDeviceCategory(device.type) === 'unknown') return true;
   if (getOSCategory(device.operatingSystem) === 'unknown') return true;
 
   if (device.firstUsedAt) {
     const firstUse = new Date(device.firstUsedAt).getTime();
-    const now      = Date.now();
+    const now = Date.now();
     const hoursAge = (now - firstUse) / (1000 * 60 * 60);
 
     if (hoursAge < 24) return true;
@@ -328,8 +311,8 @@ export function getDeviceTrustScore(device: {
 
   if (device.firstUsedAt) {
     const firstUse = new Date(device.firstUsedAt).getTime();
-    const now      = Date.now();
-    const daysAge  = (now - firstUse) / (1000 * 60 * 60 * 24);
+    const now = Date.now();
+    const daysAge = (now - firstUse) / (1000 * 60 * 60 * 24);
 
     if (daysAge >= 30) score += 25;
     else if (daysAge >= 7) score += 15;

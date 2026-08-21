@@ -75,9 +75,7 @@ export function UsersPage() {
 
         if (cancelled) return;
 
-        setClients(
-          clientsData.status === 'fulfilled' ? clientsData.value : []
-        );
+        setClients(clientsData.status === 'fulfilled' ? clientsData.value : []);
 
         if (devicesData.status === 'fulfilled') {
           setDevicesByClient(devicesData.value);
@@ -110,27 +108,22 @@ export function UsersPage() {
   // FILTRADO — Clientes
   // ==============================================================================
 
-  const activeClients = useMemo(
-    () => clients.filter(c => c.status === 'active'),
-    [clients]
-  );
+  const activeClients = useMemo(() => clients.filter((c) => c.status === 'active'), [clients]);
 
-  const inactiveClients = useMemo(
-    () => clients.filter(c => c.status === 'inactive'),
-    [clients]
-  );
+  const inactiveClients = useMemo(() => clients.filter((c) => c.status === 'inactive'), [clients]);
 
   const filteredClients = useMemo(() => {
     let result = showInactive ? clients : activeClients;
 
     if (debouncedSearch.trim()) {
       const query = debouncedSearch.toLowerCase();
-      result = result.filter(c =>
-        c.name.toLowerCase().includes(query) ||
-        c.email.toLowerCase().includes(query) ||
-        c.city.toLowerCase().includes(query) ||
-        c.bank.name.toLowerCase().includes(query) ||
-        c.phone.includes(query)
+      result = result.filter(
+        (c) =>
+          c.name.toLowerCase().includes(query) ||
+          c.email.toLowerCase().includes(query) ||
+          c.city.toLowerCase().includes(query) ||
+          c.bank.name.toLowerCase().includes(query) ||
+          c.phone.includes(query),
       );
     }
 
@@ -145,12 +138,13 @@ export function UsersPage() {
     if (!debouncedSearch.trim()) return allDevices;
 
     const query = debouncedSearch.toLowerCase();
-    return allDevices.filter(d =>
-      d.type.toLowerCase().includes(query) ||
-      d.operatingSystem.toLowerCase().includes(query) ||
-      d.browser.toLowerCase().includes(query) ||
-      d.clientName.toLowerCase().includes(query) ||
-      d.bank.name.toLowerCase().includes(query)
+    return allDevices.filter(
+      (d) =>
+        d.type.toLowerCase().includes(query) ||
+        d.operatingSystem.toLowerCase().includes(query) ||
+        d.browser.toLowerCase().includes(query) ||
+        d.clientName.toLowerCase().includes(query) ||
+        d.bank.name.toLowerCase().includes(query),
     );
   }, [allDevices, debouncedSearch]);
 
@@ -159,12 +153,12 @@ export function UsersPage() {
   // ==============================================================================
 
   // Paginación separada por vista (TypeScript no puede unir BankClient[] con Device[])
-const clientsPagination = usePagination(filteredClients, { pageSize: 30 });
-const devicesPagination = usePagination(filteredDevices, { pageSize: 30 });
+  const clientsPagination = usePagination(filteredClients, { pageSize: 30 });
+  const devicesPagination = usePagination(filteredDevices, { pageSize: 30 });
 
-// Seleccionar la paginación activa según la vista
-const activePagination = viewMode === 'clients' ? clientsPagination : devicesPagination;
-const { page, totalPages, totalItems, pageSize, goToPage, range } = activePagination;
+  // Seleccionar la paginación activa según la vista
+  const activePagination = viewMode === 'clients' ? clientsPagination : devicesPagination;
+  const { page, totalPages, totalItems, pageSize, goToPage, range } = activePagination;
 
   // ==============================================================================
   // HANDLERS
@@ -198,100 +192,100 @@ const { page, totalPages, totalItems, pageSize, goToPage, range } = activePagina
   // ==============================================================================
 
   const pageStyle: React.CSSProperties = {
-    display:       'flex',
+    display: 'flex',
     flexDirection: 'column',
-    gap:           '16px',
-    padding:       '24px',
-    minHeight:     '100vh',
-    fontFamily:    'Inter, sans-serif',
+    gap: '16px',
+    padding: '24px',
+    minHeight: '100vh',
+    fontFamily: 'Inter, sans-serif',
   };
 
   const headerStyle: React.CSSProperties = {
-    display:        'flex',
-    alignItems:     'flex-start',
+    display: 'flex',
+    alignItems: 'flex-start',
     justifyContent: 'space-between',
-    gap:            '16px',
-    flexWrap:       'wrap',
+    gap: '16px',
+    flexWrap: 'wrap',
   };
 
   const headerLeftStyle: React.CSSProperties = {
-    display:       'flex',
+    display: 'flex',
     flexDirection: 'column',
-    gap:           '4px',
+    gap: '4px',
   };
 
   const titleStyle: React.CSSProperties = {
-    fontSize:      '24px',
-    fontWeight:    800,
-    color:         'var(--text-primary)',
-    margin:        0,
+    fontSize: '24px',
+    fontWeight: 800,
+    color: 'var(--text-primary)',
+    margin: 0,
     letterSpacing: '-0.02em',
-    display:       'flex',
-    alignItems:    'center',
-    gap:           '10px',
+    display: 'flex',
+    alignItems: 'center',
+    gap: '10px',
   };
 
   const subtitleStyle: React.CSSProperties = {
     fontSize: '13px',
-    color:    'var(--text-secondary)',
-    margin:   0,
+    color: 'var(--text-secondary)',
+    margin: 0,
   };
 
   const tabsStyle: React.CSSProperties = {
-    display:    'flex',
-    gap:        '4px',
+    display: 'flex',
+    gap: '4px',
     background: 'var(--bg-secondary)',
-    border:     '1px solid var(--border)',
+    border: '1px solid var(--border)',
     borderRadius: '10px',
-    padding:    '4px',
+    padding: '4px',
   };
 
   const tabStyle = (active: boolean): React.CSSProperties => ({
-    display:      'flex',
-    alignItems:   'center',
-    gap:          '6px',
-    padding:      '8px 16px',
-    fontSize:     '12px',
-    fontWeight:   active ? 700 : 500,
-    color:        active ? '#818CF8' : 'var(--text-secondary)',
-    background:   active ? 'rgba(99, 102, 241, 0.12)' : 'transparent',
-    border:       'none',
+    display: 'flex',
+    alignItems: 'center',
+    gap: '6px',
+    padding: '8px 16px',
+    fontSize: '12px',
+    fontWeight: active ? 700 : 500,
+    color: active ? '#818CF8' : 'var(--text-secondary)',
+    background: active ? 'rgba(99, 102, 241, 0.12)' : 'transparent',
+    border: 'none',
     borderRadius: '8px',
-    cursor:       'pointer',
-    transition:   'all 0.15s ease',
-    fontFamily:   'inherit',
+    cursor: 'pointer',
+    transition: 'all 0.15s ease',
+    fontFamily: 'inherit',
   });
 
   const filtersRowStyle: React.CSSProperties = {
-    display:    'flex',
+    display: 'flex',
     alignItems: 'center',
-    gap:        '12px',
-    flexWrap:   'wrap',
+    gap: '12px',
+    flexWrap: 'wrap',
   };
 
   const toolbarStyle: React.CSSProperties = {
-    display:        'flex',
-    alignItems:     'center',
+    display: 'flex',
+    alignItems: 'center',
     justifyContent: 'space-between',
-    gap:            '12px',
-    flexWrap:       'wrap',
+    gap: '12px',
+    flexWrap: 'wrap',
   };
 
   const rangeInfoStyle: React.CSSProperties = {
     fontSize: '12px',
-    color:    'var(--text-tertiary)',
+    color: 'var(--text-tertiary)',
   };
 
   const gridStyle: React.CSSProperties = {
-    display:             'grid',
+    display: 'grid',
     gridTemplateColumns: 'repeat(auto-fill, minmax(320px, 1fr))',
-    gap:                 '12px',
+    gap: '12px',
   };
 
   const devicesGridStyle: React.CSSProperties = {
-    display:             'grid',
+    display: 'grid',
     gridTemplateColumns: 'repeat(auto-fill, minmax(280px, 1fr))',
-    gap:                 '10px',
+    gap: '10px',
   };
 
   // ==============================================================================
@@ -332,7 +326,6 @@ const { page, totalPages, totalItems, pageSize, goToPage, range } = activePagina
 
   return (
     <div style={pageStyle}>
-
       {/* ================================================================
           HEADER
           ================================================================ */}
@@ -344,8 +337,8 @@ const { page, totalPages, totalItems, pageSize, goToPage, range } = activePagina
             Clientes y Dispositivos
           </h1>
           <p style={subtitleStyle}>
-            {clients.length} clientes · {activeClients.length} activos
-            · {inactiveClients.length} inactivos
+            {clients.length} clientes · {activeClients.length} activos · {inactiveClients.length}{' '}
+            inactivos
             {viewMode === 'devices' && ` · ${allDevices.length} dispositivos`}
           </p>
         </div>
@@ -446,13 +439,13 @@ const { page, totalPages, totalItems, pageSize, goToPage, range } = activePagina
             )
           ) : (
             <div style={gridStyle}>
-              {clientsPagination.items.map(client => (
+              {clientsPagination.items.map((client) => (
                 <ClientCard
-                    key={client.id}
-                    client={client}
-                    devices={devicesByClient.get(client.id) ?? []}
+                  key={client.id}
+                  client={client}
+                  devices={devicesByClient.get(client.id) ?? []}
                 />
-                ))}
+              ))}
             </div>
           )}
         </>
@@ -483,13 +476,9 @@ const { page, totalPages, totalItems, pageSize, goToPage, range } = activePagina
             )
           ) : (
             <div style={devicesGridStyle}>
-              {devicesPagination.items.map(device => (
-                <DeviceCard
-                    key={device.id}
-                    device={device}
-                    detailed
-                />
-                ))}
+              {devicesPagination.items.map((device) => (
+                <DeviceCard key={device.id} device={device} detailed />
+              ))}
             </div>
           )}
         </>

@@ -50,11 +50,7 @@ function isLocalStorageAvailable(): boolean {
  * @param fallback - Valor a retornar si no existe o falla.
  * @returns Valor deserializado o fallback.
  */
-function readFromStorage<T>(
-  key: string,
-  deserialize: (value: string) => T,
-  fallback: T
-): T {
+function readFromStorage<T>(key: string, deserialize: (value: string) => T, fallback: T): T {
   try {
     const raw = localStorage.getItem(key);
     if (raw === null) return fallback;
@@ -71,11 +67,7 @@ function readFromStorage<T>(
  * @param value - Valor a guardar.
  * @param serialize - Función de serialización.
  */
-function writeToStorage<T>(
-  key: string,
-  value: T,
-  serialize: (value: T) => string
-): void {
+function writeToStorage<T>(key: string, value: T, serialize: (value: T) => string): void {
   try {
     localStorage.setItem(key, serialize(value));
   } catch {
@@ -106,7 +98,7 @@ function writeToStorage<T>(
 export function useLocalStorage<T>(
   key: string,
   initialValue: T,
-  options: UseLocalStorageOptions<T> = {}
+  options: UseLocalStorageOptions<T> = {},
 ): [T, SetValue<T>] {
   const {
     serialize = JSON.stringify,
@@ -125,11 +117,8 @@ export function useLocalStorage<T>(
 
   const setValue: SetValue<T> = useCallback(
     (value) => {
-      setStoredValue(prev => {
-        const nextValue =
-          typeof value === 'function'
-            ? (value as (prev: T) => T)(prev)
-            : value;
+      setStoredValue((prev) => {
+        const nextValue = typeof value === 'function' ? (value as (prev: T) => T)(prev) : value;
 
         if (storageAvailable) {
           writeToStorage(key, nextValue, serialize);
@@ -138,7 +127,7 @@ export function useLocalStorage<T>(
         return nextValue;
       });
     },
-    [key, serialize, storageAvailable]
+    [key, serialize, storageAvailable],
   );
 
   // ==============================================================================

@@ -12,15 +12,14 @@
  * Rangos válidos de coordenadas según constraints de la BD.
  */
 export const COORDINATE_LIMITS = {
-  LATITUDE_MIN:  -90,
-  LATITUDE_MAX:   90,
+  LATITUDE_MIN: -90,
+  LATITUDE_MAX: 90,
   LONGITUDE_MIN: -180,
-  LONGITUDE_MAX:  180,
+  LONGITUDE_MAX: 180,
 } as const;
 
-
 export const DEFAULT_COORDINATES = {
-  latitude:  4.6097,
+  latitude: 4.6097,
   longitude: -74.0817,
 } as const;
 
@@ -39,14 +38,14 @@ export const DEFAULT_COORDINATES = {
  *       Las coordenadas pueden venir como string o number según el driver.
  */
 export interface LocationRaw {
-  id_ubicacion?:    number;
-  id_dispositivo?:  number;
-  direccion_ip?:    string;
-  pais?:            string;
-  ciudad?:          string;
-  latitud?:         number | string | null;
-  longitud?:        number | string | null;
-  fecha_registro?:  string;
+  id_ubicacion?: number;
+  id_dispositivo?: number;
+  direccion_ip?: string;
+  pais?: string;
+  ciudad?: string;
+  latitud?: number | string | null;
+  longitud?: number | string | null;
+  fecha_registro?: string;
 }
 
 // ==============================================================================
@@ -116,19 +115,19 @@ export interface CityStats {
  * Estructura raw de una agregación por ciudad desde el backend.
  */
 export interface CityStatsRaw {
-  ciudad?:   string;
-  city?:     string;
-  nombre?:   string;
-  pais?:     string;
-  country?:  string;
-  count?:    number;
+  ciudad?: string;
+  city?: string;
+  nombre?: string;
+  pais?: string;
+  country?: string;
+  count?: number;
   cantidad?: number;
-  total?:    number;
-  fraud?:    number;
-  fraude?:   number;
-  fraudes?:  number;
-  amount?:   number;
-  monto?:    number;
+  total?: number;
+  fraud?: number;
+  fraude?: number;
+  fraudes?: number;
+  amount?: number;
+  monto?: number;
 }
 
 // ==============================================================================
@@ -201,7 +200,7 @@ export function isValidLongitude(lng: number | string | null | undefined): lng i
  */
 export function hasValidCoordinates(
   lat: number | string | null | undefined,
-  lng: number | string | null | undefined
+  lng: number | string | null | undefined,
 ): boolean {
   if (!isValidLatitude(lat) || !isValidLongitude(lng)) return false;
   const nLat = typeof lat === 'string' ? parseFloat(lat) : lat;

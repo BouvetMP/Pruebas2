@@ -3,12 +3,12 @@
 // ¿Impacto? Cierra el stub de alertas con datos reales y autenticación.
 
 import { Router } from 'express';
-import { alertsController } from './alerts.controller.ts';
-import { requireAuth } from '../../middlewares/auth.middleware.ts';
+import { alertsController } from './alerts.controller.js';
+import { requireAuth } from '../../middlewares/auth.middleware.js';
 
 const router = Router();
-
 router.use(requireAuth);
 router.get('/', alertsController.list);
+router.patch('/:id/status', alertsController.updateStatus);
 
 export default router;

@@ -10,35 +10,19 @@ import type { TransactionStatus } from './Transaction';
 // ENUMS DE LA BD
 // ==============================================================================
 
-export type AlertCriticalityRaw =
-  | 'BAJA'
-  | 'MEDIA'
-  | 'ALTA'
-  | 'CRITICA';
-
+export type AlertCriticalityRaw = 'BAJA' | 'MEDIA' | 'ALTA' | 'CRITICA';
 
 export type AlertCriticality = RiskLevel;
- 
-export type AlertStatusRaw =
-  | 'ACTIVA'
-  | 'EN_REVISION'
-  | 'RESUELTA'
-  | 'DESCARTADA';
 
+export type AlertStatusRaw = 'ACTIVA' | 'EN_REVISION' | 'RESUELTA' | 'DESCARTADA';
 
-export type AlertStatus =
-  | 'active'
-  | 'in_review'
-  | 'resolved'
-  | 'dismissed';
-
+export type AlertStatus = 'active' | 'in_review' | 'resolved' | 'dismissed';
 
 export type AlertClassificationRaw =
   | 'FRAUDE_CONFIRMADO'
   | 'FALSO_POSITIVO'
   | 'PENDIENTE_INVESTIGACION'
   | 'REQUIERE_CONTACTO_CLIENTE';
-
 
 export type AlertClassification =
   | 'confirmed_fraud'
@@ -61,37 +45,37 @@ export type AlertClassification =
  * NOTE: Los campos vienen en snake_case (columnas de la BD).
  */
 export interface AlertRaw {
-  id_alerta:               number;
-  id_transaccion?:         number;
-  nivel_criticidad?:       AlertCriticalityRaw;
-  nivel?:                  string;
-  criticidad?:             string;
-  fecha_generacion?:       string;
-  factores_sospechosos?:   string | null;
-  estado_alerta?:          AlertStatusRaw;
-  prioridad?:              number;
+  id_alerta: number;
+  id_transaccion?: number;
+  nivel_criticidad?: AlertCriticalityRaw;
+  nivel?: string;
+  criticidad?: string;
+  fecha_generacion?: string;
+  factores_sospechosos?: string | null;
+  estado_alerta?: AlertStatusRaw;
+  prioridad?: number;
 
-  cliente?:                string;
-  cuenta?:                 string;
-  banco?:                  string;
-  banco_codigo?:           string;
-  banco_color?:            string;
-  tipo_transaccion?:       string;
-  monto?:                  number | string;
-  score_riesgo?:           number | string;
-  ciudad?:                 string;
-  canal?:                  string;
-  dispositivo?:            string;
-  estado_transaccion?:     TransactionStatus;
+  cliente?: string;
+  cuenta?: string;
+  banco?: string;
+  banco_codigo?: string;
+  banco_color?: string;
+  tipo_transaccion?: string;
+  monto?: number | string;
+  score_riesgo?: number | string;
+  ciudad?: string;
+  canal?: string;
+  dispositivo?: string;
+  estado_transaccion?: TransactionStatus;
 
-  descripcion?:            string;
-  mensaje?:                string;
-  fecha?:                  string;
-  createdAt?:              string;
-  timestamp?:              string;
-  origen?:                 string;
-  tipo?:                   string;
-  categoria?:              string;
+  descripcion?: string;
+  mensaje?: string;
+  fecha?: string;
+  createdAt?: string;
+  timestamp?: string;
+  origen?: string;
+  tipo?: string;
+  categoria?: string;
 }
 
 // ==============================================================================
@@ -121,8 +105,8 @@ export interface Alert {
   isFraud: boolean;
   channel: string;
   bank: {
-    id:    string;
-    name:  string;
+    id: string;
+    name: string;
     color: string;
   };
   location: {
@@ -174,19 +158,17 @@ export interface ValidateAlertPayload {
   actionTaken?: string;
 }
 
-
 export interface ValidationRaw {
-  id_validacion:      number;
-  id_alerta:          number;
-  id_usuario:         number;
-  clasificacion:      AlertClassificationRaw;
-  comentarios:        string | null;
-  fecha_validacion:   string;
-  accion_tomada:      string | null;
-  analista?:          string;
-  rol_analista?:      string;
+  id_validacion: number;
+  id_alerta: number;
+  id_usuario: number;
+  clasificacion: AlertClassificationRaw;
+  comentarios: string | null;
+  fecha_validacion: string;
+  accion_tomada: string | null;
+  analista?: string;
+  rol_analista?: string;
 }
-
 
 export interface Validation {
   id: number;
@@ -204,7 +186,6 @@ export interface Validation {
 // FILTROS Y ESTADÍSTICAS
 // ==============================================================================
 
-
 export interface AlertFilters {
   level?: AlertCriticality | 'all';
   status?: TransactionStatus | 'all';
@@ -221,12 +202,12 @@ export interface AlertFilters {
  * ¿Para qué? Consumo en los chips de resumen.
  */
 export interface AlertStats {
-  total:    number;
+  total: number;
   critical: number;
-  high:     number;
-  medium:   number;
-  low:      number;
-  blocked:  number;
-  flagged:  number;
+  high: number;
+  medium: number;
+  low: number;
+  blocked: number;
+  flagged: number;
   resolved: number;
 }

@@ -22,11 +22,7 @@ export interface AppLayoutProps {
 // COMPONENTE
 // ==============================================================================
 
-export function AppLayout({
-  showSidebar = true,
-  children,
-  className = '',
-}: AppLayoutProps) {
+export function AppLayout({ showSidebar = true, children, className = '' }: AppLayoutProps) {
   const location = useLocation();
   const mainRef = useRef<HTMLDivElement>(null);
 
@@ -46,26 +42,26 @@ export function AppLayout({
   // ==============================================================================
 
   const wrapperStyle: React.CSSProperties = {
-    display:       'flex',
-    minHeight:     '100vh',
-    background:    'var(--bg-primary)',
-    fontFamily:    'Inter, sans-serif',
-    color:         'var(--text-primary)',
+    display: 'flex',
+    minHeight: '100vh',
+    background: 'var(--bg-primary)',
+    fontFamily: 'Inter, sans-serif',
+    color: 'var(--text-primary)',
   };
 
   const mainStyle: React.CSSProperties = {
-    flex:          1,
-    minWidth:      0,
-    minHeight:     '100vh',
-    overflowY:     'auto',
-    overflowX:     'hidden',
-    position:      'relative',
-    display:       'flex',
+    flex: 1,
+    minWidth: 0,
+    minHeight: '100vh',
+    overflowY: 'auto',
+    overflowX: 'hidden',
+    position: 'relative',
+    display: 'flex',
     flexDirection: 'column',
   };
 
   const contentStyle: React.CSSProperties = {
-    flex:    1,
+    flex: 1,
     display: 'flex',
     flexDirection: 'column',
   };
@@ -75,23 +71,13 @@ export function AppLayout({
   // ==============================================================================
 
   return (
-    <div
-      className={`app-layout ${className}`}
-      style={wrapperStyle}
-    >
+    <div className={`app-layout ${className}`} style={wrapperStyle}>
       {/* Sidebar persistente */}
       {showSidebar && <Sidebar />}
 
       {/* Main content — renderiza la página actual via Outlet */}
-      <main
-        ref={mainRef}
-        style={mainStyle}
-        role="main"
-        aria-label="Contenido principal"
-      >
-        <div style={contentStyle}>
-          {children ?? <Outlet />}
-        </div>
+      <main ref={mainRef} style={mainStyle} role="main" aria-label="Contenido principal">
+        <div style={contentStyle}>{children ?? <Outlet />}</div>
       </main>
     </div>
   );

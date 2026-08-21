@@ -5,17 +5,15 @@
 //           ADMINISTRADOR, ANALISTA, OPERADOR o AUDITOR.
 
 import { useState, type FormEvent } from 'react';
-import { Save } from 'lucide-react';import { useAuth } from '@context/AuthContext';
+import { Save } from 'lucide-react';
+import { useAuth } from '@context/AuthContext';
 import { useBank } from '@context/BankContext';
 import { Modal } from '@components/ui/Modal';
 import { Button } from '@components/ui/Button';
 import { Input } from '@components/ui/Input';
 import { Select } from '@components/ui/Select';
 import { PasswordInput } from '@components/auth/PasswordInput';
-import {
-  PasswordStrengthMeter,
-  analyzePassword,
-} from '@components/auth/PasswordStrengthMeter';
+import { PasswordStrengthMeter, analyzePassword } from '@components/auth/PasswordStrengthMeter';
 import { ROLES_LIST } from '@constants/Roles';
 import { isValidEmail, isValidName } from '@utils/User';
 import type { RegisterPayload } from '@app-types';
@@ -35,23 +33,19 @@ export interface NewUserModalProps {
 // ==============================================================================
 
 const INITIAL_FORM = {
-  name:            '',
-  email:           '',
-  password:        '',
+  name: '',
+  email: '',
+  password: '',
   confirmPassword: '',
-  role:            'OPERADOR' as RegisterPayload['rol'],
-  bank:            '',
+  role: 'OPERADOR' as RegisterPayload['rol'],
+  bank: '',
 };
 
 // ==============================================================================
 // COMPONENTE
 // ==============================================================================
 
-export function NewUserModal({
-  open,
-  onClose,
-  onSuccess,
-}: NewUserModalProps) {
+export function NewUserModal({ open, onClose, onSuccess }: NewUserModalProps) {
   const { register } = useAuth();
   const { banks } = useBank();
 
@@ -71,9 +65,9 @@ export function NewUserModal({
 
   const updateField = <K extends keyof typeof INITIAL_FORM>(
     field: K,
-    value: typeof INITIAL_FORM[K]
+    value: (typeof INITIAL_FORM)[K],
   ): void => {
-    setForm(prev => ({ ...prev, [field]: value }));
+    setForm((prev) => ({ ...prev, [field]: value }));
   };
 
   // ==============================================================================
@@ -129,9 +123,9 @@ export function NewUserModal({
     try {
       await register({
         nombre_completo: form.name.trim(),
-        email:           form.email.trim(),
-        password:        form.password,
-        rol:             form.role,
+        email: form.email.trim(),
+        password: form.password,
+        rol: form.role,
       });
 
       onSuccess?.();
@@ -160,39 +154,39 @@ export function NewUserModal({
   // ==============================================================================
 
   const formStyle: React.CSSProperties = {
-    display:       'flex',
+    display: 'flex',
     flexDirection: 'column',
-    gap:           '16px',
+    gap: '16px',
   };
 
   const rowStyle: React.CSSProperties = {
-    display:             'grid',
+    display: 'grid',
     gridTemplateColumns: '1fr 1fr',
-    gap:                 '12px',
+    gap: '12px',
   };
 
   const errorStyle: React.CSSProperties = {
-    padding:      '10px 14px',
-    background:   'rgba(239, 68, 68, 0.1)',
-    border:       '1px solid rgba(239, 68, 68, 0.3)',
+    padding: '10px 14px',
+    background: 'rgba(239, 68, 68, 0.1)',
+    border: '1px solid rgba(239, 68, 68, 0.3)',
     borderRadius: '8px',
-    color:        '#EF4444',
-    fontSize:     '12px',
-    fontWeight:   600,
+    color: '#EF4444',
+    fontSize: '12px',
+    fontWeight: 600,
   };
 
   // ==============================================================================
   // OPCIONES DE SELECT
   // ==============================================================================
 
-  const roleOptions = ROLES_LIST.map(role => ({
+  const roleOptions = ROLES_LIST.map((role) => ({
     value: role.id,
     label: role.label,
   }));
 
   const bankOptions = [
     { value: '', label: 'Sin banco asignado' },
-    ...banks.map(bank => ({
+    ...banks.map((bank) => ({
       value: bank.id,
       label: bank.name,
     })),
@@ -227,7 +221,9 @@ export function NewUserModal({
     >
       <form onSubmit={handleSubmit} style={formStyle} noValidate>
         {globalError && (
-          <div style={errorStyle} role="alert">⚠️ {globalError}</div>
+          <div style={errorStyle} role="alert">
+            ⚠️ {globalError}
+          </div>
         )}
 
         <Input

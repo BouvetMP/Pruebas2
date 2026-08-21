@@ -25,20 +25,20 @@ import { ALL_BANKS_ID } from '@app-types';
 const DEFAULT_AUTO_REFRESH_MS = 60_000;
 
 const EMPTY_METRICS: AnalyticsMetrics = {
-  detectionRate:       0,
-  falsePositiveRate:   0,
-  averageAmount:       0,
-  totalAnalyzed:       0,
+  detectionRate: 0,
+  falsePositiveRate: 0,
+  averageAmount: 0,
+  totalAnalyzed: 0,
   averageResponseTime: 0,
-  protectedAmount:     0,
-  fraudsDetected:      0,
+  protectedAmount: 0,
+  fraudsDetected: 0,
 };
 
 const EMPTY_AGGREGATIONS: AnalyticsAggregations = {
-  porTipo:   [],
+  porTipo: [],
   porCiudad: [],
-  porCanal:  [],
-  porBanco:  [],
+  porCanal: [],
+  porBanco: [],
 };
 
 // ==============================================================================
@@ -94,7 +94,7 @@ export interface UseAnalyticsDataResult {
  */
 export function useAnalyticsData(
   bankId: SelectedBankId = ALL_BANKS_ID,
-  options: UseAnalyticsDataOptions = {}
+  options: UseAnalyticsDataOptions = {},
 ): UseAnalyticsDataResult {
   const {
     autoRefresh = false,
@@ -148,7 +148,7 @@ export function useAnalyticsData(
         setRefreshing(false);
       }
     },
-    [bankId]
+    [bankId],
   );
 
   // ==============================================================================
@@ -250,36 +250,31 @@ export function useAnalyticsData(
   // ==============================================================================
 
   const topCities = useMemo<CityStats[]>(
-    () => [...aggregations.porCiudad]
-      .sort((a, b) => b.transactionCount - a.transactionCount)
-      .slice(0, topCitiesLimit),
-    [aggregations.porCiudad, topCitiesLimit]
+    () =>
+      [...aggregations.porCiudad]
+        .sort((a, b) => b.transactionCount - a.transactionCount)
+        .slice(0, topCitiesLimit),
+    [aggregations.porCiudad, topCitiesLimit],
   );
 
   const topBanksByFraud = useMemo<BankAggregation[]>(
-    () => [...aggregations.porBanco]
-      .sort((a, b) => b.fraud - a.fraud)
-      .slice(0, topBanksLimit),
-    [aggregations.porBanco, topBanksLimit]
+    () => [...aggregations.porBanco].sort((a, b) => b.fraud - a.fraud).slice(0, topBanksLimit),
+    [aggregations.porBanco, topBanksLimit],
   );
 
   const topBanksByVolume = useMemo<BankAggregation[]>(
-    () => [...aggregations.porBanco]
-      .sort((a, b) => b.count - a.count)
-      .slice(0, topBanksLimit),
-    [aggregations.porBanco, topBanksLimit]
+    () => [...aggregations.porBanco].sort((a, b) => b.count - a.count).slice(0, topBanksLimit),
+    [aggregations.porBanco, topBanksLimit],
   );
 
   const typesRanked = useMemo<TransactionTypeAggregation[]>(
-    () => [...aggregations.porTipo]
-      .sort((a, b) => b.count - a.count),
-    [aggregations.porTipo]
+    () => [...aggregations.porTipo].sort((a, b) => b.count - a.count),
+    [aggregations.porTipo],
   );
 
   const channelsRanked = useMemo<ChannelAggregation[]>(
-    () => [...aggregations.porCanal]
-      .sort((a, b) => b.count - a.count),
-    [aggregations.porCanal]
+    () => [...aggregations.porCanal].sort((a, b) => b.count - a.count),
+    [aggregations.porCanal],
   );
 
   // ==============================================================================

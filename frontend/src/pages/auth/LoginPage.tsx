@@ -14,7 +14,6 @@ import { Shield } from 'lucide-react';
 // ==============================================================================
 
 export function LoginPage() {
-
   // ==============================================================================
   // METADATA — Actualizar título del documento
   // ==============================================================================
@@ -28,49 +27,49 @@ export function LoginPage() {
   // ==============================================================================
 
   const logoContainerStyle: React.CSSProperties = {
-    display:        'flex',
-    alignItems:     'center',
+    display: 'flex',
+    alignItems: 'center',
     justifyContent: 'center',
-    width:          '56px',
-    height:         '56px',
-    borderRadius:   '50%',
-    background:     'rgba(99, 102, 241, 0.15)',
-    color:          '#6366F1',
-    margin:         '0 auto 16px',
+    width: '56px',
+    height: '56px',
+    borderRadius: '50%',
+    background: 'rgba(99, 102, 241, 0.15)',
+    color: '#6366F1',
+    margin: '0 auto 16px',
   };
 
   const brandNameStyle: React.CSSProperties = {
-    fontSize:      '24px',
-    fontWeight:    800,
-    color:         'var(--text-primary)',
-    margin:        '0 0 4px',
+    fontSize: '24px',
+    fontWeight: 800,
+    color: 'var(--text-primary)',
+    margin: '0 0 4px',
     letterSpacing: '-0.02em',
-    textAlign:     'center',
+    textAlign: 'center',
   };
 
   const taglineStyle: React.CSSProperties = {
-    fontSize:      '11px',
-    color:         'var(--text-tertiary)',
-    margin:        '0 0 20px',
-    textAlign:     'center',
+    fontSize: '11px',
+    color: 'var(--text-tertiary)',
+    margin: '0 0 20px',
+    textAlign: 'center',
     textTransform: 'uppercase',
     letterSpacing: '0.1em',
-    fontWeight:    600,
+    fontWeight: 600,
   };
 
   const welcomeTitleStyle: React.CSSProperties = {
-    fontSize:   '18px',
+    fontSize: '18px',
     fontWeight: 700,
-    color:      'var(--text-primary)',
-    margin:     '0 0 6px',
-    textAlign:  'center',
+    color: 'var(--text-primary)',
+    margin: '0 0 6px',
+    textAlign: 'center',
   };
 
   const welcomeSubtitleStyle: React.CSSProperties = {
-    fontSize:   '13px',
-    color:      'var(--text-secondary)',
-    margin:     0,
-    textAlign:  'center',
+    fontSize: '13px',
+    color: 'var(--text-secondary)',
+    margin: 0,
+    textAlign: 'center',
     lineHeight: 1.5,
   };
 
@@ -93,9 +92,7 @@ export function LoginPage() {
 
             {/* Título de bienvenida */}
             <h2 style={welcomeTitleStyle}>Bienvenido de nuevo</h2>
-            <p style={welcomeSubtitleStyle}>
-              Ingresa tus credenciales para acceder al sistema
-            </p>
+            <p style={welcomeSubtitleStyle}>Ingresa tus credenciales para acceder al sistema</p>
           </div>
         </CardHeader>
 

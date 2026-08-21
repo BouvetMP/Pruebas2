@@ -3,17 +3,22 @@
 // ¿Impacto? Conecta la página Transacciones con PostgreSQL.
 
 import { Response, NextFunction } from 'express';
-import { AuthenticatedRequest } from '../../types/index.ts';
-import { transactionsService } from './transactions.service.ts';
+import { AuthenticatedRequest } from '../../types/index.js';
+import { transactionsService } from './transactions.service.js';
+import { createTransactionSchema } from './transactions.schemas.js';
 
 export const transactionsController = {
   async list(req: AuthenticatedRequest, res: Response, next: NextFunction) {
     try {
       const banco = typeof req.query.banco === 'string' ? req.query.banco : null;
-      const data = await transactionsService.list(banco);
-      res.json(data);
-    } catch (error) {
-      next(error);
-    }
+      res.json(await transactionsService.list(banco));
+    } catch (error) { next(error); }
+  },
+
+  async create(req: AuthenticatedRequest, res: Response, next: NextFunction) {
+    try {
+      const validatedData = createTransactionSchema.parse(req.body);
+      res.status(201).json(await transactionsService.create(validatedData));
+    } catch (error) { next(error); }
   },
 };

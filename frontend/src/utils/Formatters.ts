@@ -37,13 +37,13 @@ const CURRENCY_DECIMALS: Record<string, number> = {
  */
 export function formatCurrency(
   amount: number | null | undefined,
-  currency: CurrencyCode = 'COP'
+  currency: CurrencyCode = 'COP',
 ): string {
   const value = amount ?? 0;
   const decimals = CURRENCY_DECIMALS[currency] ?? 2;
 
   return new Intl.NumberFormat(DEFAULT_LOCALE, {
-    style:                 'currency',
+    style: 'currency',
     currency,
     minimumFractionDigits: decimals,
     maximumFractionDigits: decimals,
@@ -68,10 +68,7 @@ export function formatCOP(amount: number | null | undefined): string {
  * @param decimals - Cantidad de decimales (default: 0).
  * @returns String formateado con separadores.
  */
-export function formatNumber(
-  value: number | null | undefined,
-  decimals: number = 0
-): string {
+export function formatNumber(value: number | null | undefined, decimals: number = 0): string {
   const num = value ?? 0;
   return new Intl.NumberFormat(DEFAULT_LOCALE, {
     minimumFractionDigits: decimals,
@@ -90,7 +87,7 @@ export function formatNumber(
 export function formatPercent(
   value: number | null | undefined,
   decimals: number = 1,
-  isRatio: boolean = false
+  isRatio: boolean = false,
 ): string {
   const raw = value ?? 0;
   const num = isRatio ? raw * 100 : raw;
@@ -116,7 +113,7 @@ export function formatPercent(
 export function formatCompact(value: number | null | undefined): string {
   const num = value ?? 0;
   return new Intl.NumberFormat(DEFAULT_LOCALE, {
-    notation:              'compact',
+    notation: 'compact',
     maximumFractionDigits: 1,
   }).format(num);
 }
@@ -138,9 +135,9 @@ export function formatDate(date: string | Date | null | undefined): string {
   if (isNaN(d.getTime())) return '--/--/----';
 
   return d.toLocaleDateString(DEFAULT_LOCALE, {
-    day:   '2-digit',
+    day: '2-digit',
     month: '2-digit',
-    year:  'numeric',
+    year: 'numeric',
   });
 }
 
@@ -157,7 +154,7 @@ export function formatDate(date: string | Date | null | undefined): string {
  */
 export function formatTime(
   date: string | Date | null | undefined,
-  includeSeconds: boolean = false
+  includeSeconds: boolean = false,
 ): string {
   if (!date) return includeSeconds ? '--:--:--' : '--:--';
 
@@ -165,7 +162,7 @@ export function formatTime(
   if (isNaN(d.getTime())) return includeSeconds ? '--:--:--' : '--:--';
 
   return d.toLocaleTimeString(DEFAULT_LOCALE, {
-    hour:   '2-digit',
+    hour: '2-digit',
     minute: '2-digit',
     second: includeSeconds ? '2-digit' : undefined,
     hour12: false,
@@ -178,9 +175,7 @@ export function formatTime(
  * @param date - Fecha en formato ISO 8601, Date o timestamp.
  * @returns String como "22/03/2026 14:30".
  */
-export function formatDateTime(
-  date: string | Date | null | undefined
-): string {
+export function formatDateTime(date: string | Date | null | undefined): string {
   if (!date) return '--/--/---- --:--';
 
   const d = new Date(date);
@@ -202,9 +197,7 @@ export function formatDateTime(
  * @example
  * formatRelativeTime('2026-03-22T10:00:00Z')  // "hace 5 minutos"
  */
-export function formatRelativeTime(
-  date: string | Date | null | undefined
-): string {
+export function formatRelativeTime(date: string | Date | null | undefined): string {
   if (!date) return 'Sin fecha';
 
   const d = new Date(date);
@@ -217,10 +210,10 @@ export function formatRelativeTime(
   const hours = Math.floor(minutes / 60);
   const days = Math.floor(hours / 24);
 
-  if (seconds < 60)  return 'hace unos segundos';
-  if (minutes < 60)  return `hace ${minutes} ${minutes === 1 ? 'minuto' : 'minutos'}`;
-  if (hours < 24)    return `hace ${hours} ${hours === 1 ? 'hora' : 'horas'}`;
-  if (days < 7)      return `hace ${days} ${days === 1 ? 'día' : 'días'}`;
+  if (seconds < 60) return 'hace unos segundos';
+  if (minutes < 60) return `hace ${minutes} ${minutes === 1 ? 'minuto' : 'minutos'}`;
+  if (hours < 24) return `hace ${hours} ${hours === 1 ? 'hora' : 'horas'}`;
+  if (days < 7) return `hace ${days} ${days === 1 ? 'día' : 'días'}`;
 
   return formatDate(d);
 }
@@ -257,10 +250,7 @@ export function formatRiskScore(score: number | null | undefined): string {
  * @example
  * truncateText('Este es un texto muy largo', 10)  // "Este es un..."
  */
-export function truncateText(
-  text: string | null | undefined,
-  maxLength: number = 50
-): string {
+export function truncateText(text: string | null | undefined, maxLength: number = 50): string {
   if (!text) return '';
   if (text.length <= maxLength) return text;
   return `${text.slice(0, maxLength).trim()}...`;
@@ -291,7 +281,7 @@ export function toTitleCase(text: string | null | undefined): string {
   return text
     .toLowerCase()
     .split(' ')
-    .map(word => capitalize(word))
+    .map((word) => capitalize(word))
     .join(' ');
 }
 

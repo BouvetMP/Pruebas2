@@ -33,11 +33,16 @@ export interface ExportPreviewModalProps<T> {
 
 function getFormatMeta(format: ExportFormat): { icon: React.ReactNode; label: string } {
   switch (format) {
-    case 'csv':  return { icon: <FileSpreadsheet size={14} />, label: 'CSV' };
-    case 'pdf':  return { icon: <FileText size={14} />,        label: 'PDF' };
-    case 'json': return { icon: <FileJson size={14} />,        label: 'JSON' };
-    case 'xlsx': return { icon: <FileSpreadsheet size={14} />, label: 'Excel' };
-    default:     return { icon: <FileText size={14} />,        label: String(format).toUpperCase() };
+    case 'csv':
+      return { icon: <FileSpreadsheet size={14} />, label: 'CSV' };
+    case 'pdf':
+      return { icon: <FileText size={14} />, label: 'PDF' };
+    case 'json':
+      return { icon: <FileJson size={14} />, label: 'JSON' };
+    case 'xlsx':
+      return { icon: <FileSpreadsheet size={14} />, label: 'Excel' };
+    default:
+      return { icon: <FileText size={14} />, label: String(format).toUpperCase() };
   }
 }
 
@@ -55,19 +60,14 @@ export function ExportPreviewModal<T>({
   description,
   downloading = false,
 }: ExportPreviewModalProps<T>) {
+  const formatMeta = useMemo(() => (preview ? getFormatMeta(preview.format) : null), [preview]);
 
-  const formatMeta = useMemo(
-    () => preview ? getFormatMeta(preview.format) : null,
-    [preview]
-  );
+  const modalTitle =
+    title ?? (formatMeta ? `Vista previa — ${formatMeta.label}` : 'Vista previa de exportación');
 
-  const modalTitle = title ?? (
-    formatMeta ? `Vista previa — ${formatMeta.label}` : 'Vista previa de exportación'
-  );
-
-  const modalDescription = description ?? (
-    preview ? `${preview.count.toLocaleString('es-CO')} registros serán exportados` : undefined
-  );
+  const modalDescription =
+    description ??
+    (preview ? `${preview.count.toLocaleString('es-CO')} registros serán exportados` : undefined);
 
   const sampleData = (preview?.sample ?? []) as T[];
   const showingCount = sampleData.length;
@@ -139,7 +139,7 @@ export function ExportPreviewModal<T>({
                         'text-[10px] uppercase tracking-wider',
                         'border-b border-[var(--border)]',
                         'whitespace-nowrap sticky top-0 z-[1]',
-                        ALIGN_CLASSES_PREVIEW[col.align ?? 'left']
+                        ALIGN_CLASSES_PREVIEW[col.align ?? 'left'],
                       )}
                     >
                       {col.label}
@@ -157,7 +157,7 @@ export function ExportPreviewModal<T>({
                           'px-3 py-2 text-[var(--text-primary)]',
                           'border-b border-[var(--border)]',
                           'whitespace-nowrap max-w-[250px] overflow-hidden text-ellipsis',
-                          ALIGN_CLASSES_PREVIEW[col.align ?? 'left']
+                          ALIGN_CLASSES_PREVIEW[col.align ?? 'left'],
                         )}
                       >
                         {col.render(item, rowIndex)}
@@ -174,7 +174,8 @@ export function ExportPreviewModal<T>({
       {/* Nota de más registros */}
       {hasMore && (
         <p className="text-[11px] text-[var(--text-tertiary)] mt-2.5 text-center italic">
-          … y {(totalCount - showingCount).toLocaleString('es-CO')} registros más se incluirán en el archivo descargado.
+          … y {(totalCount - showingCount).toLocaleString('es-CO')} registros más se incluirán en el
+          archivo descargado.
         </p>
       )}
 
@@ -190,7 +191,7 @@ export function ExportPreviewModal<T>({
 
 // Helper local para alineación en la tabla de preview
 const ALIGN_CLASSES_PREVIEW: Record<string, string> = {
-  left:   'text-left',
+  left: 'text-left',
   center: 'text-center',
-  right:  'text-right',
+  right: 'text-right',
 };

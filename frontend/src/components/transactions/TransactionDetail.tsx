@@ -39,19 +39,18 @@ export function TransactionDetail({
   showTechnicalInfo = true,
   className = '',
 }: TransactionDetailProps) {
-
   // ==============================================================================
   // ESTILOS
   // ==============================================================================
 
   const ringContainerStyle: React.CSSProperties = {
-    display:        'flex',
+    display: 'flex',
     justifyContent: 'center',
-    marginBottom:   '20px',
+    marginBottom: '20px',
   };
 
   const fraudIndicatorStyle: React.CSSProperties = {
-    color:      transaction.isFraud ? '#EF4444' : '#34D399',
+    color: transaction.isFraud ? '#EF4444' : '#34D399',
     fontWeight: 700,
   };
 
@@ -64,10 +63,7 @@ export function TransactionDetail({
       {/* Score Ring grande centrado */}
       {showScoreRing && (
         <div style={ringContainerStyle}>
-          <ScoreRing
-            score={transaction.riskScore}
-            size={scoreRingSize}
-          />
+          <ScoreRing score={transaction.riskScore} size={scoreRingSize} />
         </div>
       )}
 
@@ -76,10 +72,7 @@ export function TransactionDetail({
         <DetailGrid columns={2}>
           <DetailField label="Usuario" value={transaction.user} />
           <DetailField label="Cuenta" value={transaction.account} />
-          <DetailField
-            label="Banco"
-            value={<BankBadge bank={transaction.bank} />}
-          />
+          <DetailField label="Banco" value={<BankBadge bank={transaction.bank} />} />
           <DetailField label="Tipo" value={transaction.type} />
           <DetailField
             label="Monto"
@@ -121,10 +114,7 @@ export function TransactionDetail({
               </span>
             }
           />
-          <DetailField
-            label="Fecha y hora"
-            value={formatDateTime(transaction.timestamp)}
-          />
+          <DetailField label="Fecha y hora" value={formatDateTime(transaction.timestamp)} />
         </DetailGrid>
       </DetailSection>
 
@@ -134,10 +124,7 @@ export function TransactionDetail({
           <DetailDivider />
           <DetailSection title="Información técnica">
             <DetailGrid columns={2}>
-              <DetailField
-                label="Latencia"
-                value={`${transaction.processingTime} ms`}
-              />
+              <DetailField label="Latencia" value={`${transaction.processingTime} ms`} />
               <DetailField label="Moneda" value={transaction.currency} />
               <DetailField
                 label="ID transacción"

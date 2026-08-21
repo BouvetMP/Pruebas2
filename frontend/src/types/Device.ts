@@ -14,13 +14,7 @@
  * ¿Para qué? Renderizar iconos y agrupar dispositivos en estadísticas.
  * ¿Impacto? El helper `getDeviceCategory()` mapea strings variables a estos valores.
  */
-export type DeviceCategory =
-  | 'mobile'
-  | 'desktop'
-  | 'tablet'
-  | 'pos'
-  | 'atm'
-  | 'unknown';
+export type DeviceCategory = 'mobile' | 'desktop' | 'tablet' | 'pos' | 'atm' | 'unknown';
 
 /**
  * Palabras clave usadas para detectar dispositivos móviles.
@@ -41,12 +35,7 @@ export const MOBILE_KEYWORDS: readonly string[] = [
 /**
  * Palabras clave usadas para detectar tablets.
  */
-export const TABLET_KEYWORDS: readonly string[] = [
-  'ipad',
-  'tablet',
-  'tab',
-  'galaxy tab',
-] as const;
+export const TABLET_KEYWORDS: readonly string[] = ['ipad', 'tablet', 'tab', 'galaxy tab'] as const;
 
 // ==============================================================================
 // ESTRUCTURA RAW (tal como viene del backend)
@@ -61,19 +50,19 @@ export const TABLET_KEYWORDS: readonly string[] = [
  *
  */
 export interface DeviceRaw {
-  id_dispositivo?:      number | string;
-  id_cliente?:          number;
-  tipo_dispositivo?:    string;
+  id_dispositivo?: number | string;
+  id_cliente?: number;
+  tipo_dispositivo?: string;
   identificador_unico?: string;
-  sistema_operativo?:   string;
-  navegador?:           string;
-  fecha_primer_uso?:    string;
-  fecha_ultimo_uso?:    string;
+  sistema_operativo?: string;
+  navegador?: string;
+  fecha_primer_uso?: string;
+  fecha_ultimo_uso?: string;
 
-  cliente?:      string;   
-  banco?:        string;   
-  banco_codigo?: string;   
-  banco_color?: string;   
+  cliente?: string;
+  banco?: string;
+  banco_codigo?: string;
+  banco_color?: string;
 }
 
 // ==============================================================================
@@ -99,8 +88,8 @@ export interface Device {
   firstUsedAt: string | null;
   lastUsedAt: string | null;
   bank: {
-    id:    string;
-    name:  string;
+    id: string;
+    name: string;
     color: string;
   };
 }

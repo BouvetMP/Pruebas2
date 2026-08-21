@@ -103,9 +103,8 @@ export const authService = {
 
     const token = signToken(payload);
 
-    // Actualizar último acceso (no bloquea si falla)
-    await prisma.$queryRaw`SELECT trida.fn_actualizar_ultimo_acceso(${user.id_usuario})`.catch(() => null);
-
+    // Actualizar último acceso con cast explícito a integer
+    await prisma.$queryRaw`SELECT trida.fn_actualizar_ultimo_acceso(${Number(user.id_usuario)}::integer)`.catch(() => null);
     return {
       token,
       user: {
@@ -295,20 +294,25 @@ export const authService = {
   },
 
   // ── LISTAR USUARIOS SISTEMA (solo admin) ───────────────────
-  async listSystemUsers() {
+   async listSystemUsers() {
     const rows = await prisma.$queryRaw<FnListarUsuariosRow[]>`
       SELECT * FROM trida.fn_listar_usuarios_sistema()
     `;
 
-    return rows.map((u) => ({
-      id: u.id_usuario,
-      nombre: u.nombre_completo,
-      email: u.email,
-      rol: u.rol,
-      estado: u.estado,
-      fecha_creacion: u.fecha_creacion,
-      ultimo_acceso: u.ultimo_acceso,
-      id_generador: u.id_usuario_generador,
-    }));
+    return rows.map((u) => {
+      const idNum = Number(u.id_usuario);
+      return {
+        id: String(idNum),
+        id_usuario: idNum,
+        nombre_completo: u.nombre_completo,
+        nombre: u.nombre_completo,
+        email: u.email,
+        rol: u.rol,
+        estado: Boolean(u.estado),
+        fecha_creacion: u.fecha_creacion,
+        ultimo_acceso: u.ultimo_acceso,
+        id_usuario_generador: u.id_usuario_generador ? Number(u.id_usuario_generador) : null,
+      };
+    });
   },
 };

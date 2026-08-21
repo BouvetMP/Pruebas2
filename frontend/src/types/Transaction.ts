@@ -10,28 +10,11 @@ import type { RiskLevel } from '@constants/Risk';
 // ENUMS DE LA BD
 // ==============================================================================
 
+export type TransactionStatusRaw = 'PENDIENTE' | 'APROBADA' | 'ALERTADA' | 'BLOQUEADA';
 
-export type TransactionStatusRaw =
-  | 'PENDIENTE'
-  | 'APROBADA'
-  | 'ALERTADA'
-  | 'BLOQUEADA';
+export type TransactionStatus = 'pending' | 'approved' | 'flagged' | 'blocked';
 
-
-export type TransactionStatus =
-  | 'pending'
-  | 'approved'
-  | 'flagged'
-  | 'blocked';
-
-
-export type TransactionChannel =
-  | 'mobile'
-  | 'web'
-  | 'pos'
-  | 'atm'
-  | 'branch';
-
+export type TransactionChannel = 'mobile' | 'web' | 'pos' | 'atm' | 'branch';
 
 export type CurrencyCode = 'COP' | 'USD' | 'EUR' | string;
 
@@ -48,35 +31,35 @@ export type CurrencyCode = 'COP' | 'USD' | 'EUR' | string;
  *
  */
 export interface TransactionRaw {
-  id_transaccion:           number;
-  id_cliente?:              number;
-  id_dispositivo?:          number;
-  id_ubicacion?:            number;
-  id_banco?:                number;
-  tipo_transaccion?:        string;
-  monto?:                   number | string;
-  cuenta_origen?:           string;
-  cuenta_destino?:          string;
-  fecha_transaccion?:       string;
-  score_riesgo?:            number | string;
-  estado_transaccion?:      TransactionStatusRaw;
-  es_fraude_real?:          boolean | null;
+  id_transaccion: number;
+  id_cliente?: number;
+  id_dispositivo?: number;
+  id_ubicacion?: number;
+  id_banco?: number;
+  tipo_transaccion?: string;
+  monto?: number | string;
+  cuenta_origen?: string;
+  cuenta_destino?: string;
+  fecha_transaccion?: string;
+  score_riesgo?: number | string;
+  estado_transaccion?: TransactionStatusRaw;
+  es_fraude_real?: boolean | null;
   tiempo_de_procesamiento?: number;
-  tiempo_proceso?:          number;
-  moneda?:                  CurrencyCode;
-  canal?:                   TransactionChannel;
+  tiempo_proceso?: number;
+  moneda?: CurrencyCode;
+  canal?: TransactionChannel;
 
-  cliente?:                 string;   
-  nombre_completo?:         string;   
-  banco?:                   string;   
-  banco_codigo?:            string;   
-  banco_color?:             string;   
-  color_banco?:             string;   
-  ciudad?:                  string;   
-  latitud?:                 number | string;
-  longitud?:                number | string;
-  tipo_dispositivo?:        string;   
-  cuenta?:                  string;   
+  cliente?: string;
+  nombre_completo?: string;
+  banco?: string;
+  banco_codigo?: string;
+  banco_color?: string;
+  color_banco?: string;
+  ciudad?: string;
+  latitud?: number | string;
+  longitud?: number | string;
+  tipo_dispositivo?: string;
+  cuenta?: string;
 }
 
 // ==============================================================================
@@ -105,13 +88,13 @@ export interface Transaction {
   processingTime: number;
   channel: TransactionChannel;
   bank: {
-    id:    string;
-    name:  string;
+    id: string;
+    name: string;
     color: string;
   };
   location: {
-    city:      string;
-    latitude:  number | null;
+    city: string;
+    latitude: number | null;
     longitude: number | null;
   };
   device: {
@@ -150,13 +133,7 @@ export interface TransactionSort {
   direction: 'asc' | 'desc';
 }
 
-export type TransactionSortField =
-  | 'id'
-  | 'timestamp'
-  | 'amount'
-  | 'riskScore'
-  | 'user'
-  | 'bank';
+export type TransactionSortField = 'id' | 'timestamp' | 'amount' | 'riskScore' | 'user' | 'bank';
 
 // ==============================================================================
 // AGRUPACIONES Y ESTADÍSTICAS
@@ -169,13 +146,13 @@ export type TransactionSortField =
  * ¿Para qué? Consumo en los cards de métricas.
  */
 export interface TransactionStats {
-  total:      number;
-  approved:   number;
-  flagged:    number;
-  blocked:    number;
-  pending:    number;
+  total: number;
+  approved: number;
+  flagged: number;
+  blocked: number;
+  pending: number;
   fraudCount: number;
-  totalAmount:   number;
+  totalAmount: number;
   averageAmount: number;
   fraudRate: number;
 }
@@ -202,12 +179,12 @@ export interface TransactionMapPoint {
   currency: CurrencyCode;
   channel: TransactionChannel;
   bank: {
-    name:  string;
+    name: string;
     color: string;
   };
   location: {
-    city:      string;
-    latitude:  number;
+    city: string;
+    latitude: number;
     longitude: number;
   };
 }

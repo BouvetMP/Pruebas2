@@ -4,7 +4,8 @@
 //           de cambiar contraseña.
 
 import { useState } from 'react';
-import { User, Mail, Phone, KeyRound } from 'lucide-react';import { useAuth } from '@context/AuthContext';
+import { User, Mail, Phone, KeyRound } from 'lucide-react';
+import { useAuth } from '@context/AuthContext';
 import { Card, CardHeader, CardBody } from '@components/ui/Card';
 import { Input } from '@components/ui/Input';
 import { Button } from '@components/ui/Button';
@@ -29,16 +30,16 @@ export function ProfileTab() {
   const roleMeta = user?.rol ? getRoleMetadata(user.rol) : null;
 
   const sectionStyle: React.CSSProperties = {
-    display:       'flex',
+    display: 'flex',
     flexDirection: 'column',
-    gap:           '20px',
-    maxWidth:      '560px',
+    gap: '20px',
+    maxWidth: '560px',
   };
 
   const avatarSectionStyle: React.CSSProperties = {
-    display:    'flex',
+    display: 'flex',
     alignItems: 'center',
-    gap:        '16px',
+    gap: '16px',
   };
 
   const avatarWrapperStyle: React.CSSProperties = {
@@ -46,13 +47,13 @@ export function ProfileTab() {
   };
 
   const roleBadgeStyle: React.CSSProperties = {
-    display:      'inline-flex',
-    padding:      '4px 10px',
+    display: 'inline-flex',
+    padding: '4px 10px',
     borderRadius: '6px',
-    fontSize:     '11px',
-    fontWeight:   700,
-    color:        roleMeta?.color ?? '#6366F1',
-    background:   `${roleMeta?.color ?? '#6366F1'}18`,
+    fontSize: '11px',
+    fontWeight: 700,
+    color: roleMeta?.color ?? '#6366F1',
+    background: `${roleMeta?.color ?? '#6366F1'}18`,
   };
 
   return (
@@ -106,7 +107,9 @@ export function ProfileTab() {
             />
 
             {/* Botones */}
-            <div style={{ display: 'flex', gap: '10px', justifyContent: 'flex-end', marginTop: '8px' }}>
+            <div
+              style={{ display: 'flex', gap: '10px', justifyContent: 'flex-end', marginTop: '8px' }}
+            >
               <Button
                 variant="ghost"
                 leftIcon={<KeyRound size={14} />}
@@ -115,18 +118,13 @@ export function ProfileTab() {
                 Cambiar contraseña
               </Button>
 
-              <Button variant="primary">
-                Guardar cambios
-              </Button>
+              <Button variant="primary">Guardar cambios</Button>
             </div>
           </div>
         </CardBody>
       </Card>
 
-      <ChangePasswordModal
-        open={passwordModalOpen}
-        onClose={() => setPasswordModalOpen(false)}
-      />
+      <ChangePasswordModal open={passwordModalOpen} onClose={() => setPasswordModalOpen(false)} />
     </div>
   );
 }

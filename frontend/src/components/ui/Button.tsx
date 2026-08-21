@@ -13,12 +13,12 @@ import { cn } from '@utils/cn';
 
 /** Variantes de color del botón. */
 export type ButtonVariant =
-  | 'primary'    // Acción principal (índigo / azul acero según tema)
-  | 'secondary'  // Acción secundaria (gris)
-  | 'danger'     // Acción destructiva (rojo / coral)
-  | 'success'    // Acción positiva (verde)
-  | 'ghost'      // Sin fondo (transparente)
-  | 'outline';   // Solo borde
+  | 'primary' // Acción principal (índigo / azul acero según tema)
+  | 'secondary' // Acción secundaria (gris)
+  | 'danger' // Acción destructiva (rojo / coral)
+  | 'success' // Acción positiva (verde)
+  | 'ghost' // Sin fondo (transparente)
+  | 'outline'; // Solo borde
 
 /** Tamaños disponibles del botón. */
 export type ButtonSize = 'sm' | 'md' | 'lg';
@@ -120,13 +120,12 @@ export const Button = forwardRef<HTMLButtonElement, ButtonProps>(
       className = '',
       ...rest
     },
-    ref
+    ref,
   ) => {
     const isDisabled = disabled || loading;
 
     // Spinner blanco para botones con fondo, primary para ghost/outline
-    const spinnerVariant =
-      variant === 'ghost' || variant === 'outline' ? 'primary' : 'white';
+    const spinnerVariant = variant === 'ghost' || variant === 'outline' ? 'primary' : 'white';
 
     return (
       <button
@@ -153,31 +152,25 @@ export const Button = forwardRef<HTMLButtonElement, ButtonProps>(
           fullWidth && 'w-full',
 
           // Clase externa (permite sobreescribir desde el padre)
-          className
+          className,
         )}
         aria-busy={loading}
         {...rest}
       >
         {/* Spinner cuando loading (reemplaza leftIcon) */}
-        {loading && (
-          <Spinner size={SPINNER_SIZE[size]} variant={spinnerVariant} />
-        )}
+        {loading && <Spinner size={SPINNER_SIZE[size]} variant={spinnerVariant} />}
 
         {/* Ícono izquierdo (solo si no está loading) */}
-        {!loading && leftIcon && (
-          <span className="inline-flex shrink-0">{leftIcon}</span>
-        )}
+        {!loading && leftIcon && <span className="inline-flex shrink-0">{leftIcon}</span>}
 
         {/* Texto del botón */}
         {children && <span>{children}</span>}
 
         {/* Ícono derecho (solo si no está loading) */}
-        {!loading && rightIcon && (
-          <span className="inline-flex shrink-0">{rightIcon}</span>
-        )}
+        {!loading && rightIcon && <span className="inline-flex shrink-0">{rightIcon}</span>}
       </button>
     );
-  }
+  },
 );
 
 Button.displayName = 'Button';

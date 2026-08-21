@@ -37,34 +37,34 @@ export interface ConfirmDialogProps {
 // ==============================================================================
 
 interface VariantConfig {
-  icon:           ReactNode;
-  iconClasses:    string;
+  icon: ReactNode;
+  iconClasses: string;
   wrapperClasses: string;
   confirmVariant: ButtonVariant;
 }
 
 const VARIANT_CONFIG: Record<ConfirmDialogVariant, VariantConfig> = {
   info: {
-    icon:           <Info size={24} strokeWidth={2} />,
-    iconClasses:    'text-[var(--color-info)]',
+    icon: <Info size={24} strokeWidth={2} />,
+    iconClasses: 'text-[var(--color-info)]',
     wrapperClasses: 'bg-[var(--color-info)]/15',
     confirmVariant: 'primary',
   },
   warning: {
-    icon:           <AlertTriangle size={24} strokeWidth={2} />,
-    iconClasses:    'text-[var(--color-warning)]',
+    icon: <AlertTriangle size={24} strokeWidth={2} />,
+    iconClasses: 'text-[var(--color-warning)]',
     wrapperClasses: 'bg-[var(--color-warning)]/15',
     confirmVariant: 'primary',
   },
   danger: {
-    icon:           <AlertCircle size={24} strokeWidth={2} />,
-    iconClasses:    'text-[var(--color-danger)]',
+    icon: <AlertCircle size={24} strokeWidth={2} />,
+    iconClasses: 'text-[var(--color-danger)]',
     wrapperClasses: 'bg-[var(--color-danger)]/15',
     confirmVariant: 'danger',
   },
   question: {
-    icon:           <HelpCircle size={24} strokeWidth={2} />,
-    iconClasses:    'text-[var(--color-primary)]',
+    icon: <HelpCircle size={24} strokeWidth={2} />,
+    iconClasses: 'text-[var(--color-primary)]',
     wrapperClasses: 'bg-[var(--color-primary)]/15',
     confirmVariant: 'primary',
   },
@@ -130,7 +130,7 @@ export function ConfirmDialog({
             'flex items-center justify-center',
             'w-14 h-14 rounded-full shrink-0',
             config.wrapperClasses,
-            config.iconClasses
+            config.iconClasses,
           )}
           role="img"
           aria-label={`Ícono de ${variant}`}

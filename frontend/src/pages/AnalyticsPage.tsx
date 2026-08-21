@@ -22,9 +22,9 @@ import { formatCurrency, formatNumber, formatPercent } from '@utils/Formatters';
 /** Emoji por canal de transacción. */
 const CHANNEL_ICONS: Record<string, string> = {
   mobile: '📱',
-  web:    '💻',
-  pos:    '💳',
-  atm:    '🏧',
+  web: '💻',
+  pos: '💳',
+  atm: '🏧',
   branch: '🏦',
 };
 
@@ -63,7 +63,7 @@ export function AnalyticsPage() {
     refetch,
   } = useAnalyticsData(selectedBank, {
     topCitiesLimit: 12,
-    topBanksLimit:  10,
+    topBanksLimit: 10,
   });
 
   // ==============================================================================
@@ -71,95 +71,95 @@ export function AnalyticsPage() {
   // ==============================================================================
 
   const pageStyle: React.CSSProperties = {
-    display:       'flex',
+    display: 'flex',
     flexDirection: 'column',
-    gap:           '20px',
-    padding:       '24px',
-    minHeight:     '100vh',
-    fontFamily:    'Inter, sans-serif',
+    gap: '20px',
+    padding: '24px',
+    minHeight: '100vh',
+    fontFamily: 'Inter, sans-serif',
   };
 
   const headerStyle: React.CSSProperties = {
-    display:        'flex',
-    alignItems:     'flex-start',
+    display: 'flex',
+    alignItems: 'flex-start',
     justifyContent: 'space-between',
-    gap:            '16px',
-    flexWrap:       'wrap',
+    gap: '16px',
+    flexWrap: 'wrap',
   };
 
   const headerLeftStyle: React.CSSProperties = {
-    display:       'flex',
+    display: 'flex',
     flexDirection: 'column',
-    gap:           '4px',
+    gap: '4px',
   };
 
   const titleStyle: React.CSSProperties = {
-    fontSize:      '24px',
-    fontWeight:    800,
-    color:         'var(--text-primary)',
-    margin:        0,
+    fontSize: '24px',
+    fontWeight: 800,
+    color: 'var(--text-primary)',
+    margin: 0,
     letterSpacing: '-0.02em',
-    display:       'flex',
-    alignItems:    'center',
-    gap:           '10px',
+    display: 'flex',
+    alignItems: 'center',
+    gap: '10px',
   };
 
   const subtitleStyle: React.CSSProperties = {
     fontSize: '13px',
-    color:    'var(--text-secondary)',
-    margin:   0,
+    color: 'var(--text-secondary)',
+    margin: 0,
   };
 
   const lastUpdatedStyle: React.CSSProperties = {
-    fontSize:  '10px',
-    color:     'var(--text-tertiary)',
+    fontSize: '10px',
+    color: 'var(--text-tertiary)',
     fontStyle: 'italic',
   };
 
   const metricsGridStyle: React.CSSProperties = {
-    display:             'grid',
+    display: 'grid',
     gridTemplateColumns: 'repeat(auto-fit, minmax(220px, 1fr))',
-    gap:                 '16px',
+    gap: '16px',
   };
 
   const metricCardStyle: React.CSSProperties = {
-    display:        'flex',
-    alignItems:     'center',
-    gap:            '16px',
-    padding:        '20px',
-    background:     'var(--bg-secondary)',
-    border:         '1px solid var(--border)',
-    borderRadius:   '12px',
+    display: 'flex',
+    alignItems: 'center',
+    gap: '16px',
+    padding: '20px',
+    background: 'var(--bg-secondary)',
+    border: '1px solid var(--border)',
+    borderRadius: '12px',
   };
 
   const metricInfoStyle: React.CSSProperties = {
-    display:       'flex',
+    display: 'flex',
     flexDirection: 'column',
-    gap:           '4px',
-    flex:          1,
-    minWidth:      0,
+    gap: '4px',
+    flex: 1,
+    minWidth: 0,
   };
 
   const metricValueStyle: React.CSSProperties = {
-    fontSize:           '20px',
-    fontWeight:         800,
-    color:              'var(--text-primary)',
-    letterSpacing:      '-0.02em',
+    fontSize: '20px',
+    fontWeight: 800,
+    color: 'var(--text-primary)',
+    letterSpacing: '-0.02em',
     fontVariantNumeric: 'tabular-nums',
   };
 
   const metricLabelStyle: React.CSSProperties = {
-    fontSize:      '11px',
-    fontWeight:    500,
-    color:         'var(--text-tertiary)',
+    fontSize: '11px',
+    fontWeight: 500,
+    color: 'var(--text-tertiary)',
     textTransform: 'uppercase',
     letterSpacing: '0.05em',
   };
 
   const chartsGridStyle: React.CSSProperties = {
-    display:             'grid',
+    display: 'grid',
     gridTemplateColumns: 'repeat(auto-fit, minmax(360px, 1fr))',
-    gap:                 '16px',
+    gap: '16px',
   };
 
   // ==============================================================================
@@ -200,7 +200,6 @@ export function AnalyticsPage() {
 
   return (
     <div style={pageStyle}>
-
       {/* ================================================================
           HEADER
           ================================================================ */}
@@ -211,9 +210,7 @@ export function AnalyticsPage() {
             <BarChart3 size={24} />
             Analíticas del Modelo
           </h1>
-          <p style={subtitleStyle}>
-            Métricas de efectividad y rendimiento del modelo de IA
-          </p>
+          <p style={subtitleStyle}>Métricas de efectividad y rendimiento del modelo de IA</p>
         </div>
 
         {lastUpdated && (
@@ -229,7 +226,6 @@ export function AnalyticsPage() {
 
       <section aria-label="Métricas del modelo de IA">
         <div style={metricsGridStyle}>
-
           {/* Tasa de detección */}
           <div style={metricCardStyle}>
             <ScoreRing
@@ -239,9 +235,7 @@ export function AnalyticsPage() {
               scoreFormat="compact"
             />
             <div style={metricInfoStyle}>
-              <span style={metricValueStyle}>
-                {formatPercent(metrics.detectionRate)}
-              </span>
+              <span style={metricValueStyle}>{formatPercent(metrics.detectionRate)}</span>
               <span style={metricLabelStyle}>Tasa de Detección</span>
             </div>
           </div>
@@ -255,9 +249,7 @@ export function AnalyticsPage() {
               scoreFormat="compact"
             />
             <div style={metricInfoStyle}>
-              <span style={metricValueStyle}>
-                {formatPercent(metrics.falsePositiveRate)}
-              </span>
+              <span style={metricValueStyle}>{formatPercent(metrics.falsePositiveRate)}</span>
               <span style={metricLabelStyle}>Falsos Positivos</span>
             </div>
           </div>
@@ -265,9 +257,7 @@ export function AnalyticsPage() {
           {/* Monto promedio */}
           <div style={metricCardStyle}>
             <div style={metricInfoStyle}>
-              <span style={metricValueStyle}>
-                {formatCurrency(metrics.averageAmount)}
-              </span>
+              <span style={metricValueStyle}>{formatCurrency(metrics.averageAmount)}</span>
               <span style={metricLabelStyle}>Monto Promedio</span>
             </div>
           </div>
@@ -275,13 +265,10 @@ export function AnalyticsPage() {
           {/* Total analizadas */}
           <div style={metricCardStyle}>
             <div style={metricInfoStyle}>
-              <span style={metricValueStyle}>
-                {formatNumber(metrics.totalAnalyzed)}
-              </span>
+              <span style={metricValueStyle}>{formatNumber(metrics.totalAnalyzed)}</span>
               <span style={metricLabelStyle}>Total Analizadas</span>
             </div>
           </div>
-
         </div>
       </section>
 
@@ -291,11 +278,10 @@ export function AnalyticsPage() {
 
       <section aria-label="Distribución de transacciones">
         <div style={chartsGridStyle}>
-
           {/* Por tipo de transacción */}
           <AggregationChart
             title="Transacciones por Tipo"
-            data={typesRanked.map(t => ({
+            data={typesRanked.map((t) => ({
               label: t.type,
               count: t.count,
               fraud: t.fraud,
@@ -306,7 +292,7 @@ export function AnalyticsPage() {
           {/* Top ciudades */}
           <AggregationChart
             title="Top Ciudades"
-            data={topCities.map(c => ({
+            data={topCities.map((c) => ({
               label: c.city,
               count: c.transactionCount,
             }))}
@@ -317,10 +303,10 @@ export function AnalyticsPage() {
           {/* Por canal */}
           <AggregationChart
             title="Canal"
-            data={channelsRanked.map(c => ({
+            data={channelsRanked.map((c) => ({
               label: c.channel,
               count: c.count,
-              icon:  getChannelIcon(c.channel),
+              icon: getChannelIcon(c.channel),
             }))}
             barColor="#818CF8"
           />
@@ -328,7 +314,7 @@ export function AnalyticsPage() {
           {/* Fraude por banco */}
           <AggregationChart
             title="Fraude por Banco"
-            data={topBanksByFraud.map(b => ({
+            data={topBanksByFraud.map((b) => ({
               label: b.bank,
               count: b.count,
               fraud: b.fraud,
@@ -336,7 +322,6 @@ export function AnalyticsPage() {
             }))}
             showFraudColumn
           />
-
         </div>
       </section>
     </div>

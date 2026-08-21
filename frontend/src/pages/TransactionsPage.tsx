@@ -38,11 +38,11 @@ import type { Transaction, ExportMetadata, TransactionSortField } from '@app-typ
 const LEVEL_ORDER: RiskLevel[] = ['critical', 'high', 'medium', 'low'];
 
 const STATUS_FILTERS = [
-  { value: 'all',      label: 'Todos' },
+  { value: 'all', label: 'Todos' },
   { value: 'approved', label: '✅ Aprobadas' },
-  { value: 'flagged',  label: '⚠️ Marcadas' },
-  { value: 'blocked',  label: '🚫 Bloqueadas' },
-  { value: 'pending',  label: '⏱ Pendientes' },
+  { value: 'flagged', label: '⚠️ Marcadas' },
+  { value: 'blocked', label: '🚫 Bloqueadas' },
+  { value: 'pending', label: '⏱ Pendientes' },
 ] as const;
 
 // ==============================================================================
@@ -51,74 +51,66 @@ const STATUS_FILTERS = [
 
 const TABLE_COLUMNS: DataTableColumn<Transaction>[] = [
   {
-    key:      'id',
-    label:    'ID',
+    key: 'id',
+    label: 'ID',
     sortable: true,
-    width:    '90px',
-    render:   (tx) => (
-      <span style={{ fontFamily: 'monospace', fontSize: '11px' }}>{tx.id}</span>
+    width: '90px',
+    render: (tx) => <span style={{ fontFamily: 'monospace', fontSize: '11px' }}>{tx.id}</span>,
+  },
+  {
+    key: 'timestamp',
+    label: 'Hora',
+    sortable: true,
+    width: '80px',
+    sortAccessor: (tx) => (tx.timestamp ? new Date(tx.timestamp) : null),
+    render: (tx) => (
+      <span style={{ fontFamily: 'monospace', fontSize: '11px' }}>{formatTime(tx.timestamp)}</span>
     ),
   },
   {
-    key:          'timestamp',
-    label:        'Hora',
-    sortable:     true,
-    width:        '80px',
-    sortAccessor: (tx) => tx.timestamp ? new Date(tx.timestamp) : null,
-    render:       (tx) => (
-      <span style={{ fontFamily: 'monospace', fontSize: '11px' }}>
-        {formatTime(tx.timestamp)}
-      </span>
-    ),
-  },
-  {
-    key:      'user',
-    label:    'Usuario',
+    key: 'user',
+    label: 'Usuario',
     sortable: true,
-    render:   (tx) => <span style={{ fontWeight: 600 }}>{tx.user}</span>,
+    render: (tx) => <span style={{ fontWeight: 600 }}>{tx.user}</span>,
   },
   {
-    key:    'bank',
-    label:  'Banco',
+    key: 'bank',
+    label: 'Banco',
     render: (tx) => <BankBadge bank={tx.bank} size="sm" />,
   },
   {
-    key:    'type',
-    label:  'Tipo',
+    key: 'type',
+    label: 'Tipo',
     render: (tx) => tx.type,
   },
   {
-    key:          'amount',
-    label:        'Monto',
-    sortable:     true,
-    align:        'right',
+    key: 'amount',
+    label: 'Monto',
+    sortable: true,
+    align: 'right',
     sortAccessor: (tx) => tx.amount,
-    render:       (tx) => (
-      <span style={{ fontFamily: 'monospace', fontWeight: 600 }}>
-        {formatCurrency(tx.amount)}
-      </span>
+    render: (tx) => (
+      <span style={{ fontFamily: 'monospace', fontWeight: 600 }}>{formatCurrency(tx.amount)}</span>
     ),
   },
   {
-    key:          'riskScore',
-    label:        'Riesgo',
-    sortable:     true,
-    align:        'center',
+    key: 'riskScore',
+    label: 'Riesgo',
+    sortable: true,
+    align: 'center',
     sortAccessor: (tx) => tx.riskScore,
-    render:       (tx) => <RiskBadge score={tx.riskScore} size="sm" />,
+    render: (tx) => <RiskBadge score={tx.riskScore} size="sm" />,
   },
   {
-    key:    'location',
-    label:  'Ciudad',
+    key: 'location',
+    label: 'Ciudad',
     render: (tx) => tx.location.city,
   },
   {
-    key:   'status',
+    key: 'status',
     label: 'Estado',
     align: 'center',
-    render: (tx) => (
-      <StatusBadge type="transaction" status={tx.status} size="sm" />
-    ),
+    render: (tx) => <StatusBadge type="transaction" status={tx.status} size="sm" />,
   },
 ];
 
@@ -127,18 +119,18 @@ const TABLE_COLUMNS: DataTableColumn<Transaction>[] = [
 // ==============================================================================
 
 const EXPORT_COLUMNS: ExportColumn<Transaction>[] = [
-  { header: 'ID',          accessor: (t) => t.id },
-  { header: 'Fecha',       accessor: (t) => t.timestamp ?? '' },
-  { header: 'Usuario',     accessor: (t) => t.user },
-  { header: 'Banco',       accessor: (t) => t.bank.name },
-  { header: 'Tipo',        accessor: (t) => t.type },
-  { header: 'Monto',       accessor: (t) => t.amount },
-  { header: 'Moneda',      accessor: (t) => t.currency },
-  { header: 'Riesgo',      accessor: (t) => `${t.riskScore}%` },
-  { header: 'Nivel',       accessor: (t) => t.alertLevel },
-  { header: 'Ciudad',      accessor: (t) => t.location.city },
-  { header: 'Canal',       accessor: (t) => t.channel },
-  { header: 'Estado',      accessor: (t) => t.status },
+  { header: 'ID', accessor: (t) => t.id },
+  { header: 'Fecha', accessor: (t) => t.timestamp ?? '' },
+  { header: 'Usuario', accessor: (t) => t.user },
+  { header: 'Banco', accessor: (t) => t.bank.name },
+  { header: 'Tipo', accessor: (t) => t.type },
+  { header: 'Monto', accessor: (t) => t.amount },
+  { header: 'Moneda', accessor: (t) => t.currency },
+  { header: 'Riesgo', accessor: (t) => `${t.riskScore}%` },
+  { header: 'Nivel', accessor: (t) => t.alertLevel },
+  { header: 'Ciudad', accessor: (t) => t.location.city },
+  { header: 'Canal', accessor: (t) => t.channel },
+  { header: 'Estado', accessor: (t) => t.status },
   { header: 'Latencia(ms)', accessor: (t) => t.processingTime },
 ];
 
@@ -207,99 +199,105 @@ export function TransactionsPage() {
   // HANDLERS
   // ==============================================================================
 
-  const handleExport = useCallback((format: 'csv' | 'pdf' | 'json' | 'xlsx'): void => {
-    exportData({
-      format,
-      data:           filteredTransactions,
-      columns:        EXPORT_COLUMNS,
-      filenamePrefix: 'transacciones_trida',
-      title:          'TRANSACCIONES — TriDa Sistema Antifraude',
-    });
-  }, [filteredTransactions]);
+  const handleExport = useCallback(
+    (format: 'csv' | 'pdf' | 'json' | 'xlsx'): void => {
+      exportData({
+        format,
+        data: filteredTransactions,
+        columns: EXPORT_COLUMNS,
+        filenamePrefix: 'transacciones_trida',
+        title: 'TRANSACCIONES — TriDa Sistema Antifraude',
+      });
+    },
+    [filteredTransactions],
+  );
 
-  const handlePreview = useCallback((format: 'csv' | 'pdf' | 'json' | 'xlsx'): void => {
-    const preview = buildExportPreview(format, filteredTransactions, 5, 'transacciones_trida');
-    setExportPreview(preview);
-  }, [filteredTransactions]);
+  const handlePreview = useCallback(
+    (format: 'csv' | 'pdf' | 'json' | 'xlsx'): void => {
+      const preview = buildExportPreview(format, filteredTransactions, 5, 'transacciones_trida');
+      setExportPreview(preview);
+    },
+    [filteredTransactions],
+  );
 
   // ==============================================================================
   // ESTILOS
   // ==============================================================================
 
   const pageStyle: React.CSSProperties = {
-    display:       'flex',
+    display: 'flex',
     flexDirection: 'column',
-    gap:           '16px',
-    padding:       '24px',
-    minHeight:     '100vh',
-    fontFamily:    'Inter, sans-serif',
+    gap: '16px',
+    padding: '24px',
+    minHeight: '100vh',
+    fontFamily: 'Inter, sans-serif',
   };
 
   const headerStyle: React.CSSProperties = {
-    display:        'flex',
-    alignItems:     'flex-start',
+    display: 'flex',
+    alignItems: 'flex-start',
     justifyContent: 'space-between',
-    gap:            '16px',
-    flexWrap:       'wrap',
+    gap: '16px',
+    flexWrap: 'wrap',
   };
 
   const headerLeftStyle: React.CSSProperties = {
-    display:       'flex',
+    display: 'flex',
     flexDirection: 'column',
-    gap:           '4px',
+    gap: '4px',
   };
 
   const titleStyle: React.CSSProperties = {
-    fontSize:      '24px',
-    fontWeight:    800,
-    color:         'var(--text-primary)',
-    margin:        0,
+    fontSize: '24px',
+    fontWeight: 800,
+    color: 'var(--text-primary)',
+    margin: 0,
     letterSpacing: '-0.02em',
-    display:       'flex',
-    alignItems:    'center',
-    gap:           '10px',
+    display: 'flex',
+    alignItems: 'center',
+    gap: '10px',
   };
 
   const subtitleStyle: React.CSSProperties = {
     fontSize: '13px',
-    color:    'var(--text-secondary)',
-    margin:   0,
+    color: 'var(--text-secondary)',
+    margin: 0,
   };
 
   const filtersRowStyle: React.CSSProperties = {
-    display:    'flex',
+    display: 'flex',
     alignItems: 'center',
-    gap:        '12px',
-    flexWrap:   'wrap',
+    gap: '12px',
+    flexWrap: 'wrap',
   };
 
   const filterGroupStyle: React.CSSProperties = {
-    display:    'flex',
+    display: 'flex',
     alignItems: 'center',
-    gap:        '6px',
-    flexWrap:   'wrap',
+    gap: '6px',
+    flexWrap: 'wrap',
   };
 
   const filterLabelStyle: React.CSSProperties = {
-    fontSize:      '11px',
-    fontWeight:    600,
-    color:         'var(--text-tertiary)',
+    fontSize: '11px',
+    fontWeight: 600,
+    color: 'var(--text-tertiary)',
     textTransform: 'uppercase',
     letterSpacing: '0.05em',
   };
 
   const bodyStyle: React.CSSProperties = {
     display: 'flex',
-    gap:     '16px',
-    flex:    1,
+    gap: '16px',
+    flex: 1,
   };
 
   const tableContainerStyle: React.CSSProperties = {
-    flex:          1,
-    minWidth:      0,
-    display:       'flex',
+    flex: 1,
+    minWidth: 0,
+    display: 'flex',
     flexDirection: 'column',
-    gap:           '12px',
+    gap: '12px',
   };
 
   // ==============================================================================
@@ -340,7 +338,6 @@ export function TransactionsPage() {
 
   return (
     <div style={pageStyle}>
-
       {/* ================================================================
           HEADER
           ================================================================ */}
@@ -378,7 +375,7 @@ export function TransactionsPage() {
             active={!filters.level || filters.level === 'all'}
             onClick={() => setFilters({ level: 'all' })}
           />
-          {LEVEL_ORDER.map(level => (
+          {LEVEL_ORDER.map((level) => (
             <FilterChip
               key={level}
               label={RISK_LEVELS[level].label}
@@ -393,7 +390,7 @@ export function TransactionsPage() {
         {/* Filtro por estado */}
         <div style={filterGroupStyle}>
           <span style={filterLabelStyle}>Estado:</span>
-          {STATUS_FILTERS.map(sf => (
+          {STATUS_FILTERS.map((sf) => (
             <FilterChip
               key={sf.value}
               label={sf.label}
@@ -449,7 +446,8 @@ export function TransactionsPage() {
                 columns={TABLE_COLUMNS}
                 getRowKey={(tx) => tx.id}
                 sort={sort}
-                onSortChange={(newSort) => toggleSort(newSort.field as TransactionSortField)}                onRowClick={setSelected}
+                onSortChange={(newSort) => toggleSort(newSort.field as TransactionSortField)}
+                onRowClick={setSelected}
                 hoverable
               />
 

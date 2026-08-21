@@ -33,9 +33,9 @@ function normalizeDashboardStats(raw: DashboardStatsRaw): DashboardStats {
   const totalFrauds = raw.total_fraudes ?? 0;
 
   const alertsByLevel: Record<AlertCriticality, number> = {
-    low:      0,
-    medium:   0,
-    high:     raw.total_altas ?? raw.high ?? 0,
+    low: 0,
+    medium: 0,
+    high: raw.total_altas ?? raw.high ?? 0,
     critical: raw.total_criticas ?? raw.crit ?? 0,
   };
 
@@ -43,11 +43,11 @@ function normalizeDashboardStats(raw: DashboardStatsRaw): DashboardStats {
 
   return {
     totalTransactions: total,
-    totalClients:      raw.total_clientes ?? 0,
+    totalClients: raw.total_clientes ?? 0,
     totalFrauds,
     totalBlocked,
-    totalAmount:       raw.monto_total ?? 0,
-    fraudRate:         Number(fraudRate.toFixed(1)),
+    totalAmount: raw.monto_total ?? 0,
+    fraudRate: Number(fraudRate.toFixed(1)),
     alertsByLevel,
   };
 }
@@ -73,7 +73,7 @@ function normalizeDashboardStats(raw: DashboardStatsRaw): DashboardStats {
  *
  */
 export async function getDashboardStats(
-  bankId: SelectedBankId = ALL_BANKS_ID
+  bankId: SelectedBankId = ALL_BANKS_ID,
 ): Promise<DashboardStats> {
   const params = bankId !== ALL_BANKS_ID ? { banco: bankId } : undefined;
 
@@ -90,7 +90,7 @@ export async function getDashboardStats(
  * Combina dos llamadas separadas en una única estructura para conveniencia.
  */
 export interface DashboardData {
-  stats:        DashboardStats;
+  stats: DashboardStats;
   recentAlerts: RecentAlert[];
 }
 
@@ -109,7 +109,7 @@ export interface DashboardData {
  *
  */
 export async function getDashboardData(
-  bankId: SelectedBankId = ALL_BANKS_ID
+  bankId: SelectedBankId = ALL_BANKS_ID,
 ): Promise<DashboardData> {
   const [stats, recentAlerts] = await Promise.all([
     getDashboardStats(bankId),
@@ -133,7 +133,7 @@ export async function getDashboardData(
  * @returns Monto total procesado.
  */
 export async function getTotalProcessedAmount(
-  bankId: SelectedBankId = ALL_BANKS_ID
+  bankId: SelectedBankId = ALL_BANKS_ID,
 ): Promise<number> {
   const stats = await getDashboardStats(bankId);
   return stats.totalAmount;
@@ -148,9 +148,7 @@ export async function getTotalProcessedAmount(
  * @param bankId - Código del banco a filtrar, o 'all'.
  * @returns Tasa de fraude en porcentaje (0-100).
  */
-export async function getFraudRate(
-  bankId: SelectedBankId = ALL_BANKS_ID
-): Promise<number> {
+export async function getFraudRate(bankId: SelectedBankId = ALL_BANKS_ID): Promise<number> {
   const stats = await getDashboardStats(bankId);
   return stats.fraudRate;
 }

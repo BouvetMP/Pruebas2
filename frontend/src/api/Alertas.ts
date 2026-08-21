@@ -6,13 +6,7 @@
 
 import { get } from './Client';
 import { normalizeAlerts, normalizeRecentAlerts } from '@utils/Normalizers';
-import type {
-  Alert,
-  AlertRaw,
-  RecentAlert,
-  AlertCriticality,
-  SelectedBankId,
-} from '@app-types';
+import type { Alert, AlertRaw, RecentAlert, AlertCriticality, SelectedBankId } from '@app-types';
 import { ALL_BANKS_ID } from '@app-types';
 
 // ==============================================================================
@@ -36,9 +30,7 @@ import { ALL_BANKS_ID } from '@app-types';
  * @throws ApiError si la consulta falla.
  *
  */
-export async function getAlerts(
-  bankId: SelectedBankId = ALL_BANKS_ID
-): Promise<Alert[]> {
+export async function getAlerts(bankId: SelectedBankId = ALL_BANKS_ID): Promise<Alert[]> {
   const params = bankId !== ALL_BANKS_ID ? { banco: bankId } : undefined;
 
   const raw = await get<AlertRaw[]>('/alertas', params);
@@ -58,7 +50,7 @@ export async function getAlerts(
  *
  */
 export async function getRecentAlerts(
-  bankId: SelectedBankId = ALL_BANKS_ID
+  bankId: SelectedBankId = ALL_BANKS_ID,
 ): Promise<RecentAlert[]> {
   const params = bankId !== ALL_BANKS_ID ? { banco: bankId } : undefined;
 
@@ -76,9 +68,7 @@ export async function getRecentAlerts(
  * @param bankId - Código del banco a filtrar, o 'all'.
  * @returns Cantidad total de alertas.
  */
-export async function getAlertsCount(
-  bankId: SelectedBankId = ALL_BANKS_ID
-): Promise<number> {
+export async function getAlertsCount(bankId: SelectedBankId = ALL_BANKS_ID): Promise<number> {
   const alerts = await getAlerts(bankId);
   return alerts.length;
 }
@@ -97,10 +87,10 @@ export async function getAlertsCount(
  */
 export async function getAlertsCountByLevel(
   level: AlertCriticality,
-  bankId: SelectedBankId = ALL_BANKS_ID
+  bankId: SelectedBankId = ALL_BANKS_ID,
 ): Promise<number> {
   const alerts = await getAlerts(bankId);
-  return alerts.filter(alert => alert.alertLevel === level).length;
+  return alerts.filter((alert) => alert.alertLevel === level).length;
 }
 
 /**
@@ -115,15 +105,15 @@ export async function getAlertsCountByLevel(
  * @returns Objeto con conteos por nivel: { low, medium, high, critical }.
  */
 export async function getAlertsCountsByLevel(
-  bankId: SelectedBankId = ALL_BANKS_ID
+  bankId: SelectedBankId = ALL_BANKS_ID,
 ): Promise<Record<AlertCriticality, number>> {
   const alerts = await getAlerts(bankId);
 
   return {
-    low:      alerts.filter(a => a.alertLevel === 'low').length,
-    medium:   alerts.filter(a => a.alertLevel === 'medium').length,
-    high:     alerts.filter(a => a.alertLevel === 'high').length,
-    critical: alerts.filter(a => a.alertLevel === 'critical').length,
+    low: alerts.filter((a) => a.alertLevel === 'low').length,
+    medium: alerts.filter((a) => a.alertLevel === 'medium').length,
+    high: alerts.filter((a) => a.alertLevel === 'high').length,
+    critical: alerts.filter((a) => a.alertLevel === 'critical').length,
   };
 }
 
@@ -136,9 +126,7 @@ export async function getAlertsCountsByLevel(
  * @param bankId - Código del banco a filtrar, o 'all'.
  * @returns Cantidad de alertas activas.
  */
-export async function getActiveAlertsCount(
-  bankId: SelectedBankId = ALL_BANKS_ID
-): Promise<number> {
+export async function getActiveAlertsCount(bankId: SelectedBankId = ALL_BANKS_ID): Promise<number> {
   const alerts = await getAlerts(bankId);
-  return alerts.filter(alert => alert.alertStatus === 'active').length;
+  return alerts.filter((alert) => alert.alertStatus === 'active').length;
 }

@@ -18,12 +18,12 @@ const rootElement = document.getElementById('root');
 if (!rootElement) {
   throw new Error(
     'No se encontró el elemento #root en el DOM. ' +
-    'Verifica que index.html tenga <div id="root"></div>.'
+      'Verifica que index.html tenga <div id="root"></div>.',
   );
 }
 
 ReactDOM.createRoot(rootElement).render(
   <React.StrictMode>
     <App />
-  </React.StrictMode>
+  </React.StrictMode>,
 );

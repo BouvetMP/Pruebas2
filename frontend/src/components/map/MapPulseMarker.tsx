@@ -27,10 +27,14 @@ export interface MapPulseMarkerProps {
  */
 function getPulseSize(level: RiskLevel): number {
   switch (level) {
-    case 'critical': return 24;
-    case 'high':     return 18;
-    case 'medium':   return 14;
-    default:         return 10;
+    case 'critical':
+      return 24;
+    case 'high':
+      return 18;
+    case 'medium':
+      return 14;
+    default:
+      return 10;
   }
 }
 
@@ -86,10 +90,9 @@ export function MapPulseMarker({ pulse }: MapPulseMarkerProps) {
     });
 
     // Crear y añadir el marcador al mapa
-    const marker = L.marker(
-      [pulse.latitude, pulse.longitude],
-      { icon, interactive: false }
-    ).addTo(map);
+    const marker = L.marker([pulse.latitude, pulse.longitude], { icon, interactive: false }).addTo(
+      map,
+    );
 
     markerRef.current = marker;
 

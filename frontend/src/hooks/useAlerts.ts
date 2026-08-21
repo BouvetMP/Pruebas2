@@ -7,12 +7,7 @@
 import { useCallback, useEffect, useMemo, useState } from 'react';
 import { getAlerts, getRecentAlerts } from '@api/Alertas';
 import { countByRiskLevel } from '@utils/Risk';
-import type {
-  Alert,
-  AlertCriticality,
-  RecentAlert,
-  SelectedBankId,
-} from '@app-types';
+import type { Alert, AlertCriticality, RecentAlert, SelectedBankId } from '@app-types';
 import { ALL_BANKS_ID } from '@app-types';
 
 // ==============================================================================
@@ -60,7 +55,7 @@ export interface UseRecentAlertsResult {
  * @param bankId - Código del banco a filtrar, o 'all'.
  * @returns Objeto con alertas, estados y funciones de gestión.
  *
- * 
+ *
  */
 export function useAlerts(bankId: SelectedBankId = ALL_BANKS_ID): UseAlertsResult {
   const [alerts, setAlerts] = useState<Alert[]>([]);
@@ -95,7 +90,7 @@ export function useAlerts(bankId: SelectedBankId = ALL_BANKS_ID): UseAlertsResul
         setRefreshing(false);
       }
     },
-    [bankId]
+    [bankId],
   );
 
   // ==============================================================================
@@ -150,7 +145,7 @@ export function useAlerts(bankId: SelectedBankId = ALL_BANKS_ID): UseAlertsResul
 
   const counts = useMemo<Record<AlertCriticality, number>>(
     () => countByRiskLevel(alerts),
-    [alerts]
+    [alerts],
   );
 
   const count = alerts.length;
@@ -183,9 +178,7 @@ export function useAlerts(bankId: SelectedBankId = ALL_BANKS_ID): UseAlertsResul
  *
  * );
  */
-export function useRecentAlerts(
-  bankId: SelectedBankId = ALL_BANKS_ID
-): UseRecentAlertsResult {
+export function useRecentAlerts(bankId: SelectedBankId = ALL_BANKS_ID): UseRecentAlertsResult {
   const [alerts, setAlerts] = useState<RecentAlert[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);

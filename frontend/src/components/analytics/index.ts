@@ -3,7 +3,4 @@
 // ¿Impacto? Punto único de importación para componentes de analytics.
 
 export { AggregationChart } from './AggregationChart';
-export type {
-  AggregationChartProps,
-  ChartItem,
-} from './AggregationChart';
+export type { AggregationChartProps, ChartItem } from './AggregationChart';

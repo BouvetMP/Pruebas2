@@ -48,14 +48,10 @@ function toNumber(value: unknown, fallback: number = 0): number {
 }
 
 /** Construye el objeto de banco embebido en otros normalizers. */
-function buildBankInfo(
-  name?: string | null,
-  id?: string | null,
-  color?: string | null
-): Bank {
+function buildBankInfo(name?: string | null, id?: string | null, color?: string | null): Bank {
   return {
-    id:    id    ?? UNASSIGNED_BANK_ID,
-    name:  name  ?? 'Sin banco',
+    id: id ?? UNASSIGNED_BANK_ID,
+    name: name ?? 'Sin banco',
     color: color ?? DEFAULT_BANK_COLOR,
   };
 }
@@ -75,8 +71,8 @@ function buildBankInfo(
  */
 export function normalizeBank(raw: BankRaw): Bank {
   return {
-    id:    raw.codigo ?? raw.codigo_banco ?? String(raw.id_banco ?? UNASSIGNED_BANK_ID),
-    name:  raw.nombre ?? raw.nombre_banco ?? raw.name ?? 'Sin nombre',
+    id: raw.codigo ?? raw.codigo_banco ?? String(raw.id_banco ?? UNASSIGNED_BANK_ID),
+    name: raw.nombre ?? raw.nombre_banco ?? raw.name ?? 'Sin nombre',
     color: raw.color ?? DEFAULT_BANK_COLOR,
   };
 }
@@ -103,12 +99,12 @@ export function normalizeSystemUser(raw: SystemUserRaw): SystemUser {
   const name = raw.nombre_completo ?? 'Usuario sin nombre';
 
   return {
-    id:        raw.id_usuario,
+    id: raw.id_usuario,
     name,
-    email:     raw.email,
-    role:      raw.rol,
-    status:    raw.estado ? 'active' : 'inactive',
-    avatar:    getInitials(name),
+    email: raw.email,
+    role: raw.rol,
+    status: raw.estado ? 'active' : 'inactive',
+    avatar: getInitials(name),
     createdAt: raw.fecha_creacion,
     lastLogin: raw.ultimo_acceso,
     createdBy: raw.id_usuario_generador,
@@ -140,17 +136,17 @@ export function normalizeBankClient(raw: BankClientRaw): BankClient {
   const name = raw.nombre_completo ?? 'Cliente sin nombre';
 
   return {
-    id:           raw.id_cliente,
+    id: raw.id_cliente,
     name,
-    email:        raw.email ?? 'sin-correo@dominio.com',
-    phone:        raw.telefono ?? 'N/D',
-    country:      raw.pais ?? 'N/D',
-    city:         raw.ciudad ?? 'N/D',
-    avatar:       getInitials(name),
-    status:       raw.estado ? 'active' : 'inactive',
+    email: raw.email ?? 'sin-correo@dominio.com',
+    phone: raw.telefono ?? 'N/D',
+    country: raw.pais ?? 'N/D',
+    city: raw.ciudad ?? 'N/D',
+    avatar: getInitials(name),
+    status: raw.estado ? 'active' : 'inactive',
     registeredAt: raw.fecha_registro,
-    bank:         buildBankInfo(raw.banco, raw.banco_codigo, raw.banco_color),
-    riskScore:    toNumber(raw.riesgo, 0),
+    bank: buildBankInfo(raw.banco, raw.banco_codigo, raw.banco_color),
+    riskScore: toNumber(raw.riesgo, 0),
   };
 }
 
@@ -176,17 +172,17 @@ export function normalizeDevice(raw: DeviceRaw): Device {
   const type = raw.tipo_dispositivo ?? 'Desconocido';
 
   return {
-    id:              String(raw.id_dispositivo ?? ''),
-    clientId:        raw.id_cliente ?? 0,
-    clientName:      raw.cliente ?? 'Sin cliente',
+    id: String(raw.id_dispositivo ?? ''),
+    clientId: raw.id_cliente ?? 0,
+    clientName: raw.cliente ?? 'Sin cliente',
     type,
-    category:        getDeviceCategory(type),
+    category: getDeviceCategory(type),
     operatingSystem: raw.sistema_operativo ?? 'N/D',
-    browser:         raw.navegador ?? 'N/D',
-    fingerprint:     raw.identificador_unico ?? '',
-    firstUsedAt:     raw.fecha_primer_uso ?? null,
-    lastUsedAt:      raw.fecha_ultimo_uso ?? null,
-    bank:            buildBankInfo(raw.banco, raw.banco_codigo, raw.banco_color),
+    browser: raw.navegador ?? 'N/D',
+    fingerprint: raw.identificador_unico ?? '',
+    firstUsedAt: raw.fecha_primer_uso ?? null,
+    lastUsedAt: raw.fecha_ultimo_uso ?? null,
+    bank: buildBankInfo(raw.banco, raw.banco_codigo, raw.banco_color),
   };
 }
 
@@ -213,12 +209,12 @@ export function normalizeLocation(raw: LocationRaw): Location {
   const lng = toNumber(raw.longitud, 0);
 
   return {
-    id:           raw.id_ubicacion ?? 0,
-    latitude:     lat,
-    longitude:    lng,
-    city:         raw.ciudad ?? 'Desconocida',
-    country:      raw.pais ?? 'N/D',
-    ipAddress:    raw.direccion_ip ?? '',
+    id: raw.id_ubicacion ?? 0,
+    latitude: lat,
+    longitude: lng,
+    city: raw.ciudad ?? 'Desconocida',
+    country: raw.pais ?? 'N/D',
+    ipAddress: raw.direccion_ip ?? '',
     registeredAt: raw.fecha_registro ?? '',
   };
 }
@@ -226,7 +222,7 @@ export function normalizeLocation(raw: LocationRaw): Location {
 /** Normaliza un array de ubicaciones filtrando las que tengan coordenadas inválidas. */
 export function normalizeLocations(rawList: LocationRaw[]): Location[] {
   return (rawList ?? [])
-    .filter(raw => hasValidCoordinates(raw.latitud, raw.longitud))
+    .filter((raw) => hasValidCoordinates(raw.latitud, raw.longitud))
     .map(normalizeLocation);
 }
 
@@ -249,23 +245,23 @@ export function normalizeTransaction(raw: TransactionRaw): Transaction {
   const level = getRiskLevel(score);
 
   return {
-    id:             String(raw.id_transaccion),
-    timestamp:      raw.fecha_transaccion ?? null,
-    user:           raw.cliente ?? raw.nombre_completo ?? 'Desconocido',
-    account:        raw.cuenta ?? raw.cuenta_origen ?? 'N/D',
-    type:           raw.tipo_transaccion ?? 'Sin tipo',
-    amount:         toNumber(raw.monto),
-    currency:       raw.moneda ?? 'COP',
-    riskScore:      score,
-    alertLevel:     level,
-    status:         mapTransactionStatusRaw(raw.estado_transaccion),
-    isFraud:        raw.es_fraude_real ?? false,
+    id: String(raw.id_transaccion),
+    timestamp: raw.fecha_transaccion ?? null,
+    user: raw.cliente ?? raw.nombre_completo ?? 'Desconocido',
+    account: raw.cuenta ?? raw.cuenta_origen ?? 'N/D',
+    type: raw.tipo_transaccion ?? 'Sin tipo',
+    amount: toNumber(raw.monto),
+    currency: raw.moneda ?? 'COP',
+    riskScore: score,
+    alertLevel: level,
+    status: mapTransactionStatusRaw(raw.estado_transaccion),
+    isFraud: raw.es_fraude_real ?? false,
     processingTime: toNumber(raw.tiempo_de_procesamiento ?? raw.tiempo_proceso),
-    channel:        raw.canal ?? 'web',
-    bank:           buildBankInfo(raw.banco, raw.banco_codigo, raw.banco_color ?? raw.color_banco),
+    channel: raw.canal ?? 'web',
+    bank: buildBankInfo(raw.banco, raw.banco_codigo, raw.banco_color ?? raw.color_banco),
     location: {
-      city:      raw.ciudad ?? 'N/D',
-      latitude:  raw.latitud !== undefined ? toNumber(raw.latitud) : null,
+      city: raw.ciudad ?? 'N/D',
+      latitude: raw.latitud !== undefined ? toNumber(raw.latitud) : null,
       longitude: raw.longitud !== undefined ? toNumber(raw.longitud) : null,
     },
     device: {
@@ -303,21 +299,21 @@ export function normalizeAlert(raw: AlertRaw): Alert {
   const transactionStatus = mapTransactionStatusRaw(raw.estado_transaccion);
 
   return {
-    id:          String(raw.id_alerta),
-    timestamp:   raw.fecha_generacion ?? raw.fecha ?? raw.timestamp ?? new Date().toISOString(),
-    user:        raw.cliente ?? 'Usuario Desconocido',
-    account:     raw.cuenta ?? 'N/D',
-    type:        raw.tipo_transaccion ?? raw.tipo ?? 'Actividad Inusual',
-    amount:      toNumber(raw.monto),
-    riskScore:   score,
-    alertLevel:  level,
+    id: String(raw.id_alerta),
+    timestamp: raw.fecha_generacion ?? raw.fecha ?? raw.timestamp ?? new Date().toISOString(),
+    user: raw.cliente ?? 'Usuario Desconocido',
+    account: raw.cuenta ?? 'N/D',
+    type: raw.tipo_transaccion ?? raw.tipo ?? 'Actividad Inusual',
+    amount: toNumber(raw.monto),
+    riskScore: score,
+    alertLevel: level,
     alertStatus: mapAlertStatusRaw(raw.estado_alerta),
-    status:      transactionStatus,
-    priority:    toNumber(raw.prioridad, 1),
-    factors:     raw.factores_sospechosos ?? raw.descripcion ?? raw.mensaje ?? null,
-    isFraud:     level === 'critical' || transactionStatus === 'blocked',
-    channel:     raw.canal ?? 'web',
-    bank:        buildBankInfo(raw.banco, raw.banco_codigo, raw.banco_color),
+    status: transactionStatus,
+    priority: toNumber(raw.prioridad, 1),
+    factors: raw.factores_sospechosos ?? raw.descripcion ?? raw.mensaje ?? null,
+    isFraud: level === 'critical' || transactionStatus === 'blocked',
+    channel: raw.canal ?? 'web',
+    bank: buildBankInfo(raw.banco, raw.banco_codigo, raw.banco_color),
     location: {
       city: raw.ciudad ?? 'Desconocida',
     },
@@ -348,13 +344,17 @@ export function normalizeRecentAlert(raw: AlertRaw): RecentAlert {
     : getRiskLevel(score);
 
   return {
-    id:          String(raw.id_alerta),
-    timestamp:   raw.fecha_generacion ?? raw.fecha ?? raw.timestamp ?? new Date().toISOString(),
-    description: raw.descripcion ?? raw.mensaje ?? raw.factores_sospechosos ?? 'Actividad sospechosa detectada',
-    amount:      raw.monto !== undefined ? toNumber(raw.monto) : null,
-    origin:      raw.origen ?? raw.tipo ?? raw.categoria ?? null,
+    id: String(raw.id_alerta),
+    timestamp: raw.fecha_generacion ?? raw.fecha ?? raw.timestamp ?? new Date().toISOString(),
+    description:
+      raw.descripcion ??
+      raw.mensaje ??
+      raw.factores_sospechosos ??
+      'Actividad sospechosa detectada',
+    amount: raw.monto !== undefined ? toNumber(raw.monto) : null,
+    origin: raw.origen ?? raw.tipo ?? raw.categoria ?? null,
     level,
-    color:       getRiskColorFromScore(score),
+    color: getRiskColorFromScore(score),
   };
 }
 

@@ -4,14 +4,7 @@
 // ¿Impacto? Se usa exclusivamente en DashboardPage. Recibe los datos ya
 //           procesados y los renderiza con el layout correcto.
 
-import {
-  Activity,
-  DollarSign,
-  AlertTriangle,
-  Ban,
-  Shield,
-  Zap,
-} from 'lucide-react';
+import { Activity, DollarSign, AlertTriangle, Ban, Shield, Zap } from 'lucide-react';
 import { StatsCard } from './StatsCards';
 import type { DashboardStats } from '@app-types';
 import { formatCurrency, formatPercent, formatNumber } from '@utils/Formatters';
@@ -41,28 +34,26 @@ export function StatsCardsGrid({
   onBlockedClick,
   className = '',
 }: StatsCardsGridProps) {
-
   // ==============================================================================
   // VALORES DERIVADOS
   // ==============================================================================
 
-  const fraudDisplay = stats.totalFrauds > 0
-    ? `${formatNumber(stats.totalFrauds)} (${formatPercent(stats.fraudRate, 1)})`
-    : '0';
+  const fraudDisplay =
+    stats.totalFrauds > 0
+      ? `${formatNumber(stats.totalFrauds)} (${formatPercent(stats.fraudRate, 1)})`
+      : '0';
 
-  const tpsDisplay = isLive
-    ? formatNumber(transactionsPerSecond)
-    : '0';
+  const tpsDisplay = isLive ? formatNumber(transactionsPerSecond) : '0';
 
   // ==============================================================================
   // ESTILOS
   // ==============================================================================
 
   const gridStyle: React.CSSProperties = {
-    display:             'grid',
+    display: 'grid',
     gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))',
-    gap:                 '12px',
-    width:               '100%',
+    gap: '12px',
+    width: '100%',
   };
 
   // ==============================================================================

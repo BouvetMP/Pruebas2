@@ -9,10 +9,7 @@ import { KeyRound } from 'lucide-react';
 import { Modal } from '@components/ui/Modal';
 import { Button } from '@components/ui/Button';
 import { PasswordInput } from '@components/auth/PasswordInput';
-import {
-  PasswordStrengthMeter,
-  analyzePassword,
-} from '@components/auth/PasswordStrengthMeter';
+import { PasswordStrengthMeter, analyzePassword } from '@components/auth/PasswordStrengthMeter';
 
 // ==============================================================================
 // TYPES
@@ -28,11 +25,7 @@ export interface ChangePasswordModalProps {
 // COMPONENTE
 // ==============================================================================
 
-export function ChangePasswordModal({
-  open,
-  onClose,
-  onSuccess,
-}: ChangePasswordModalProps) {
+export function ChangePasswordModal({ open, onClose, onSuccess }: ChangePasswordModalProps) {
   const [currentPassword, setCurrentPassword] = useState('');
   const [newPassword, setNewPassword] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
@@ -94,14 +87,12 @@ export function ChangePasswordModal({
     setGlobalError('');
 
     try {
-      await new Promise(resolve => setTimeout(resolve, 1000));
+      await new Promise((resolve) => setTimeout(resolve, 1000));
 
       onSuccess?.();
       handleClose();
     } catch (err) {
-      setGlobalError(
-        err instanceof Error ? err.message : 'Error al cambiar la contraseña'
-      );
+      setGlobalError(err instanceof Error ? err.message : 'Error al cambiar la contraseña');
     } finally {
       setSaving(false);
     }
@@ -124,19 +115,19 @@ export function ChangePasswordModal({
   // ==============================================================================
 
   const formStyle: React.CSSProperties = {
-    display:       'flex',
+    display: 'flex',
     flexDirection: 'column',
-    gap:           '16px',
+    gap: '16px',
   };
 
   const errorStyle: React.CSSProperties = {
-    padding:      '10px 14px',
-    background:   'rgba(239, 68, 68, 0.1)',
-    border:       '1px solid rgba(239, 68, 68, 0.3)',
+    padding: '10px 14px',
+    background: 'rgba(239, 68, 68, 0.1)',
+    border: '1px solid rgba(239, 68, 68, 0.3)',
     borderRadius: '8px',
-    color:        '#EF4444',
-    fontSize:     '12px',
-    fontWeight:   600,
+    color: '#EF4444',
+    fontSize: '12px',
+    fontWeight: 600,
   };
 
   // ==============================================================================
@@ -168,7 +159,9 @@ export function ChangePasswordModal({
     >
       <form onSubmit={handleSubmit} style={formStyle} noValidate>
         {globalError && (
-          <div style={errorStyle} role="alert">⚠️ {globalError}</div>
+          <div style={errorStyle} role="alert">
+            ⚠️ {globalError}
+          </div>
         )}
 
         <PasswordInput

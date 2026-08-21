@@ -30,7 +30,7 @@ export interface SidebarProps {
 // ==============================================================================
 
 const SIDEBAR_WIDTHS = {
-  expanded:  '240px',
+  expanded: '240px',
   collapsed: '64px',
 } as const;
 
@@ -52,7 +52,7 @@ export function Sidebar({
   const [collapsedLocal, setCollapsedLocal] = useState(defaultCollapsed);
   const [collapsedStored, setCollapsedStored] = useLocalStorage(
     'trida-sidebar-collapsed',
-    defaultCollapsed
+    defaultCollapsed,
   );
 
   const collapsed = persistCollapsedState ? collapsedStored : collapsedLocal;
@@ -93,20 +93,20 @@ export function Sidebar({
   // ==============================================================================
 
   const wrapperStyle: React.CSSProperties = {
-    position:      'sticky',
-    top:           0,
-    left:          0,
-    height:        '100vh',
-    width:         collapsed ? SIDEBAR_WIDTHS.collapsed : SIDEBAR_WIDTHS.expanded,
-    background:    'var(--bg-secondary)',
-    borderRight:   '1px solid var(--border)',
-    display:       'flex',
+    position: 'sticky',
+    top: 0,
+    left: 0,
+    height: '100vh',
+    width: collapsed ? SIDEBAR_WIDTHS.collapsed : SIDEBAR_WIDTHS.expanded,
+    background: 'var(--bg-secondary)',
+    borderRight: '1px solid var(--border)',
+    display: 'flex',
     flexDirection: 'column',
-    fontFamily:    'Inter, sans-serif',
-    transition:    'width 0.25s cubic-bezier(0.4, 0, 0.2, 1)',
-    flexShrink:    0,
-    overflow:      'hidden',
-    zIndex:        50,
+    fontFamily: 'Inter, sans-serif',
+    transition: 'width 0.25s cubic-bezier(0.4, 0, 0.2, 1)',
+    flexShrink: 0,
+    overflow: 'hidden',
+    zIndex: 50,
   };
 
   // ==============================================================================
@@ -120,20 +120,13 @@ export function Sidebar({
       aria-label="Barra lateral de navegación"
     >
       {/* 1. Brand + Toggle */}
-      <SidebarBrand
-        collapsed={collapsed}
-        onToggle={handleToggleCollapsed}
-      />
+      <SidebarBrand collapsed={collapsed} onToggle={handleToggleCollapsed} />
 
       {/* 2. Selector de banco */}
       <SidebarBankSelector collapsed={collapsed} />
 
       {/* 3. Navegación principal */}
-      <SidebarNav
-        collapsed={collapsed}
-        alertCount={alertCount}
-        isLive={isLive}
-      />
+      <SidebarNav collapsed={collapsed} alertCount={alertCount} isLive={isLive} />
 
       {/* 4. Perfil del usuario + logout */}
       <SidebarUserProfile collapsed={collapsed} />

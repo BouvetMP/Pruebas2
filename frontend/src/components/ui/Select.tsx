@@ -2,12 +2,7 @@
 // ¿Para qué? Estandarizar los selects del sistema con clases Tailwind.
 // ¿Impacto? Todos los formularios y filtros que usen selects usan este componente.
 
-import {
-  forwardRef,
-  useId,
-  type ReactNode,
-  type SelectHTMLAttributes,
-} from 'react';
+import { forwardRef, useId, type ReactNode, type SelectHTMLAttributes } from 'react';
 import { ChevronDown } from 'lucide-react';
 import { cn } from '@utils/cn';
 
@@ -60,7 +55,7 @@ function SelectInner<T extends string | number = string>(
     className = '',
     ...rest
   }: SelectProps<T>,
-  ref: React.Ref<HTMLSelectElement>
+  ref: React.Ref<HTMLSelectElement>,
 ) {
   // Generar ID único si no se proporciona (para vincular label ↔ select).
   const generatedId = useId();
@@ -72,13 +67,7 @@ function SelectInner<T extends string | number = string>(
   const showHelper = !hasError && helperText;
 
   return (
-    <div
-      className={cn(
-        'flex flex-col gap-1.5 font-sans',
-        fullWidth && 'w-full',
-        wrapperClassName
-      )}
-    >
+    <div className={cn('flex flex-col gap-1.5 font-sans', fullWidth && 'w-full', wrapperClassName)}>
       {/* ================================================================
           LABEL
           ================================================================ */}
@@ -87,17 +76,12 @@ function SelectInner<T extends string | number = string>(
           htmlFor={selectId}
           className={cn(
             'text-xs font-semibold flex items-center gap-1',
-            hasError
-              ? 'text-[var(--color-danger)]'
-              : 'text-[var(--text-secondary)]'
+            hasError ? 'text-[var(--color-danger)]' : 'text-[var(--text-secondary)]',
           )}
         >
           {label}
           {required && (
-            <span
-              className="text-[var(--color-danger)]"
-              aria-label="Campo requerido"
-            >
+            <span className="text-[var(--color-danger)]" aria-label="Campo requerido">
               *
             </span>
           )}
@@ -108,16 +92,13 @@ function SelectInner<T extends string | number = string>(
           SELECT CONTAINER (posiciona ícono izq + chevron der)
           ================================================================ */}
       <div className="relative flex items-center">
-
         {/* Ícono izquierdo */}
         {leftIcon && (
           <span
             className={cn(
               'absolute left-2.5 top-1/2 -translate-y-1/2',
               'flex items-center justify-center pointer-events-none',
-              hasError
-                ? 'text-[var(--color-danger)]'
-                : 'text-[var(--text-tertiary)]'
+              hasError ? 'text-[var(--color-danger)]' : 'text-[var(--text-tertiary)]',
             )}
           >
             {leftIcon}
@@ -129,13 +110,11 @@ function SelectInner<T extends string | number = string>(
           ref={ref}
           id={selectId}
           value={value}
-          onChange={e => onChange(e.target.value as T)}
+          onChange={(e) => onChange(e.target.value as T)}
           required={required}
           disabled={disabled}
           aria-invalid={hasError}
-          aria-describedby={
-            hasError ? errorId : showHelper ? helperId : undefined
-          }
+          aria-describedby={hasError ? errorId : showHelper ? helperId : undefined}
           className={cn(
             // Base
             'w-full py-2.5 text-sm font-sans rounded-lg outline-none',
@@ -162,7 +141,7 @@ function SelectInner<T extends string | number = string>(
             'pr-9', // Siempre espacio para el chevron
 
             // Clase externa
-            className
+            className,
           )}
           {...rest}
         >
@@ -174,12 +153,8 @@ function SelectInner<T extends string | number = string>(
           )}
 
           {/* Opciones */}
-          {options.map(option => (
-            <option
-              key={String(option.value)}
-              value={option.value}
-              disabled={option.disabled}
-            >
+          {options.map((option) => (
+            <option key={String(option.value)} value={option.value} disabled={option.disabled}>
               {option.label}
             </option>
           ))}
@@ -190,9 +165,7 @@ function SelectInner<T extends string | number = string>(
           className={cn(
             'absolute right-2.5 top-1/2 -translate-y-1/2',
             'flex items-center justify-center pointer-events-none',
-            hasError
-              ? 'text-[var(--color-danger)]'
-              : 'text-[var(--text-tertiary)]'
+            hasError ? 'text-[var(--color-danger)]' : 'text-[var(--text-tertiary)]',
           )}
         >
           <ChevronDown size={16} />
@@ -214,10 +187,7 @@ function SelectInner<T extends string | number = string>(
       )}
 
       {showHelper && (
-        <span
-          id={helperId}
-          className="text-[11px] text-[var(--text-tertiary)] mt-0.5"
-        >
+        <span id={helperId} className="text-[11px] text-[var(--text-tertiary)] mt-0.5">
           {helperText}
         </span>
       )}
@@ -235,5 +205,5 @@ function SelectInner<T extends string | number = string>(
  * este pattern es la forma estándar de conservarlos.
  */
 export const Select = forwardRef(SelectInner) as <T extends string | number = string>(
-  props: SelectProps<T> & { ref?: React.Ref<HTMLSelectElement> }
+  props: SelectProps<T> & { ref?: React.Ref<HTMLSelectElement> },
 ) => ReturnType<typeof SelectInner>;

@@ -3,8 +3,6 @@
 //            clases condicionales, variantes y props opcionales.
 // ¿Impacto? Se usa en TODOS los componentes migrados a Tailwind.
 
-export function cn(
-  ...classes: (string | boolean | undefined | null)[]
-): string {
+export function cn(...classes: (string | boolean | undefined | null)[]): string {
   return classes.filter(Boolean).join(' ');
 }

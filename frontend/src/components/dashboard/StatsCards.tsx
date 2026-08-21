@@ -11,13 +11,8 @@ import type { LucideIcon } from 'lucide-react';
 // TYPES
 // ==============================================================================
 
-export type StatsCardVariant =
-  | 'primary'   
-  | 'success'   
-  | 'warning'   
-  | 'danger'    
-  | 'info';    
-  
+export type StatsCardVariant = 'primary' | 'success' | 'warning' | 'danger' | 'info';
+
 export interface StatsCardProps {
   icon: LucideIcon;
   value: ReactNode;
@@ -41,14 +36,13 @@ const VARIANT_COLORS: Record<StatsCardVariant, string> = {
   primary: '#6366F1',
   success: '#34D399',
   warning: '#FBBF24',
-  danger:  '#EF4444',
-  info:    '#06B6D4',
+  danger: '#EF4444',
+  info: '#06B6D4',
 };
 
 // ==============================================================================
 // COMPONENTE
 // ==============================================================================
-
 
 export function StatsCard({
   icon: Icon,
@@ -81,85 +75,83 @@ export function StatsCard({
   // ==============================================================================
 
   const cardStyle: React.CSSProperties = {
-    display:        'flex',
-    alignItems:     'center',
-    gap:            '14px',
-    padding:        '16px',
-    background:     'var(--bg-secondary)',
-    border:         '1px solid var(--border)',
-    borderRadius:   '12px',
-    cursor:         isClickable ? 'pointer' : 'default',
-    transition:     'transform 0.15s ease, border-color 0.15s ease, background 0.15s ease',
-    fontFamily:     'Inter, sans-serif',
-    minHeight:      '80px',
-    outline:        'none',
+    display: 'flex',
+    alignItems: 'center',
+    gap: '14px',
+    padding: '16px',
+    background: 'var(--bg-secondary)',
+    border: '1px solid var(--border)',
+    borderRadius: '12px',
+    cursor: isClickable ? 'pointer' : 'default',
+    transition: 'transform 0.15s ease, border-color 0.15s ease, background 0.15s ease',
+    fontFamily: 'Inter, sans-serif',
+    minHeight: '80px',
+    outline: 'none',
   };
 
   const iconWrapperStyle: React.CSSProperties = {
-    display:        'flex',
-    alignItems:     'center',
+    display: 'flex',
+    alignItems: 'center',
     justifyContent: 'center',
-    width:          '44px',
-    height:         '44px',
-    borderRadius:   '10px',
-    background:     `${color}18`,
-    color:          color,
-    flexShrink:     0,
-    animation:      animated ? 'stats-card-pulse 2s ease-in-out infinite' : 'none',
+    width: '44px',
+    height: '44px',
+    borderRadius: '10px',
+    background: `${color}18`,
+    color: color,
+    flexShrink: 0,
+    animation: animated ? 'stats-card-pulse 2s ease-in-out infinite' : 'none',
   };
 
   const contentStyle: React.CSSProperties = {
-    display:       'flex',
+    display: 'flex',
     flexDirection: 'column',
-    gap:           '2px',
-    flex:          1,
-    minWidth:      0,
+    gap: '2px',
+    flex: 1,
+    minWidth: 0,
   };
 
   const valueRowStyle: React.CSSProperties = {
-    display:    'flex',
+    display: 'flex',
     alignItems: 'baseline',
-    gap:        '8px',
-    flexWrap:   'wrap',
+    gap: '8px',
+    flexWrap: 'wrap',
   };
 
   const valueStyle: React.CSSProperties = {
-    fontSize:      '18px',
-    fontWeight:    800,
-    color:         'var(--text-primary)',
-    lineHeight:    1.2,
+    fontSize: '18px',
+    fontWeight: 800,
+    color: 'var(--text-primary)',
+    lineHeight: 1.2,
     letterSpacing: '-0.02em',
     fontVariantNumeric: 'tabular-nums',
-    overflow:      'hidden',
-    textOverflow:  'ellipsis',
-    whiteSpace:    'nowrap',
+    overflow: 'hidden',
+    textOverflow: 'ellipsis',
+    whiteSpace: 'nowrap',
   };
 
   const trendStyle: React.CSSProperties = {
-    fontSize:   '11px',
+    fontSize: '11px',
     fontWeight: 700,
-    color:      trend?.isPositive ? '#34D399' : '#EF4444',
-    padding:    '2px 6px',
-    background: trend?.isPositive
-      ? 'rgba(52, 211, 153, 0.15)'
-      : 'rgba(239, 68, 68, 0.15)',
+    color: trend?.isPositive ? '#34D399' : '#EF4444',
+    padding: '2px 6px',
+    background: trend?.isPositive ? 'rgba(52, 211, 153, 0.15)' : 'rgba(239, 68, 68, 0.15)',
     borderRadius: '4px',
-    whiteSpace:   'nowrap',
+    whiteSpace: 'nowrap',
   };
 
   const labelStyle: React.CSSProperties = {
-    fontSize:      '11px',
-    color:         'var(--text-tertiary)',
-    fontWeight:    500,
+    fontSize: '11px',
+    color: 'var(--text-tertiary)',
+    fontWeight: 500,
     textTransform: 'uppercase',
     letterSpacing: '0.05em',
-    lineHeight:    1.3,
+    lineHeight: 1.3,
   };
 
   const subtitleStyle: React.CSSProperties = {
-    fontSize:   '10px',
-    color:      'var(--text-tertiary)',
-    marginTop:  '2px',
+    fontSize: '10px',
+    color: 'var(--text-tertiary)',
+    marginTop: '2px',
     lineHeight: 1.3,
     fontWeight: 400,
   };

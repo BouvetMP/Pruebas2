@@ -5,15 +5,8 @@
 import type { ReactNode } from 'react';
 import { Badge } from '@components/ui/Badge';
 import type { BadgeSize } from '@components/ui/Badge';
-import {
-  RISK_COLORS,
-  RISK_LEVELS,
-  type RiskLevel,
-} from '@constants/Risk';
-import {
-  getRiskLevel,
-  getRiskLabelFromScore,
-} from '@utils/Risk';
+import { RISK_COLORS, RISK_LEVELS, type RiskLevel } from '@constants/Risk';
+import { getRiskLevel, getRiskLabelFromScore } from '@utils/Risk';
 import { formatRiskScore } from '@utils/Formatters';
 
 // ==============================================================================
@@ -22,9 +15,9 @@ import { formatRiskScore } from '@utils/Formatters';
 
 /** Modos de visualización del RiskBadge. */
 export type RiskBadgeMode =
-  | 'level'       // Solo el label ("Crítico", "Alto", etc.)
-  | 'score'       // Solo el score ("85,5 %")
-  | 'both'        // Score + label ("85,5 % · Crítico")
+  | 'level' // Solo el label ("Crítico", "Alto", etc.)
+  | 'score' // Solo el score ("85,5 %")
+  | 'both' // Score + label ("85,5 % · Crítico")
   | 'score-only'; // Score sin símbolo de %
 
 /** Props del RiskBadge. */
@@ -49,11 +42,7 @@ function resolveLevel(score?: number, level?: RiskLevel): RiskLevel {
   return 'low';
 }
 
-function buildContent(
-  mode: RiskBadgeMode,
-  score: number | undefined,
-  level: RiskLevel
-): string {
+function buildContent(mode: RiskBadgeMode, score: number | undefined, level: RiskLevel): string {
   const hasScore = typeof score === 'number';
   const label = RISK_LEVELS[level].label;
   const scoreText = hasScore ? formatRiskScore(score) : '';
@@ -98,9 +87,7 @@ export function RiskBadge({
       rounded={rounded}
       className={className}
       title={
-        typeof score === 'number'
-          ? getRiskLabelFromScore(score)
-          : RISK_LEVELS[resolvedLevel].label
+        typeof score === 'number' ? getRiskLabelFromScore(score) : RISK_LEVELS[resolvedLevel].label
       }
     >
       {content}

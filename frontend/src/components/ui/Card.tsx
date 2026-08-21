@@ -12,10 +12,10 @@ import { cn } from '@utils/cn';
 
 /** Variantes visuales del card. */
 export type CardVariant =
-  | 'default'    // Fondo secundario, borde sutil
-  | 'elevated'   // Con sombra prominente
-  | 'outlined'   // Solo borde, sin fondo
-  | 'ghost';     // Sin borde ni fondo, solo estructura
+  | 'default' // Fondo secundario, borde sutil
+  | 'elevated' // Con sombra prominente
+  | 'outlined' // Solo borde, sin fondo
+  | 'ghost'; // Sin borde ni fondo, solo estructura
 
 /** Cantidad de padding interno. */
 export type CardPadding = 'none' | 'sm' | 'md' | 'lg';
@@ -54,10 +54,10 @@ export interface CardFooterProps extends HTMLAttributes<HTMLDivElement> {
 // ==============================================================================
 
 const VARIANT_CLASSES: Record<CardVariant, string> = {
-  default:  'bg-[var(--bg-secondary)] border border-[var(--border)]',
+  default: 'bg-[var(--bg-secondary)] border border-[var(--border)]',
   elevated: 'bg-[var(--bg-secondary)] border border-[var(--border)] shadow-[var(--shadow-md)]',
   outlined: 'bg-transparent border border-[var(--border)]',
-  ghost:    'bg-transparent border-none shadow-none',
+  ghost: 'bg-transparent border-none shadow-none',
 };
 
 // ==============================================================================
@@ -66,9 +66,9 @@ const VARIANT_CLASSES: Record<CardVariant, string> = {
 
 const PADDING_CLASSES: Record<CardPadding, string> = {
   none: 'p-0',
-  sm:   'p-3',
-  md:   'p-4',
-  lg:   'p-6',
+  sm: 'p-3',
+  md: 'p-4',
+  lg: 'p-6',
 };
 
 // ==============================================================================
@@ -76,9 +76,9 @@ const PADDING_CLASSES: Record<CardPadding, string> = {
 // ==============================================================================
 
 const FOOTER_ALIGN_CLASSES: Record<NonNullable<CardFooterProps['align']>, string> = {
-  start:   'justify-start',
-  center:  'justify-center',
-  end:     'justify-end',
+  start: 'justify-start',
+  center: 'justify-center',
+  end: 'justify-end',
   between: 'justify-between',
 };
 
@@ -115,7 +115,7 @@ export function Card({
         !clickable && 'cursor-default',
 
         // Clase externa
-        className
+        className,
       )}
       {...rest}
     >
@@ -139,10 +139,7 @@ export function CardHeader({
 }: CardHeaderProps) {
   return (
     <div
-      className={cn(
-        'flex items-center justify-between gap-3 mb-3 font-sans',
-        className
-      )}
+      className={cn('flex items-center justify-between gap-3 mb-3 font-sans', className)}
       {...rest}
     >
       {children ? (
@@ -172,11 +169,7 @@ export function CardHeader({
           </div>
 
           {/* Lado derecho: acción */}
-          {action && (
-            <div className="flex items-center gap-2 shrink-0">
-              {action}
-            </div>
-          )}
+          {action && <div className="flex items-center gap-2 shrink-0">{action}</div>}
         </>
       )}
     </div>
@@ -187,17 +180,10 @@ export function CardHeader({
 // SUB-COMPONENTE — CardBody
 // ==============================================================================
 
-export function CardBody({
-  children,
-  className = '',
-  ...rest
-}: CardBodyProps) {
+export function CardBody({ children, className = '', ...rest }: CardBodyProps) {
   return (
     <div
-      className={cn(
-        'text-[var(--text-primary)] font-sans text-[13px] leading-normal',
-        className
-      )}
+      className={cn('text-[var(--text-primary)] font-sans text-[13px] leading-normal', className)}
       {...rest}
     >
       {children}
@@ -209,12 +195,7 @@ export function CardBody({
 // SUB-COMPONENTE — CardFooter
 // ==============================================================================
 
-export function CardFooter({
-  children,
-  align = 'end',
-  className = '',
-  ...rest
-}: CardFooterProps) {
+export function CardFooter({ children, align = 'end', className = '', ...rest }: CardFooterProps) {
   return (
     <div
       className={cn(
@@ -222,7 +203,7 @@ export function CardFooter({
         'mt-4 pt-3 border-t border-[var(--border)]',
         'font-sans',
         FOOTER_ALIGN_CLASSES[align],
-        className
+        className,
       )}
       {...rest}
     >

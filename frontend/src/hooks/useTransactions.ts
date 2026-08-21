@@ -81,7 +81,7 @@ const EMPTY_FILTERS: TransactionFilters = {
 };
 
 const DEFAULT_SORT: TransactionSort = {
-  field:     'timestamp',
+  field: 'timestamp',
   direction: 'desc',
 };
 
@@ -92,46 +92,43 @@ const DEFAULT_SORT: TransactionSort = {
 /**
  * Aplica los filtros a un array de transacciones.
  */
-function applyFilters(
-  transactions: Transaction[],
-  filters: TransactionFilters
-): Transaction[] {
+function applyFilters(transactions: Transaction[], filters: TransactionFilters): Transaction[] {
   let result = transactions;
 
   // Filtro de búsqueda de texto libre
   if (filters.search && filters.search.trim() !== '') {
     const query = filters.search.toLowerCase().trim();
     result = result.filter(
-      tx =>
+      (tx) =>
         tx.id.toLowerCase().includes(query) ||
         tx.user.toLowerCase().includes(query) ||
         tx.bank.name.toLowerCase().includes(query) ||
         tx.location.city.toLowerCase().includes(query) ||
-        tx.type.toLowerCase().includes(query)
+        tx.type.toLowerCase().includes(query),
     );
   }
 
   // Filtro por nivel de riesgo
   if (filters.level && filters.level !== 'all') {
-    result = result.filter(tx => tx.alertLevel === filters.level);
+    result = result.filter((tx) => tx.alertLevel === filters.level);
   }
 
   // Filtro por estado de transacción
   if (filters.status && filters.status !== 'all') {
-    result = result.filter(tx => tx.status === filters.status);
+    result = result.filter((tx) => tx.status === filters.status);
   }
 
   // Filtro por canal
   if (filters.channel && filters.channel !== 'all') {
-    result = result.filter(tx => tx.channel === filters.channel);
+    result = result.filter((tx) => tx.channel === filters.channel);
   }
 
   // Filtro por rango de monto
   if (filters.amountMin !== undefined) {
-    result = result.filter(tx => tx.amount >= (filters.amountMin ?? 0));
+    result = result.filter((tx) => tx.amount >= (filters.amountMin ?? 0));
   }
   if (filters.amountMax !== undefined) {
-    result = result.filter(tx => tx.amount <= (filters.amountMax ?? Infinity));
+    result = result.filter((tx) => tx.amount <= (filters.amountMax ?? Infinity));
   }
 
   return result;
@@ -140,10 +137,7 @@ function applyFilters(
 /**
  * Ordena un array de transacciones según la configuración.
  */
-function applySort(
-  transactions: Transaction[],
-  sort: TransactionSort
-): Transaction[] {
+function applySort(transactions: Transaction[], sort: TransactionSort): Transaction[] {
   const sorted = [...transactions];
   const { field, direction } = sort;
   const modifier = direction === 'asc' ? 1 : -1;
@@ -162,7 +156,7 @@ function applySort(
     }
 
     if (aValue < bValue) return -1 * modifier;
-    if (aValue > bValue) return  1 * modifier;
+    if (aValue > bValue) return 1 * modifier;
     return 0;
   });
 
@@ -185,11 +179,11 @@ function applySort(
  * @param options - Configuración opcional del hook.
  * @returns Objeto con transacciones y controles de filtro/sort/paginación.
  *
- * 
+ *
  */
 export function useTransactions(
   bankId: SelectedBankId = ALL_BANKS_ID,
-  options: UseTransactionsOptions = {}
+  options: UseTransactionsOptions = {},
 ): UseTransactionsResult {
   const {
     initialFilters = EMPTY_FILTERS,
@@ -228,7 +222,7 @@ export function useTransactions(
         const data = await getTransactions(bankId);
         if (!cancelled) {
           setAllTransactions(data);
-          setPage(0); 
+          setPage(0);
         }
       } catch (err) {
         if (!cancelled) {
@@ -269,13 +263,10 @@ export function useTransactions(
   // FILTROS
   // ==============================================================================
 
-  const setFilters = useCallback(
-    (newFilters: Partial<TransactionFilters>): void => {
-      setFiltersState(prev => ({ ...prev, ...newFilters }));
-      setPage(0); // Reset paginación al cambiar filtros
-    },
-    []
-  );
+  const setFilters = useCallback((newFilters: Partial<TransactionFilters>): void => {
+    setFiltersState((prev) => ({ ...prev, ...newFilters }));
+    setPage(0); // Reset paginación al cambiar filtros
+  }, []);
 
   const clearFilters = useCallback((): void => {
     setFiltersState(EMPTY_FILTERS);
@@ -285,12 +276,12 @@ export function useTransactions(
   // Aplica debouncedSearch a los filtros efectivos
   const effectiveFilters = useMemo<TransactionFilters>(
     () => ({ ...filters, search: debouncedSearch }),
-    [filters, debouncedSearch]
+    [filters, debouncedSearch],
   );
 
   const filteredTransactions = useMemo<Transaction[]>(
     () => applyFilters(allTransactions, effectiveFilters),
-    [allTransactions, effectiveFilters]
+    [allTransactions, effectiveFilters],
   );
 
   // ==============================================================================
@@ -298,7 +289,7 @@ export function useTransactions(
   // ==============================================================================
 
   const toggleSort = useCallback((field: TransactionSortField): void => {
-    setSort(prev => {
+    setSort((prev) => {
       if (prev.field === field) {
         return { field, direction: prev.direction === 'asc' ? 'desc' : 'asc' };
       }
@@ -308,7 +299,7 @@ export function useTransactions(
 
   const sortedTransactions = useMemo<Transaction[]>(
     () => applySort(filteredTransactions, sort),
-    [filteredTransactions, sort]
+    [filteredTransactions, sort],
   );
 
   // ==============================================================================
@@ -325,11 +316,11 @@ export function useTransactions(
   }, [sortedTransactions, page, pageSize]);
 
   const nextPage = useCallback((): void => {
-    setPage(prev => Math.min(prev + 1, totalPages - 1));
+    setPage((prev) => Math.min(prev + 1, totalPages - 1));
   }, [totalPages]);
 
   const previousPage = useCallback((): void => {
-    setPage(prev => Math.max(prev - 1, 0));
+    setPage((prev) => Math.max(prev - 1, 0));
   }, []);
 
   // ==============================================================================
@@ -338,7 +329,7 @@ export function useTransactions(
 
   return {
     // Datos
-    transactions:         paginatedTransactions,
+    transactions: paginatedTransactions,
     allTransactions,
     filteredTransactions: sortedTransactions,
 
@@ -387,9 +378,10 @@ export function useTransactions(
  * @returns Objeto con `count` y `loading`.
  *
  */
-export function useTransactionsCount(
-  bankId: SelectedBankId = ALL_BANKS_ID
-): { count: number; loading: boolean } {
+export function useTransactionsCount(bankId: SelectedBankId = ALL_BANKS_ID): {
+  count: number;
+  loading: boolean;
+} {
   const [count, setCount] = useState(0);
   const [loading, setLoading] = useState(true);
 
@@ -397,7 +389,7 @@ export function useTransactionsCount(
     let cancelled = false;
 
     getTransactions(bankId)
-      .then(data => {
+      .then((data) => {
         if (!cancelled) setCount(data.length);
       })
       .catch(() => {

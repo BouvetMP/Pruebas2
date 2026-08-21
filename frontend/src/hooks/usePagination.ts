@@ -73,17 +73,13 @@ export interface UsePaginationResult<T> {
  * @param options - Configuración opcional del hook.
  * @returns Objeto con items de la página y controles de navegación.
  *
- * 
+ *
  */
 export function usePagination<T>(
   data: T[],
-  options: UsePaginationOptions = {}
+  options: UsePaginationOptions = {},
 ): UsePaginationResult<T> {
-  const {
-    pageSize = DEFAULT_PAGE_SIZE,
-    initialPage = 0,
-    resetOnDataChange = true,
-  } = options;
+  const { pageSize = DEFAULT_PAGE_SIZE, initialPage = 0, resetOnDataChange = true } = options;
 
   // ==============================================================================
   // ESTADO
@@ -131,15 +127,15 @@ export function usePagination<T>(
       const clamped = Math.max(0, Math.min(newPage, totalPages - 1));
       setPage(clamped);
     },
-    [totalPages]
+    [totalPages],
   );
 
   const nextPage = useCallback((): void => {
-    setPage(prev => Math.min(prev + 1, totalPages - 1));
+    setPage((prev) => Math.min(prev + 1, totalPages - 1));
   }, [totalPages]);
 
   const previousPage = useCallback((): void => {
-    setPage(prev => Math.max(prev - 1, 0));
+    setPage((prev) => Math.max(prev - 1, 0));
   }, []);
 
   const goToFirst = useCallback((): void => {

@@ -12,11 +12,7 @@ import {
   type RiskLevel,
 } from '@constants/Risk';
 
-import type {
-  AlertCriticalityRaw,
-  AlertStatusRaw,
-  TransactionStatusRaw,
-} from '@app-types';
+import type { AlertCriticalityRaw, AlertStatusRaw, TransactionStatusRaw } from '@app-types';
 
 // ==============================================================================
 // MAPEOS BACKEND → FRONTEND (niveles de criticidad)
@@ -33,9 +29,11 @@ import type {
  * @returns Nivel normalizado ('low' | 'medium' | 'high' | 'critical').
  */
 export function mapCriticalityRawToLevel(
-  raw: AlertCriticalityRaw | string | null | undefined
+  raw: AlertCriticalityRaw | string | null | undefined,
 ): RiskLevel {
-  const normalized = String(raw ?? '').toUpperCase().trim();
+  const normalized = String(raw ?? '')
+    .toUpperCase()
+    .trim();
 
   switch (normalized) {
     case 'CRITICA':
@@ -64,9 +62,9 @@ export function mapCriticalityRawToLevel(
  */
 export function mapLevelToCriticalityRaw(level: RiskLevel): AlertCriticalityRaw {
   const map: Record<RiskLevel, AlertCriticalityRaw> = {
-    low:      'BAJA',
-    medium:   'MEDIA',
-    high:     'ALTA',
+    low: 'BAJA',
+    medium: 'MEDIA',
+    high: 'ALTA',
     critical: 'CRITICA',
   };
   return map[level];
@@ -83,9 +81,11 @@ export function mapLevelToCriticalityRaw(level: RiskLevel): AlertCriticalityRaw 
  * @returns Estado normalizado.
  */
 export function mapAlertStatusRaw(
-  raw: AlertStatusRaw | string | null | undefined
+  raw: AlertStatusRaw | string | null | undefined,
 ): 'active' | 'in_review' | 'resolved' | 'dismissed' {
-  const normalized = String(raw ?? '').toUpperCase().trim();
+  const normalized = String(raw ?? '')
+    .toUpperCase()
+    .trim();
 
   switch (normalized) {
     case 'EN_REVISION':
@@ -111,9 +111,11 @@ export function mapAlertStatusRaw(
  * @returns Estado normalizado.
  */
 export function mapTransactionStatusRaw(
-  raw: TransactionStatusRaw | string | null | undefined
+  raw: TransactionStatusRaw | string | null | undefined,
 ): 'pending' | 'approved' | 'flagged' | 'blocked' {
-  const normalized = String(raw ?? '').toUpperCase().trim();
+  const normalized = String(raw ?? '')
+    .toUpperCase()
+    .trim();
 
   switch (normalized) {
     case 'BLOQUEADA':
@@ -218,9 +220,9 @@ export function shouldGenerateAlert(score: number): boolean {
  */
 export function compareRiskLevels(a: RiskLevel, b: RiskLevel): number {
   const priority: Record<RiskLevel, number> = {
-    low:      1,
-    medium:   2,
-    high:     3,
+    low: 1,
+    medium: 2,
+    high: 3,
     critical: 4,
   };
   return priority[a] - priority[b];
@@ -255,12 +257,12 @@ export function isAtLeastLevel(level: RiskLevel, threshold: RiskLevel): boolean 
  * @returns Objeto con conteo por nivel.
  */
 export function countByRiskLevel<T extends { alertLevel: RiskLevel }>(
-  items: T[]
+  items: T[],
 ): Record<RiskLevel, number> {
   const counts: Record<RiskLevel, number> = {
-    low:      0,
-    medium:   0,
-    high:     0,
+    low: 0,
+    medium: 0,
+    high: 0,
     critical: 0,
   };
 
@@ -279,12 +281,12 @@ export function countByRiskLevel<T extends { alertLevel: RiskLevel }>(
  *
  */
 export function groupByRiskLevel<T extends { alertLevel: RiskLevel }>(
-  items: T[]
+  items: T[],
 ): Record<RiskLevel, T[]> {
   const groups: Record<RiskLevel, T[]> = {
-    low:      [],
-    medium:   [],
-    high:     [],
+    low: [],
+    medium: [],
+    high: [],
     critical: [],
   };
 
@@ -311,9 +313,9 @@ export function groupByRiskLevel<T extends { alertLevel: RiskLevel }>(
  */
 export function levelToPriority(level: RiskLevel): number {
   const map: Record<RiskLevel, number> = {
-    low:      2,
-    medium:   5,
-    high:     7,
+    low: 2,
+    medium: 5,
+    high: 7,
     critical: 10,
   };
   return map[level];

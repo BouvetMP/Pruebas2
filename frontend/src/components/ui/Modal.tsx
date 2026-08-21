@@ -38,10 +38,10 @@ export interface ModalProps {
  * Ancho máximo del modal según el tamaño.
  */
 const SIZE_CLASSES: Record<ModalSize, string> = {
-  sm:   'max-w-[400px]',
-  md:   'max-w-[520px]',
-  lg:   'max-w-[680px]',
-  xl:   'max-w-[900px]',
+  sm: 'max-w-[400px]',
+  md: 'max-w-[520px]',
+  lg: 'max-w-[680px]',
+  xl: 'max-w-[900px]',
   full: 'max-w-[95vw]',
 };
 
@@ -141,7 +141,7 @@ export function Modal({
         'bg-black/65 backdrop-blur-sm',
         'flex items-center justify-center',
         'p-5',
-        'animate-fade-in'
+        'animate-fade-in',
       )}
       role="presentation"
       onClick={handleOverlayClick}
@@ -162,7 +162,7 @@ export function Modal({
           'animate-scale-in',
 
           // Tamaño
-          SIZE_CLASSES[size]
+          SIZE_CLASSES[size],
         )}
         role="dialog"
         aria-modal="true"
@@ -178,7 +178,7 @@ export function Modal({
             className={cn(
               'flex items-start justify-between gap-4',
               'px-5 pt-5 pb-4',
-              (title || description) && 'border-b border-[var(--border)]'
+              (title || description) && 'border-b border-[var(--border)]',
             )}
           >
             {/* Grupo de título y descripción */}
@@ -215,7 +215,7 @@ export function Modal({
                   'transition-colors duration-150',
                   disableClose
                     ? 'cursor-not-allowed opacity-40'
-                    : 'cursor-pointer hover:bg-[var(--bg-tertiary)] hover:text-[var(--text-secondary)]'
+                    : 'cursor-pointer hover:bg-[var(--bg-tertiary)] hover:text-[var(--text-secondary)]',
                 )}
                 aria-label="Cerrar modal"
               >

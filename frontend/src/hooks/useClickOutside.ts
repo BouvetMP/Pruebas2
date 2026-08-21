@@ -40,13 +40,9 @@ export interface UseClickOutsideOptions {
 
 export function useClickOutside<T extends HTMLElement = HTMLElement>(
   onClickOutside: (event: ClickOutsideEvent) => void,
-  options: UseClickOutsideOptions = {}
+  options: UseClickOutsideOptions = {},
 ): RefObject<T | null> {
-  const {
-    enabled = true,
-    closeOnEscape = true,
-    additionalRefs = [],
-  } = options;
+  const { enabled = true, closeOnEscape = true, additionalRefs = [] } = options;
 
   const ref = useRef<T | null>(null);
 

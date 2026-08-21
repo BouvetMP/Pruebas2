@@ -43,7 +43,7 @@ export function ClientCard({
   // ==============================================================================
 
   const handleToggle = (): void => {
-    setExpanded(prev => !prev);
+    setExpanded((prev) => !prev);
     onClick?.(client);
   };
 
@@ -59,118 +59,118 @@ export function ClientCard({
   // ==============================================================================
 
   const cardStyle: React.CSSProperties = {
-    background:    'var(--bg-secondary)',
-    border:        '1px solid var(--border)',
-    borderRadius:  '12px',
-    overflow:      'hidden',
-    transition:    'border-color 0.15s ease',
-    opacity:       client.status === 'inactive' ? 0.6 : 1,
-    fontFamily:    'Inter, sans-serif',
+    background: 'var(--bg-secondary)',
+    border: '1px solid var(--border)',
+    borderRadius: '12px',
+    overflow: 'hidden',
+    transition: 'border-color 0.15s ease',
+    opacity: client.status === 'inactive' ? 0.6 : 1,
+    fontFamily: 'Inter, sans-serif',
   };
 
   const headerStyle: React.CSSProperties = {
-    display:     'flex',
-    alignItems:  'center',
-    gap:         '12px',
-    padding:     '14px 16px',
-    cursor:      'pointer',
-    transition:  'background 0.15s ease',
-    userSelect:  'none',
+    display: 'flex',
+    alignItems: 'center',
+    gap: '12px',
+    padding: '14px 16px',
+    cursor: 'pointer',
+    transition: 'background 0.15s ease',
+    userSelect: 'none',
   };
 
   const infoStyle: React.CSSProperties = {
-    display:       'flex',
+    display: 'flex',
     flexDirection: 'column',
-    gap:           '2px',
-    flex:          1,
-    minWidth:      0,
+    gap: '2px',
+    flex: 1,
+    minWidth: 0,
   };
 
   const nameStyle: React.CSSProperties = {
-    fontSize:     '13px',
-    fontWeight:   700,
-    color:        'var(--text-primary)',
-    overflow:     'hidden',
+    fontSize: '13px',
+    fontWeight: 700,
+    color: 'var(--text-primary)',
+    overflow: 'hidden',
     textOverflow: 'ellipsis',
-    whiteSpace:   'nowrap',
+    whiteSpace: 'nowrap',
   };
 
   const statusDotStyle: React.CSSProperties = {
-    width:        '8px',
-    height:       '8px',
+    width: '8px',
+    height: '8px',
     borderRadius: '50%',
-    background:   client.status === 'active' ? '#34D399' : '#6B7280',
-    flexShrink:   0,
+    background: client.status === 'active' ? '#34D399' : '#6B7280',
+    flexShrink: 0,
   };
 
   const chevronStyle: React.CSSProperties = {
-    color:      'var(--text-tertiary)',
+    color: 'var(--text-tertiary)',
     transition: 'transform 0.2s ease',
-    transform:  expanded ? 'rotate(90deg)' : 'none',
+    transform: expanded ? 'rotate(90deg)' : 'none',
     flexShrink: 0,
   };
 
   const expandedStyle: React.CSSProperties = {
-    padding:     '0 16px 16px',
-    display:     'flex',
+    padding: '0 16px 16px',
+    display: 'flex',
     flexDirection: 'column',
-    gap:         '12px',
-    borderTop:   '1px solid var(--border)',
-    paddingTop:  '12px',
+    gap: '12px',
+    borderTop: '1px solid var(--border)',
+    paddingTop: '12px',
   };
 
   const detailRowStyle: React.CSSProperties = {
-    display:        'flex',
+    display: 'flex',
     justifyContent: 'space-between',
-    alignItems:     'center',
-    gap:            '8px',
+    alignItems: 'center',
+    gap: '8px',
   };
 
   const detailLabelStyle: React.CSSProperties = {
-    fontSize:   '11px',
-    color:      'var(--text-tertiary)',
+    fontSize: '11px',
+    color: 'var(--text-tertiary)',
     fontWeight: 500,
   };
 
   const detailValueStyle: React.CSSProperties = {
-    fontSize:     '12px',
-    fontWeight:   600,
-    color:        'var(--text-primary)',
-    textAlign:    'right',
-    overflow:     'hidden',
+    fontSize: '12px',
+    fontWeight: 600,
+    color: 'var(--text-primary)',
+    textAlign: 'right',
+    overflow: 'hidden',
     textOverflow: 'ellipsis',
-    whiteSpace:   'nowrap',
-    maxWidth:     '200px',
+    whiteSpace: 'nowrap',
+    maxWidth: '200px',
   };
 
   const devicesSectionStyle: React.CSSProperties = {
-    display:       'flex',
+    display: 'flex',
     flexDirection: 'column',
-    gap:           '6px',
+    gap: '6px',
   };
 
   const devicesTitleStyle: React.CSSProperties = {
-    fontSize:      '10px',
-    fontWeight:    700,
-    color:         'var(--text-tertiary)',
+    fontSize: '10px',
+    fontWeight: 700,
+    color: 'var(--text-tertiary)',
     textTransform: 'uppercase',
     letterSpacing: '0.05em',
   };
 
   const riskBarStyle: React.CSSProperties = {
-    width:        '100%',
-    height:       '4px',
-    background:   'var(--bg-tertiary)',
+    width: '100%',
+    height: '4px',
+    background: 'var(--bg-tertiary)',
     borderRadius: '2px',
-    overflow:     'hidden',
-    marginTop:    '4px',
+    overflow: 'hidden',
+    marginTop: '4px',
   };
 
   const riskFillStyle: React.CSSProperties = {
-    height:       '100%',
-    width:        `${client.riskScore}%`,
+    height: '100%',
+    width: `${client.riskScore}%`,
     borderRadius: '2px',
-    transition:   'width 0.3s ease',
+    transition: 'width 0.3s ease',
   };
 
   // ==============================================================================
@@ -198,14 +198,12 @@ export function ClientCard({
           (e.currentTarget as HTMLElement).style.background = 'transparent';
         }}
       >
-        <UserAvatar
-          name={client.name}
-          color={client.bank.color}
-          size="sm"
-        />
+        <UserAvatar name={client.name} color={client.bank.color} size="sm" />
 
         <div style={infoStyle}>
-          <span style={nameStyle} title={client.name}>{client.name}</span>
+          <span style={nameStyle} title={client.name}>
+            {client.name}
+          </span>
           <BankBadge bank={client.bank} size="sm" />
         </div>
 
@@ -220,7 +218,9 @@ export function ClientCard({
           {/* Detalles del cliente */}
           <div style={detailRowStyle}>
             <span style={detailLabelStyle}>Email</span>
-            <span style={detailValueStyle} title={client.email}>{client.email}</span>
+            <span style={detailValueStyle} title={client.email}>
+              {client.email}
+            </span>
           </div>
 
           <div style={detailRowStyle}>
@@ -258,28 +258,30 @@ export function ClientCard({
             <div
               style={{
                 ...riskFillStyle,
-                background: client.riskScore >= 80 ? '#EF4444'
-                           : client.riskScore >= 60 ? '#F97316'
-                           : client.riskScore >= 30 ? '#FBBF24'
-                           : '#34D399',
+                background:
+                  client.riskScore >= 80
+                    ? '#EF4444'
+                    : client.riskScore >= 60
+                      ? '#F97316'
+                      : client.riskScore >= 30
+                        ? '#FBBF24'
+                        : '#34D399',
               }}
             />
           </div>
 
           {/* Dispositivos */}
           <div style={devicesSectionStyle}>
-            <span style={devicesTitleStyle}>
-              Dispositivos ({devices.length})
-            </span>
+            <span style={devicesTitleStyle}>Dispositivos ({devices.length})</span>
 
             {devices.length === 0 ? (
-              <span style={{ fontSize: '11px', color: 'var(--text-tertiary)', fontStyle: 'italic' }}>
+              <span
+                style={{ fontSize: '11px', color: 'var(--text-tertiary)', fontStyle: 'italic' }}
+              >
                 Sin dispositivos registrados
               </span>
             ) : (
-              devices.map(device => (
-                <DeviceCard key={device.id} device={device} />
-              ))
+              devices.map((device) => <DeviceCard key={device.id} device={device} />)
             )}
           </div>
         </div>

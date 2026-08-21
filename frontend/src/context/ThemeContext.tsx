@@ -4,14 +4,7 @@
 // ¿Impacto? Consumido por Sidebar, Settings y cualquier componente que necesite
 //           adaptarse al tema activo (dashboard, cards, mapas).
 
-import {
-  createContext,
-  useContext,
-  useEffect,
-  useMemo,
-  useState,
-  type ReactNode,
-} from 'react';
+import { createContext, useContext, useEffect, useMemo, useState, type ReactNode } from 'react';
 
 import { STORAGE_KEYS } from '@constants/Api';
 
@@ -62,7 +55,8 @@ function getStoredTheme(): Theme | null {
   try {
     const value = localStorage.getItem(STORAGE_KEYS.THEME);
     return value === 'dark' || value === 'light' ? value : null;
-  } catch {
+  } catch (error) {
+    console.warn('Error al consultar el tema desde localStorage:', error);
     return null;
   }
 }
@@ -76,7 +70,8 @@ function getStoredTheme(): Theme | null {
 function storeTheme(theme: Theme): void {
   try {
     localStorage.setItem(STORAGE_KEYS.THEME, theme);
-  } catch {
+  } catch (error) {
+    console.warn('Error al guardar la preferencia de tema en localStorage:', error);
   }
 }
 
@@ -112,7 +107,6 @@ interface ThemeProviderProps {
  * ¿Para qué? Reemplaza `ThemeProvider` de `store/context.js` con estructura
  *            propia por archivo (patrón moderno) y tipado estricto.
  * ¿Impacto? Debe montarse en App.tsx envolviendo a toda la aplicación.
- *
  */
 export function ThemeProvider({ children, initialTheme }: ThemeProviderProps) {
   const [theme, setThemeState] = useState<Theme>(() => {
@@ -143,17 +137,13 @@ export function ThemeProvider({ children, initialTheme }: ThemeProviderProps) {
   const value = useMemo<ThemeContextValue>(
     () => ({
       theme,
-      toggleTheme: () => setThemeState(prev => (prev === 'dark' ? 'light' : 'dark')),
-      setTheme:    (newTheme: Theme) => setThemeState(newTheme),
+      toggleTheme: () => setThemeState((prev) => (prev === 'dark' ? 'light' : 'dark')),
+      setTheme: (newTheme: Theme) => setThemeState(newTheme),
     }),
-    [theme]
+    [theme],
   );
 
-  return (
-    <ThemeContext.Provider value={value}>
-      {children}
-    </ThemeContext.Provider>
-  );
+  return <ThemeContext.Provider value={value}>{children}</ThemeContext.Provider>;
 }
 
 // ==============================================================================
@@ -169,15 +159,15 @@ export function ThemeProvider({ children, initialTheme }: ThemeProviderProps) {
  *
  * @returns Objeto con `theme`, `toggleTheme` y `setTheme`.
  * @throws Error si se usa fuera del ThemeProvider.
- *
  */
+// eslint-disable-next-line react-refresh/only-export-components
 export function useTheme(): ThemeContextValue {
   const context = useContext(ThemeContext);
 
   if (!context) {
     throw new Error(
       'useTheme debe ser usado dentro de un <ThemeProvider>. ' +
-      'Envuelve tu aplicación con <ThemeProvider> en App.tsx.'
+        'Envuelve tu aplicación con <ThemeProvider> en App.tsx.',
     );
   }
 
