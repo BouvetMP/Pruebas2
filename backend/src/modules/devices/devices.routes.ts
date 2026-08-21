@@ -3,8 +3,8 @@
 // ¿Impacto? Cierra el stub de dispositivos.
 
 import { Router } from 'express';
-import { devicesController } from './devices.controller.ts';
-import { requireAuth } from '../../middlewares/auth.middleware.ts';
+import { devicesController } from './devices.controller';
+import { requireAuth } from '../../middlewares/auth.middleware';
 
 const router = Router();
 

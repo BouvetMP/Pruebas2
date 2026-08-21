@@ -1,7 +1,7 @@
 import { Response, NextFunction } from 'express';
-import { AuthenticatedRequest } from '../../types/index.ts';
+import { AuthenticatedRequest } from '../../types/index';
 import { usersService } from './users.service.js';
-import { updateUserStatusSchema, updateUserRoleSchema } from './users.schemas.ts';
+import { updateUserStatusSchema, updateUserRoleSchema } from './users.schemas';
 
 export const usersController = {
   async listAll(_req: AuthenticatedRequest, res: Response, next: NextFunction) {

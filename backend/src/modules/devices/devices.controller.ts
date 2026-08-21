@@ -3,8 +3,8 @@
 // ¿Impacto? Conecta la vista de dispositivos con la BD.
 
 import { Response, NextFunction } from 'express';
-import { AuthenticatedRequest } from '../../types/index.ts';
-import { devicesService } from './devices.service.ts';
+import { AuthenticatedRequest } from '../../types/index';
+import { devicesService } from './devices.service';
 
 export const devicesController = {
   async list(req: AuthenticatedRequest, res: Response, next: NextFunction) {

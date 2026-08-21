@@ -76,7 +76,7 @@ export const authService = {
   // ── LOGIN ──────────────────────────────────────────────────
   async login(email: string, password: string) {
     const rows = await prisma.$queryRaw<FnLoginRow[]>`
-      SELECT * FROM trida.fn_login(${email})
+      SELECT * FROM trida.fn_login(${email}::text)
     `;
 
     if (rows.length === 0) {
@@ -162,7 +162,7 @@ export const authService = {
     const genericMessage = 'Si el correo existe, recibirás un enlace de recuperación en breve.';
 
     const users = await prisma.$queryRaw<FnLoginRow[]>`
-      SELECT * FROM trida.fn_login(${correo.trim()})
+      SELECT * FROM trida.fn_login(${correo.trim()}::text)
     `;
 
     if (users.length === 0 || !users[0].estado) {

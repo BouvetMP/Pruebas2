@@ -2,7 +2,7 @@
 // ¿Para qué? Listar bancos activos para filtros del frontend.
 // ¿Impacto? Permite filtrar todo el sistema por entidad financiera.
 
-import { prisma } from '../../db/prisma.ts';
+import { prisma } from '../../db/prisma';
 
 export const banksService = {
   async list() {

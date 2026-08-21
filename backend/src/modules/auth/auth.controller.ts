@@ -9,7 +9,7 @@ import {
   registerSchema,
   forgotPasswordSchema,
   resetPasswordSchema,
-} from './auth.schemas.ts';
+} from './auth.schemas';
 import { AuthenticatedRequest } from '../../types/index.js';
 
 const handleError = (error: unknown, next: NextFunction) => {

@@ -2,7 +2,7 @@
 // ¿Para qué? Listar alertas con contexto de cliente, banco y dispositivo.
 // ¿Impacto? Alimenta la bandeja de alertas del analista.
 
-import { prisma } from '../../db/prisma.ts';
+import { prisma } from '../../db/prisma';
 
 export const alertsService = {
   async list(bancoCodigo?: string | null) {

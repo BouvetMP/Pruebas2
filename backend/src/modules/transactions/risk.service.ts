@@ -1,23 +1,20 @@
-// ¿Qué? Motor determinista de cálculo de score de riesgo basado en 7 factores ponderados.
-// ¿Para qué? Implementar la fórmula exacta de criticidad.md: Score = Σ (Wᵢ × Fᵢ) × 100.
-// ¿Impacto? Es el núcleo matemático de prevención de fraude del sistema TriDa.
+// ¿Qué? Motor determinista de scoring de riesgo basado en la Fórmula de Criticidad de TriDa (7 factores ponderados)
+// ¿Para qué? Calcular el score de riesgo (0-100) de cada transacción en tiempo real y decidir si se aprueba, alerta o bloquea
+// ¿Impacto? Núcleo del sistema antifraude. Cuando se integre la IA, este motor será reemplazado por el modelo ML entrenado
 
-export interface TransactionRiskInput {
+// ── INTERFACES ──────────────────────────────────────────────
+
+export interface RiskInput {
   montoActual: number;
   montoPromedio: number;
   desviacionEstandar: number;
-  
   dispositivoConocido: boolean;
   dispositivoConfiable: boolean;
   diasUsoDispositivo: number;
-
   distanciaKm: number;
   tiempoTranscurridoHoras: number;
-
   horaTransaccion: number;
-  
-  anomaliasComportamiento: number; // 0 a 4 (monto, tipo, destino, frecuencia)
-  
+  anomaliasComportamiento: number;
   paisDestino: string;
   paisHabitual: string;
   esPaisVecino: boolean;
@@ -25,118 +22,160 @@ export interface TransactionRiskInput {
   esPaisAltoRiesgo: boolean;
 }
 
-export const riskScoringEngine = {
-  evaluate(input: TransactionRiskInput) {
-    const factores: string[] = [];
+export interface RiskEvaluation {
+  score: number;
+  estadoTransaccion: 'APROBADA' | 'ALERTADA' | 'BLOQUEADA';
+  nivel: 'BAJA' | 'MEDIA' | 'ALTA' | 'CRITICA';
+  factoresSospechosos: string[];
+  detalleFactores: {
+    fMonto: number;
+    fDispositivo: number;
+    fUbicacion: number;
+    fVelocidad: number;
+    fHorario: number;
+    fComportamiento: number;
+    fPais: number;
+  };
+}
 
-    // ==========================================
-    // CÁLCULO DE FACTORES (0.0 a 1.0)
-    // ==========================================
+// ── PESOS (Wᵢ) — Deben sumar 1.0 ──────────────────────────
 
-    // F1: Desviación del Monto
-    let fMonto = 0.0;
-    if (input.desviacionEstandar > 0) {
-      fMonto = Math.min(1.0, Math.abs(input.montoActual - input.montoPromedio) / input.desviacionEstandar);
-    }
-    if (fMonto > 0.5) factores.push(`Monto se desvía fuertemente del promedio histórico`);
+const WEIGHTS = {
+  monto: 0.25,         // W₁ — 25%
+  dispositivo: 0.20,   // W₂ — 20%
+  ubicacion: 0.18,     // W₃ — 18%
+  velocidad: 0.15,     // W₄ — 15%
+  horario: 0.10,       // W₅ — 10%
+  comportamiento: 0.07, // W₆ — 7%
+  pais: 0.05,          // W₇ — 5%
+} as const;
 
-    // F2: Dispositivo Desconocido
-    let fDispositivo = 0.0;
-    if (input.dispositivoConocido && input.dispositivoConfiable) fDispositivo = 0.0;
-    else if (input.dispositivoConocido && !input.dispositivoConfiable) fDispositivo = 0.3;
-    else if (!input.dispositivoConocido && input.diasUsoDispositivo > 0 && input.diasUsoDispositivo < 7) fDispositivo = 0.7;
-    else if (!input.dispositivoConocido && input.diasUsoDispositivo === 0) fDispositivo = 1.0;
-    if (fDispositivo >= 0.7) factores.push(`Uso de dispositivo nuevo o no reconocido`);
+// ── FACTORES (Fᵢ) — Cada uno retorna 0.0 a 1.0 ────────────
 
-    // F3: Ubicación Inusual
-    const fUbicacion = Math.min(1.0, input.distanciaKm / 1000);
-    if (fUbicacion > 0.5) factores.push(`Ubicación inusualmente lejana de su zona habitual`);
+function calcFMonto(input: RiskInput): number {
+  // F_Monto = min(1, |Monto_Actual - Monto_Promedio| / Desviación_Estándar)
+  if (input.desviacionEstandar === 0) return 0;
+  const desviacion = Math.abs(input.montoActual - input.montoPromedio) / input.desviacionEstandar;
+  return Math.min(1, desviacion);
+}
 
-    // F4: Velocidad Transaccional
-    let fVelocidad = 0.0;
-    if (input.tiempoTranscurridoHoras > 0) {
-      const velocidadReq = input.distanciaKm / input.tiempoTranscurridoHoras;
-      if (velocidadReq <= 100) fVelocidad = 0.0;
-      else if (velocidadReq <= 500) fVelocidad = 0.5;
-      else fVelocidad = 1.0;
-    }
-    if (fVelocidad === 1.0) factores.push(`Viaje físicamente imposible entre la transacción anterior y esta`);
+function calcFDispositivo(input: RiskInput): number {
+  if (input.dispositivoConocido && input.dispositivoConfiable) return 0.0;
+  if (input.dispositivoConocido && !input.dispositivoConfiable) return 0.3;
+  if (!input.dispositivoConocido && input.diasUsoDispositivo < 7 && input.diasUsoDispositivo > 0) return 0.7;
+  if (!input.dispositivoConocido && input.diasUsoDispositivo === 0) return 1.0;
+  return 0.7;
+}
 
-    // F5: Horario Inusual
-    let fHorario = 0.0;
-    const isMadrugada = input.horaTransaccion >= 23 || input.horaTransaccion <= 6;
-    if (isMadrugada) {
-      fHorario = 0.7; // Si es madrugada y opera ocasionalmente (simplificado)
-      factores.push(`Transacción realizada en horario de madrugada`);
-    }
+function calcFUbicacion(input: RiskInput): number {
+  // F_Ubicación = min(1, Distancia_km / 1000)
+  return Math.min(1, input.distanciaKm / 1000);
+}
 
-    // F6: Desviación del Comportamiento (0 a 4 anomalías)
-    const fComportamiento = Math.min(1.0, input.anomaliasComportamiento / 4.0);
-    if (fComportamiento > 0) factores.push(`Presenta ${input.anomaliasComportamiento} banderas rojas de comportamiento`);
+function calcFVelocidad(input: RiskInput): number {
+  // Velocidad_Requerida = Distancia_km / Tiempo_Transcurrido_horas
+  if (input.tiempoTranscurridoHoras === 0) return input.distanciaKm > 100 ? 1.0 : 0.0;
+  const velocidadRequerida = input.distanciaKm / input.tiempoTranscurridoHoras;
+  if (velocidadRequerida <= 100) return 0.0;
+  if (velocidadRequerida <= 500) return 0.5;
+  return 1.0;
+}
 
-    // F7: País de Riesgo
-    let fPais = 0.0;
-    if (input.paisDestino === input.paisHabitual) fPais = 0.0;
-    else if (input.esPaisVecino) fPais = 0.2;
-    else if (input.esPaisRiesgoMedio) fPais = 0.5;
-    else if (input.esPaisAltoRiesgo) { fPais = 1.0; factores.push(`Transacción originada en país de alto riesgo`); }
-    else fPais = 0.8;
+function calcFHorario(input: RiskInput): number {
+  const hora = input.horaTransaccion;
+  const esMadrugada = hora >= 23 || hora < 6;
+  const esRazonable = hora >= 6 && hora <= 23;
 
-    // ==========================================
-    // FÓRMULA FINAL: Score = Σ (Wᵢ × Fᵢ) × 100
-    // ==========================================
-    
-    const pesos = {
-      monto: 0.25,
-      dispositivo: 0.20,
-      ubicacion: 0.18,
-      velocidad: 0.15,
-      horario: 0.10,
-      comportamiento: 0.07,
-      pais: 0.05
-    };
+  if (!esMadrugada && esRazonable) return 0.0;
+  if (esMadrugada) return 0.7;
+  return 0.3;
+}
 
-    const scoreCrudo = (
-      (pesos.monto * fMonto) +
-      (pesos.dispositivo * fDispositivo) +
-      (pesos.ubicacion * fUbicacion) +
-      (pesos.velocidad * fVelocidad) +
-      (pesos.horario * fHorario) +
-      (pesos.comportamiento * fComportamiento) +
-      (pesos.pais * fPais)
-    );
+function calcFComportamiento(input: RiskInput): number {
+  // F_Comportamiento = Anomalías / 4 (máximo 4 anomalías)
+  const anomalias = Math.min(4, Math.max(0, input.anomaliasComportamiento));
+  return anomalias / 4;
+}
 
-    const scoreFinal = Math.round(scoreCrudo * 100);
+function calcFPais(input: RiskInput): number {
+  if (input.paisDestino === input.paisHabitual) return 0.0;
+  if (input.esPaisAltoRiesgo) return 1.0;
+  if (input.esPaisRiesgoMedio) return 0.8;
+  if (input.esPaisVecino) return 0.2;
+  return 0.5;
+}
 
-    // ==========================================
-    // CLASIFICACIÓN Y DECISIÓN
-    // ==========================================
-    
-    let nivel: 'BAJA' | 'MEDIA' | 'ALTA' | 'CRITICA' = 'BAJA';
-    let estadoTransaccion: 'APROBADA' | 'ALERTADA' | 'BLOQUEADA' = 'APROBADA';
+// ── MOTOR PRINCIPAL ────────────────────────────────────────
 
-    if (scoreFinal >= 95) {
-      nivel = 'CRITICA';
-      estadoTransaccion = 'BLOQUEADA';
-    } else if (scoreFinal >= 80) {
-      nivel = 'ALTA';
-      estadoTransaccion = 'APROBADA'; // El documento dice: Generar alerta alta + aprobar
-    } else if (scoreFinal >= 50) {
-      nivel = 'MEDIA';
-      estadoTransaccion = 'APROBADA'; 
-    } else if (scoreFinal >= 30) {
-      nivel = 'BAJA';
-      estadoTransaccion = 'APROBADA';
-    } else {
-      nivel = 'BAJA';
-      estadoTransaccion = 'APROBADA';
-    }
+function evaluate(input: RiskInput): RiskEvaluation {
+  // Calcular cada factor (0.0 a 1.0)
+  const fMonto = calcFMonto(input);
+  const fDispositivo = calcFDispositivo(input);
+  const fUbicacion = calcFUbicacion(input);
+  const fVelocidad = calcFVelocidad(input);
+  const fHorario = calcFHorario(input);
+  const fComportamiento = calcFComportamiento(input);
+  const fPais = calcFPais(input);
 
-    return {
-      score: scoreFinal,
-      nivel,
-      estadoTransaccion,
-      factoresSospechosos: factores.length > 0 ? factores : ['Ninguna anomalía detectada']
-    };
+  // Score = Σ (Wᵢ × Fᵢ) × 100
+  const scoreRaw =
+    WEIGHTS.monto * fMonto +
+    WEIGHTS.dispositivo * fDispositivo +
+    WEIGHTS.ubicacion * fUbicacion +
+    WEIGHTS.velocidad * fVelocidad +
+    WEIGHTS.horario * fHorario +
+    WEIGHTS.comportamiento * fComportamiento +
+    WEIGHTS.pais * fPais;
+
+  const score = Math.round(scoreRaw * 100 * 10) / 10; // 1 decimal
+
+  // Tabla de decisiones
+  let estadoTransaccion: 'APROBADA' | 'ALERTADA' | 'BLOQUEADA';
+  let nivel: 'BAJA' | 'MEDIA' | 'ALTA' | 'CRITICA';
+
+  if (score >= 95) {
+    estadoTransaccion = 'BLOQUEADA';
+    nivel = 'CRITICA';
+  } else if (score >= 80) {
+    estadoTransaccion = 'ALERTADA';
+    nivel = 'ALTA';
+  } else if (score >= 50) {
+    estadoTransaccion = 'ALERTADA';
+    nivel = 'MEDIA';
+  } else if (score >= 30) {
+    estadoTransaccion = 'ALERTADA';
+    nivel = 'BAJA';
+  } else {
+    estadoTransaccion = 'APROBADA';
+    nivel = 'BAJA';
   }
-};
+
+  // Factores sospechosos (solo los que aportan riesgo significativo)
+  const factoresSospechosos: string[] = [];
+  if (fMonto >= 0.3) factoresSospechosos.push(`Monto inusual (F=${fMonto.toFixed(2)})`);
+  if (fDispositivo >= 0.3) factoresSospechosos.push(`Dispositivo sospechoso (F=${fDispositivo.toFixed(2)})`);
+  if (fUbicacion >= 0.3) factoresSospechosos.push(`Ubicación inusual a ${input.distanciaKm.toFixed(0)} km (F=${fUbicacion.toFixed(2)})`);
+  if (fVelocidad >= 0.5) factoresSospechosos.push(`Velocidad físicamente imposible (F=${fVelocidad.toFixed(2)})`);
+  if (fHorario >= 0.3) factoresSospechosos.push(`Horario atípico ${input.horaTransaccion}:00 (F=${fHorario.toFixed(2)})`);
+  if (fComportamiento >= 0.3) factoresSospechosos.push(`Comportamiento anómalo (F=${fComportamiento.toFixed(2)})`);
+  if (fPais >= 0.2) factoresSospechosos.push(`País de riesgo: ${input.paisDestino} (F=${fPais.toFixed(2)})`);
+
+  return {
+    score,
+    estadoTransaccion,
+    nivel,
+    factoresSospechosos,
+    detalleFactores: {
+      fMonto,
+      fDispositivo,
+      fUbicacion,
+      fVelocidad,
+      fHorario,
+      fComportamiento,
+      fPais,
+    },
+  };
+}
+
+export const riskScoringEngine = { evaluate };
+

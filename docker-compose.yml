@@ -1,45 +1,66 @@
-version: '3.8'
-
 services:
-  # Base de Datos PostgreSQL
-  postgres-db:
-    image: postgres:15-alpine
-    container_name: trida_db
-    restart: always
+  # ── BASE DE DATOS ──
+  postgres:
+    image: postgres:17-alpine
+    container_name: trida-postgres
+    restart: unless-stopped
     environment:
+      POSTGRES_DB: TriDa
       POSTGRES_USER: postgres
-      POSTGRES_PASSWORD: tu_contraseña_aqui
-      POSTGRES_DB: trida_db
+      POSTGRES_PASSWORD: trida_secure_2026
     ports:
-      - "5432:5432"
+      - "5433:5432"
     volumes:
       - postgres_data:/var/lib/postgresql/data
+      - ./database/schema.sql:/docker-entrypoint-initdb.d/01-schema.sql:ro
+      - ./database/seed.sql:/docker-entrypoint-initdb.d/02-seed.sql:ro
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres -d TriDa"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+      start_period: 20s
 
-  # Servicio de BackEnd (Express)
+  # ── BACKEND ──
   backend:
-    build: ./BackEnd
-    container_name: trida_backend
-    restart: always
-    ports:
-      - "3000:3000"
+    build:
+      context: .
+      dockerfile: backend/Dockerfile
+    container_name: trida-backend
+    restart: unless-stopped
+    depends_on:
+      postgres:
+        condition: service_healthy
     environment:
-      - DB_HOST=postgres-db
-      - DB_PORT=5432
-      - DB_USER=postgres
-      - DB_PASSWORD=tu_contraseña_aqui
-      - DB_NAME=trida_db
-    depends_on:
-      - postgres-db
-
-  # Servicio de FrontEnd (React)
-  frontend:
-    build: ./FrontEnd
-    container_name: trida_frontend
-    restart: always
+      DATABASE_URL: postgresql://postgres:trida_secure_2026@postgres:5432/TriDa?schema=trida
+      JWT_SECRET: trida_jwt_super_secret_key_minimum_32_characters_2026!xK9mP
+      JWT_EXPIRES_IN: 15m
+      FRONTEND_URL: http://localhost
+      NODE_ENV: production
+      PORT: 3000
     ports:
-      - "5173:5173"
+      - "3001:3000"
+    healthcheck:
+      test: ["CMD", "wget", "--no-verbose", "--tries=1", "--spider", "http://localhost:3000/health"]
+      interval: 15s
+      timeout: 5s
+      retries: 3
+      start_period: 15s
+
+  # ── FRONTEND ──
+  frontend:
+    build:
+      context: .
+      dockerfile: frontend/Dockerfile
+      args:
+        VITE_API_URL: http://localhost:3001/api
+    container_name: trida-frontend
+    restart: unless-stopped
     depends_on:
-      - backend
+      backend:
+        condition: service_healthy
+    ports:
+      - "80:80"
 
 volumes:
   postgres_data:

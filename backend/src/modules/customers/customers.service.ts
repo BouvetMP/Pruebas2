@@ -2,7 +2,7 @@
 // ¿Para qué? Listar clientes (con o sin detalle de banco).
 // ¿Impacto? Reemplaza la ruta mal nombrada /tareas por /customers.
 
-import { prisma } from '../../db/prisma.ts';
+import { prisma } from '../../db/prisma';
 
 export const customersService = {
   async list(bancoCodigo?: string | null) {
