@@ -57,90 +57,13 @@ export function AggregationChart({
   const maxCount = useMemo(() => Math.max(...visibleData.map((d) => d.count), 1), [visibleData]);
 
   // ==============================================================================
-  // ESTILOS
-  // ==============================================================================
-
-  const wrapperStyle: React.CSSProperties = {
-    background: 'var(--bg-secondary)',
-    border: '1px solid var(--border)',
-    borderRadius: '12px',
-    padding: '16px',
-    fontFamily: 'Inter, sans-serif',
-    display: 'flex',
-    flexDirection: 'column',
-    gap: '14px',
-  };
-
-  const titleStyle: React.CSSProperties = {
-    fontSize: '14px',
-    fontWeight: 700,
-    color: 'var(--text-primary)',
-    margin: 0,
-  };
-
-  const rowStyle: React.CSSProperties = {
-    display: 'flex',
-    alignItems: 'center',
-    gap: '10px',
-    width: '100%',
-  };
-
-  const labelStyle: React.CSSProperties = {
-    fontSize: '12px',
-    fontWeight: 500,
-    color: 'var(--text-secondary)',
-    width: '120px',
-    flexShrink: 0,
-    overflow: 'hidden',
-    textOverflow: 'ellipsis',
-    whiteSpace: 'nowrap',
-    display: 'flex',
-    alignItems: 'center',
-    gap: '4px',
-  };
-
-  const barTrackStyle: React.CSSProperties = {
-    flex: 1,
-    height: '8px',
-    background: 'var(--bg-tertiary)',
-    borderRadius: '4px',
-    overflow: 'hidden',
-  };
-
-  const countStyle: React.CSSProperties = {
-    fontSize: '12px',
-    fontWeight: 700,
-    color: 'var(--text-primary)',
-    width: '45px',
-    textAlign: 'right',
-    fontVariantNumeric: 'tabular-nums',
-    flexShrink: 0,
-  };
-
-  const fraudStyle = (hasFraud: boolean): React.CSSProperties => ({
-    fontSize: '11px',
-    fontWeight: 600,
-    color: hasFraud ? '#EF4444' : '#34D399',
-    width: '35px',
-    textAlign: 'right',
-    fontVariantNumeric: 'tabular-nums',
-    flexShrink: 0,
-  });
-
-  const listStyle: React.CSSProperties = {
-    display: 'flex',
-    flexDirection: 'column',
-    gap: '8px',
-  };
-
-  // ==============================================================================
   // RENDER — VACÍO
   // ==============================================================================
 
   if (visibleData.length === 0) {
     return (
-      <div className={`aggregation-chart ${className}`} style={wrapperStyle}>
-        <h3 style={titleStyle}>{title}</h3>
+      <div className={`flex flex-col gap-3.5 rounded-xl border border-[var(--border)] bg-[var(--bg-secondary)] p-4 font-sans ${className}`}>
+        <h3 className="m-0 text-sm font-bold text-[var(--text-primary)]">{title}</h3>
         <EmptyState preset="no-data" description={emptyMessage} size="sm" />
       </div>
     );
@@ -152,42 +75,39 @@ export function AggregationChart({
 
   return (
     <div
-      className={`aggregation-chart ${className}`}
-      style={wrapperStyle}
+      className={`flex flex-col gap-3.5 rounded-xl border border-[var(--border)] bg-[var(--bg-secondary)] p-4 font-sans ${className}`}
       role="figure"
       aria-label={`Gráfico: ${title}`}
     >
-      <h3 style={titleStyle}>{title}</h3>
+      <h3 className="m-0 text-sm font-bold text-[var(--text-primary)]">{title}</h3>
 
-      <div style={listStyle}>
-        {visibleData.map((item) => {
+      <div className="flex flex-col gap-2">
+        {visibleData.map((item, index) => {
           const percentage = (item.count / maxCount) * 100;
           const itemColor = item.color ?? barColor;
           const hasFraud = (item.fraud ?? 0) > 0;
 
           return (
             <div
-              key={item.label}
-              style={rowStyle}
+              key={`${item.label}-${index}`}
+              className="flex w-full items-center gap-2.5 font-sans"
               title={`${item.label}: ${item.count.toLocaleString('es-CO')} transacciones${
                 item.fraud !== undefined ? ` (${item.fraud} fraudes)` : ''
               }`}
             >
               {/* Label */}
-              <span style={labelStyle}>
+              <span className="flex w-28 shrink-0 items-center gap-1 overflow-hidden text-ellipsis whitespace-nowrap text-xs font-medium text-[var(--text-secondary)]">
                 {item.icon && <span>{item.icon}</span>}
                 {item.label}
               </span>
 
               {/* Barra */}
-              <div style={barTrackStyle}>
+              <div className="h-2 flex-1 overflow-hidden rounded-full bg-[var(--bg-tertiary)]">
                 <div
+                  className="h-full rounded-full transition-[width] duration-300 ease-out"
                   style={{
-                    height: '100%',
                     width: `${percentage}%`,
                     background: itemColor,
-                    borderRadius: '4px',
-                    transition: 'width 0.3s ease',
                   }}
                   role="progressbar"
                   aria-valuenow={item.count}
@@ -198,10 +118,20 @@ export function AggregationChart({
               </div>
 
               {/* Conteo */}
-              <span style={countStyle}>{item.count.toLocaleString('es-CO')}</span>
+              <span className="w-[45px] shrink-0 text-right text-xs font-bold tabular-nums text-[var(--text-primary)]">
+                {item.count.toLocaleString('es-CO')}
+              </span>
 
               {/* Fraudes (opcional) */}
-              {showFraudColumn && <span style={fraudStyle(hasFraud)}>{item.fraud ?? 0}</span>}
+              {showFraudColumn && (
+                <span
+                  className={`w-[35px] shrink-0 text-right text-[11px] font-semibold tabular-nums ${
+                    hasFraud ? 'text-[#FF6B6B]' : 'text-[#06D6A0]'
+                  }`}
+                >
+                  {item.fraud ?? 0}
+                </span>
+              )}
             </div>
           );
         })}
