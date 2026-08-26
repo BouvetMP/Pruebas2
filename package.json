@@ -1,16 +1,13 @@
-
-{ 
-  
+{
   "name": "trida-monorepo",
+  "version": "1.0.0",
   "private": true,
   "packageManager": "pnpm@10.0.0",
-  "pnpm": {
-    "onlyBuiltDependencies": [
-      "esbuild",
-      "prisma",
-      "@prisma/client",
-      "@prisma/engines"
-    ]
+  "scripts": {
+    "dev": "pnpm --parallel --filter \"./*\" dev",
+    "dev:backend": "pnpm --filter trida-backend dev",
+    "dev:frontend": "pnpm --filter trida-frontend dev",
+    "build": "pnpm --recursive build",
+    "lint": "pnpm --recursive lint"
   }
 }
-  

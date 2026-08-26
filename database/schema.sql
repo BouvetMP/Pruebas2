@@ -1096,6 +1096,35 @@ END;
 $$;
 
 -- ==============================================================================
+-- 22. fn_perfil_cliente — Perfilamiento dinámico para el Motor de Riesgo
+-- ==============================================================================
+DROP FUNCTION IF EXISTS trida.fn_perfil_cliente(INTEGER);
+
+CREATE FUNCTION trida.fn_perfil_cliente(p_id_cliente INTEGER)
+RETURNS TABLE (
+    total_transacciones BIGINT,
+    monto_promedio      NUMERIC(15, 2),
+    desviacion_estandar NUMERIC(15, 2),
+    ciudad_habitual     VARCHAR(100),
+    pais_habitual       VARCHAR(100)
+)
+LANGUAGE sql
+STABLE
+PARALLEL SAFE
+AS $$
+    SELECT 
+        COUNT(t.id_transaccion) AS total_transacciones,
+        COALESCE(AVG(t.monto), 0) AS monto_promedio,
+        COALESCE(STDDEV_POP(t.monto), 0) AS desviacion_estandar,
+        MODE() WITHIN GROUP (ORDER BY u.ciudad) AS ciudad_habitual,
+        MODE() WITHIN GROUP (ORDER BY u.pais) AS pais_habitual
+    FROM trida.transacciones t
+    LEFT JOIN trida.historico_de_ubicacion u ON t.id_ubicacion = u.id_ubicacion
+    WHERE t.id_cliente = p_id_cliente
+      AND t.estado_transaccion IN ('APROBADA', 'PENDIENTE');
+$$;
+
+-- ==============================================================================
 -- FIN schema.sql
 -- ==============================================================================
 -- NOTA: No se incluye el SELECT de prueba de fn_register ni el DELETE de
