@@ -9,8 +9,33 @@ export const transactionsService = {
   /**
    * Obtiene el listado de transacciones llamando a la función SQL fn_transacciones.
    */
-  async list(bancoCodigo?: string | null) {
-    return prisma.$queryRaw<any[]>`SELECT * FROM trida.fn_transacciones(${bancoCodigo ?? null})`;
+    async list(bancoCodigo?: string | null, limit = 500, offset = 0) {
+    const safeLimit = Math.min(Math.max(Number(limit) || 500, 1), 2000);
+    const safeOffset = Math.max(Number(offset) || 0, 0);
+    const codigo = bancoCodigo ?? null;
+
+    const [items, totalRaw] = await Promise.all([
+      prisma.$queryRaw<any[]>`
+        SELECT * FROM trida.fn_transacciones(
+          ${codigo}::varchar,
+          ${safeLimit}::int,
+          ${safeOffset}::int
+        )
+      `,
+      prisma.$queryRaw<Array<{ count: bigint | number }>>`
+        SELECT trida.fn_transacciones_count(${codigo}::varchar) AS count
+      `,
+    ]);
+
+    const total = Number(totalRaw?.[0]?.count ?? 0);
+
+    return {
+      items,
+      total,
+      limit: safeLimit,
+      offset: safeOffset,
+      hasMore: safeOffset + items.length < total,
+    };
   },
 
   /**
