@@ -1,8 +1,6 @@
 // ¿Qué? Formulario para solicitar recuperación de contraseña por email.
-// ¿Para qué? Reemplazar el formulario embebido en forgotpassword.jsx con un
-//            componente reutilizable con estados de "enviado" y validación.
-// ¿Impacto? Se usa dentro de ForgotPasswordPage. Toda la lógica de solicitud
-//           de recuperación está encapsulada aquí.
+// ¿Para qué? Enviar enlace de reset y mostrar estado de éxito.
+// ¿Impacto? Usado en ForgotPasswordPage. Errores con AlertCircle (sin emoji).
 
 import { useState, type FormEvent } from 'react';
 import { Link } from 'react-router-dom';
@@ -14,11 +12,6 @@ import { isValidEmail } from '@utils/User';
 import { PUBLIC_ROUTES } from '@constants/Navigation';
 import { ApiError } from '@api/Client';
 
-// ==============================================================================
-// TYPES
-// ==============================================================================
-
-/** Props del ForgotPasswordForm. */
 export interface ForgotPasswordFormProps {
   onSuccess?: (email: string) => void;
   onError?: (error: Error) => void;
@@ -26,36 +19,19 @@ export interface ForgotPasswordFormProps {
   className?: string;
 }
 
-// ==============================================================================
-// COMPONENTE
-// ==============================================================================
-
 export function ForgotPasswordForm({
   onSuccess,
   onError,
   expirationMinutes = 15,
   className = '',
 }: ForgotPasswordFormProps) {
-  // ==============================================================================
-  // ESTADO
-  // ==============================================================================
-
   const [email, setEmail] = useState('');
   const [loading, setLoading] = useState(false);
   const [sent, setSent] = useState(false);
   const [sentToEmail, setSentToEmail] = useState('');
-
-  // Errores
   const [emailError, setEmailError] = useState('');
   const [globalError, setGlobalError] = useState('');
 
-  // ==============================================================================
-  // VALIDACIÓN
-  // ==============================================================================
-
-  /**
-   * Valida el email antes de enviar.
-   */
   const validate = (): boolean => {
     setEmailError('');
     setGlobalError('');
@@ -64,25 +40,15 @@ export function ForgotPasswordForm({
       setEmailError('El correo es obligatorio');
       return false;
     }
-
     if (!isValidEmail(email)) {
       setEmailError('Ingresa un correo válido');
       return false;
     }
-
     return true;
   };
 
-  // ==============================================================================
-  // HANDLERS
-  // ==============================================================================
-
-  /**
-   * Maneja el envío del formulario.
-   */
   const handleSubmit = async (e: FormEvent): Promise<void> => {
     e.preventDefault();
-
     if (!validate()) return;
 
     setLoading(true);
@@ -91,11 +57,8 @@ export function ForgotPasswordForm({
     try {
       const trimmedEmail = email.trim();
       await forgotPassword({ correo: trimmedEmail });
-
-      // Guardar el email para mostrarlo en el mensaje de éxito
       setSentToEmail(trimmedEmail);
       setSent(true);
-
       onSuccess?.(trimmedEmail);
     } catch (err) {
       const error = err as Error;
@@ -126,132 +89,33 @@ export function ForgotPasswordForm({
     setGlobalError('');
   };
 
-  // ==============================================================================
-  // ESTILOS COMPARTIDOS
-  // ==============================================================================
-
-  const wrapperStyle: React.CSSProperties = {
-    display: 'flex',
-    flexDirection: 'column',
-    gap: '20px',
-    fontFamily: 'Inter, sans-serif',
-  };
-
-  const errorAlertStyle: React.CSSProperties = {
-    display: 'flex',
-    alignItems: 'flex-start',
-    gap: '10px',
-    padding: '12px 14px',
-    background: 'rgba(239, 68, 68, 0.1)',
-    border: '1px solid rgba(239, 68, 68, 0.25)',
-    borderRadius: '8px',
-    fontSize: '12px',
-    color: '#EF4444',
-    fontWeight: 500,
-    lineHeight: 1.4,
-  };
-
-  const iconStyle: React.CSSProperties = {
-    flexShrink: 0,
-    marginTop: '1px',
-  };
-
-  const backLinkContainerStyle: React.CSSProperties = {
-    display: 'flex',
-    justifyContent: 'center',
-    marginTop: '4px',
-  };
-
-  const backLinkStyle: React.CSSProperties = {
-    display: 'inline-flex',
-    alignItems: 'center',
-    gap: '4px',
-    fontSize: '12px',
-    color: 'var(--text-secondary)',
-    textDecoration: 'none',
-    fontWeight: 500,
-    transition: 'color 0.15s ease',
-  };
-
-  // ==============================================================================
-  // RENDER — ESTADO SENT (email enviado)
-  // ==============================================================================
+  const backLinkClass =
+    'inline-flex items-center gap-1 text-xs font-medium text-[var(--text-secondary)] no-underline transition-colors hover:text-indigo-light focus-visible:text-indigo-light';
 
   if (sent) {
-    const successCardStyle: React.CSSProperties = {
-      display: 'flex',
-      flexDirection: 'column',
-      alignItems: 'center',
-      gap: '16px',
-      padding: '24px',
-      background: 'rgba(52, 211, 153, 0.08)',
-      border: '1px solid rgba(52, 211, 153, 0.25)',
-      borderRadius: '12px',
-      textAlign: 'center',
-    };
-
-    const successIconStyle: React.CSSProperties = {
-      display: 'flex',
-      alignItems: 'center',
-      justifyContent: 'center',
-      width: '56px',
-      height: '56px',
-      borderRadius: '50%',
-      background: 'rgba(52, 211, 153, 0.15)',
-      color: '#34D399',
-    };
-
-    const successTitleStyle: React.CSSProperties = {
-      fontSize: '16px',
-      fontWeight: 700,
-      color: 'var(--text-primary)',
-      margin: 0,
-      lineHeight: 1.3,
-    };
-
-    const successMessageStyle: React.CSSProperties = {
-      fontSize: '13px',
-      color: 'var(--text-secondary)',
-      margin: 0,
-      lineHeight: 1.5,
-    };
-
-    const emailHighlightStyle: React.CSSProperties = {
-      color: '#34D399',
-      fontWeight: 700,
-      wordBreak: 'break-all',
-    };
-
-    const infoNoteStyle: React.CSSProperties = {
-      display: 'flex',
-      alignItems: 'flex-start',
-      gap: '8px',
-      padding: '10px 12px',
-      background: 'rgba(99, 102, 241, 0.08)',
-      border: '1px solid rgba(99, 102, 241, 0.2)',
-      borderRadius: '8px',
-      fontSize: '11px',
-      color: 'var(--text-secondary)',
-      lineHeight: 1.5,
-      textAlign: 'left',
-    };
-
     return (
-      <div className={`forgot-password-form-sent ${className}`} style={wrapperStyle}>
-        <div style={successCardStyle} role="status" aria-live="polite">
-          <div style={successIconStyle}>
-            <CheckCircle size={28} strokeWidth={2} />
+      <div className={`forgot-password-form-sent flex flex-col gap-5 font-sans ${className}`}>
+        <div
+          className="flex flex-col items-center gap-4 rounded-xl border border-[rgba(6,214,160,0.25)] bg-[rgba(6,214,160,0.08)] p-6 text-center"
+          role="status"
+          aria-live="polite"
+        >
+          <div className="flex h-14 w-14 items-center justify-center rounded-full bg-[rgba(6,214,160,0.15)] text-neon-green">
+            <CheckCircle size={28} strokeWidth={2} aria-hidden="true" />
           </div>
 
-          <h3 style={successTitleStyle}>Correo enviado</h3>
+          <h3 className="m-0 text-base font-bold leading-snug text-[var(--text-primary)]">
+            Correo enviado
+          </h3>
 
-          <p style={successMessageStyle}>
-            Si <span style={emailHighlightStyle}>{sentToEmail}</span> está registrado en el sistema,
-            recibirás un enlace para restablecer tu contraseña.
+          <p className="m-0 text-[13px] leading-relaxed text-[var(--text-secondary)]">
+            Si{' '}
+            <span className="break-all font-bold text-neon-green">{sentToEmail}</span> está
+            registrado en el sistema, recibirás un enlace para restablecer tu contraseña.
           </p>
 
-          <div style={infoNoteStyle}>
-            <Info size={13} style={iconStyle} strokeWidth={2} />
+          <div className="flex w-full items-start gap-2 rounded-lg border border-[rgba(99,102,241,0.2)] bg-[rgba(99,102,241,0.08)] px-3 py-2.5 text-left text-[11px] leading-relaxed text-[var(--text-secondary)]">
+            <Info size={13} className="mt-0.5 shrink-0" aria-hidden="true" />
             <span>
               El enlace expira en <strong>{expirationMinutes} minutos</strong>. Revisa tu bandeja de
               entrada y la carpeta de spam.
@@ -263,18 +127,9 @@ export function ForgotPasswordForm({
           Enviar a otro correo
         </Button>
 
-        <div style={backLinkContainerStyle}>
-          <Link
-            to={PUBLIC_ROUTES.LOGIN}
-            style={backLinkStyle}
-            onMouseEnter={(e) => {
-              (e.currentTarget as HTMLElement).style.color = '#818CF8';
-            }}
-            onMouseLeave={(e) => {
-              (e.currentTarget as HTMLElement).style.color = 'var(--text-secondary)';
-            }}
-          >
-            <ArrowLeft size={14} />
+        <div className="flex justify-center">
+          <Link to={PUBLIC_ROUTES.LOGIN} className={backLinkClass}>
+            <ArrowLeft size={14} aria-hidden="true" />
             Volver al inicio de sesión
           </Link>
         </div>
@@ -282,40 +137,29 @@ export function ForgotPasswordForm({
     );
   }
 
-  // ==============================================================================
-  // RENDER — ESTADO INICIAL (formulario)
-  // ==============================================================================
-
   return (
     <form
-      onSubmit={handleSubmit}
-      className={`forgot-password-form ${className}`}
-      style={wrapperStyle}
+      onSubmit={(e) => void handleSubmit(e)}
+      className={`forgot-password-form flex flex-col gap-5 font-sans ${className}`}
       noValidate
       aria-label="Formulario de recuperación de contraseña"
     >
-      {/* Error global */}
       {globalError && (
-        <div style={errorAlertStyle} role="alert" aria-live="assertive">
-          <AlertCircle size={14} strokeWidth={2.5} style={iconStyle} />
+        <div
+          className="flex items-start gap-2.5 rounded-lg border border-[rgba(255,107,107,0.25)] bg-[rgba(255,107,107,0.1)] px-3.5 py-3 text-xs font-medium leading-snug text-[var(--color-danger)]"
+          role="alert"
+          aria-live="assertive"
+        >
+          <AlertCircle size={14} strokeWidth={2.5} className="mt-0.5 shrink-0" aria-hidden="true" />
           <span>{globalError}</span>
         </div>
       )}
 
-      {/* Descripción */}
-      <p
-        style={{
-          fontSize: '13px',
-          color: 'var(--text-secondary)',
-          margin: 0,
-          lineHeight: 1.5,
-        }}
-      >
+      <p className="m-0 text-[13px] leading-relaxed text-[var(--text-secondary)]">
         Ingresa el correo asociado a tu cuenta y te enviaremos un enlace para restablecer tu
         contraseña.
       </p>
 
-      {/* Campo Email */}
       <Input
         label="Correo electrónico"
         type="email"
@@ -334,7 +178,6 @@ export function ForgotPasswordForm({
         required
       />
 
-      {/* Botón de submit */}
       <Button
         type="submit"
         variant="primary"
@@ -346,20 +189,9 @@ export function ForgotPasswordForm({
         {loading ? 'Enviando...' : 'Enviar enlace de recuperación'}
       </Button>
 
-      {/* Link a "Volver al login" */}
-      <div style={backLinkContainerStyle}>
-        <Link
-          to={PUBLIC_ROUTES.LOGIN}
-          style={backLinkStyle}
-          tabIndex={loading ? -1 : 0}
-          onMouseEnter={(e) => {
-            (e.currentTarget as HTMLElement).style.color = '#818CF8';
-          }}
-          onMouseLeave={(e) => {
-            (e.currentTarget as HTMLElement).style.color = 'var(--text-secondary)';
-          }}
-        >
-          <ArrowLeft size={14} />
+      <div className="flex justify-center">
+        <Link to={PUBLIC_ROUTES.LOGIN} tabIndex={loading ? -1 : 0} className={backLinkClass}>
+          <ArrowLeft size={14} aria-hidden="true" />
           Volver al inicio de sesión
         </Link>
       </div>

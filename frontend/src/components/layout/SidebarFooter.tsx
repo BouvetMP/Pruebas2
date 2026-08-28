@@ -1,7 +1,6 @@
-// ¿Qué? Footer del sidebar con reloj, indicador LIVE, contadores y toggle de tema.
-// ¿Para qué? Aislar la parte inferior del sidebar.jsx original con métricas
-//            en tiempo real y controles rápidos del sistema.
-// ¿Impacto? Se usa dentro del Sidebar. Muestra el estado del sistema en tiempo real.
+// ¿Qué? Footer del sidebar con reloj, indicador LIVE, métricas y toggle de tema.
+// ¿Para qué? Mostrar el estado operacional del sistema en tiempo real y controles rápidos.
+// ¿Impacto? 100% Tailwind; animaciones mediante clases del theme sin bloques <style> inline.
 
 import { Sun, Moon, Clock } from 'lucide-react';
 import { useTheme } from '@context/ThemeContext';
@@ -35,53 +34,31 @@ export function SidebarFooter({
   const { time } = useFormattedClock({ intervalMs: 1000 });
 
   // ==============================================================================
-  // ESTILOS
-  // ==============================================================================
-
-  const wrapperStyle: React.CSSProperties = {
-    padding: collapsed ? '10px 8px 12px' : '10px 12px 12px',
-    borderTop: '1px solid var(--border)',
-    display: 'flex',
-    flexDirection: 'column',
-    gap: '8px',
-    fontFamily: 'Inter, sans-serif',
-  };
-
-  // ==============================================================================
-  // MODO COLAPSADO — Solo íconos
+  // MODO COLAPSADO — Solo íconos verticalizados
   // ==============================================================================
 
   if (collapsed) {
     return (
-      <div className="sidebar-footer sidebar-footer-collapsed" style={wrapperStyle}>
+      <div className="sidebar-footer sidebar-footer-collapsed flex flex-col gap-2 border-t border-[var(--border)] p-2 font-sans">
         {/* Indicador LIVE */}
         <Tooltip content={isLive ? 'Sistema en vivo' : 'Sistema pausado'} position="right">
           <button
             type="button"
             onClick={onToggleLive}
-            style={{
-              display: 'flex',
-              alignItems: 'center',
-              justifyContent: 'center',
-              width: '100%',
-              padding: '8px',
-              background: isLive ? 'rgba(52, 211, 153, 0.1)' : 'var(--bg-tertiary)',
-              border: `1px solid ${isLive ? 'rgba(52, 211, 153, 0.25)' : 'var(--border)'}`,
-              borderRadius: '6px',
-              cursor: 'pointer',
-              transition: 'all 0.15s ease',
-            }}
             aria-label={isLive ? 'Sistema en vivo' : 'Sistema pausado'}
+            aria-pressed={isLive}
+            className={`flex w-full cursor-pointer items-center justify-center rounded-md border p-2 transition-colors duration-150 outline-none focus-visible:shadow-[var(--focus-ring)] ${
+              isLive
+                ? 'border-[rgba(6,214,160,0.25)] bg-[rgba(6,214,160,0.1)] text-neon-green'
+                : 'border-[var(--border)] bg-[var(--bg-tertiary)] text-[var(--text-tertiary)]'
+            }`}
           >
             <span
-              style={{
-                width: '10px',
-                height: '10px',
-                borderRadius: '50%',
-                background: isLive ? '#34D399' : '#6B7280',
-                boxShadow: isLive ? '0 0 0 3px rgba(52, 211, 153, 0.2)' : 'none',
-                animation: isLive ? 'sidebar-footer-pulse 2s ease-in-out infinite' : 'none',
-              }}
+              className={`h-2.5 w-2.5 rounded-full ${
+                isLive
+                  ? 'animate-pulse-slow bg-neon-green shadow-[0_0_0_3px_rgba(6,214,160,0.2)]'
+                  : 'bg-[var(--text-disabled)]'
+              }`}
             />
           </button>
         </Tooltip>
@@ -94,150 +71,67 @@ export function SidebarFooter({
           <button
             type="button"
             onClick={toggleTheme}
-            style={{
-              display: 'flex',
-              alignItems: 'center',
-              justifyContent: 'center',
-              width: '100%',
-              padding: '8px',
-              background: 'transparent',
-              border: '1px solid var(--border)',
-              borderRadius: '6px',
-              color: 'var(--text-tertiary)',
-              cursor: 'pointer',
-              transition: 'background 0.15s ease, color 0.15s ease',
-            }}
             aria-label={`Cambiar a tema ${theme === 'dark' ? 'claro' : 'oscuro'}`}
+            className="flex w-full cursor-pointer items-center justify-center rounded-md border border-[var(--border)] bg-transparent p-2 text-[var(--text-tertiary)] transition-colors duration-150 outline-none hover:bg-[var(--bg-tertiary)] hover:text-[var(--text-primary)] focus-visible:shadow-[var(--focus-ring)]"
           >
             {theme === 'dark' ? <Sun size={14} /> : <Moon size={14} />}
           </button>
         </Tooltip>
-
-        <style>{keyframes}</style>
       </div>
     );
   }
 
   // ==============================================================================
-  // MODO EXPANDIDO — Todos los controles
-  // ==============================================================================
-
-  const pillsRowStyle: React.CSSProperties = {
-    display: 'flex',
-    gap: '6px',
-  };
-
-  const clockPillStyle: React.CSSProperties = {
-    display: 'flex',
-    alignItems: 'center',
-    gap: '5px',
-    padding: '6px 10px',
-    background: 'var(--bg-tertiary)',
-    border: '1px solid var(--border)',
-    borderRadius: '20px',
-    fontSize: '11px',
-    color: 'var(--text-secondary)',
-    fontWeight: 600,
-    fontVariantNumeric: 'tabular-nums',
-    flex: 1,
-  };
-
-  const livePillStyle: React.CSSProperties = {
-    display: 'flex',
-    alignItems: 'center',
-    gap: '6px',
-    padding: '6px 10px',
-    background: isLive ? 'rgba(52, 211, 153, 0.1)' : 'var(--bg-tertiary)',
-    border: `1px solid ${isLive ? 'rgba(52, 211, 153, 0.25)' : 'var(--border)'}`,
-    borderRadius: '20px',
-    fontSize: '10px',
-    fontWeight: 700,
-    color: isLive ? '#34D399' : 'var(--text-tertiary)',
-    letterSpacing: '0.05em',
-    cursor: onToggleLive ? 'pointer' : 'default',
-    transition: 'all 0.15s ease',
-    outline: 'none',
-    fontFamily: 'inherit',
-  };
-
-  const liveDotStyle: React.CSSProperties = {
-    width: '6px',
-    height: '6px',
-    borderRadius: '50%',
-    background: isLive ? '#34D399' : '#6B7280',
-    boxShadow: isLive ? '0 0 0 3px rgba(52, 211, 153, 0.2)' : 'none',
-    animation: isLive ? 'sidebar-footer-pulse 2s ease-in-out infinite' : 'none',
-    flexShrink: 0,
-  };
-
-  const statsRowStyle: React.CSSProperties = {
-    display: 'flex',
-    justifyContent: 'space-between',
-    alignItems: 'center',
-    padding: '6px 10px',
-    fontSize: '11px',
-    color: 'var(--text-tertiary)',
-    fontVariantNumeric: 'tabular-nums',
-  };
-
-  const statValueStyle: React.CSSProperties = {
-    color: 'var(--text-secondary)',
-    fontWeight: 700,
-  };
-
-  const themeButtonStyle: React.CSSProperties = {
-    display: 'flex',
-    alignItems: 'center',
-    justifyContent: 'center',
-    gap: '6px',
-    width: '100%',
-    padding: '7px 12px',
-    background: 'transparent',
-    border: '1px solid var(--border)',
-    borderRadius: '6px',
-    color: 'var(--text-secondary)',
-    fontSize: '11px',
-    fontWeight: 600,
-    cursor: 'pointer',
-    transition: 'background 0.15s ease, color 0.15s ease, border-color 0.15s ease',
-    fontFamily: 'inherit',
-  };
-
-  // ==============================================================================
-  // RENDER — MODO EXPANDIDO
+  // MODO EXPANDIDO — Reloj, LIVE, Métricas y Selector de tema
   // ==============================================================================
 
   return (
-    <div className="sidebar-footer" style={wrapperStyle}>
+    <div className="sidebar-footer flex flex-col gap-2 border-t border-[var(--border)] p-3 font-sans">
       {/* Fila 1: Reloj + LIVE */}
-      <div style={pillsRowStyle}>
-        <div style={clockPillStyle}>
-          <Clock size={10} strokeWidth={2} />
-          <span>{time}</span>
+      <div className="flex items-center gap-1.5">
+        <div className="flex flex-1 items-center gap-1.5 rounded-full border border-[var(--border)] bg-[var(--bg-tertiary)] px-2.5 py-1.5 text-[11px] font-semibold tabular-nums text-[var(--text-secondary)]">
+          <Clock size={10} strokeWidth={2} className="shrink-0" />
+          <span className="truncate">{time}</span>
         </div>
 
         <button
           type="button"
           onClick={onToggleLive}
-          style={livePillStyle}
+          disabled={!onToggleLive}
           aria-label={
             isLive ? 'Sistema en vivo. Click para pausar' : 'Sistema pausado. Click para reanudar'
           }
           aria-pressed={isLive}
-          disabled={!onToggleLive}
+          className={`flex cursor-pointer items-center gap-1.5 rounded-full border px-2.5 py-1.5 font-sans text-[10px] font-bold tracking-wider transition-all duration-150 outline-none focus-visible:shadow-[var(--focus-ring)] ${
+            isLive
+              ? 'border-[rgba(6,214,160,0.25)] bg-[rgba(6,214,160,0.1)] text-neon-green'
+              : 'border-[var(--border)] bg-[var(--bg-tertiary)] text-[var(--text-tertiary)]'
+          }`}
         >
-          <span style={liveDotStyle} />
+          <span
+            className={`h-1.5 w-1.5 rounded-full shrink-0 ${
+              isLive
+                ? 'animate-pulse-slow bg-neon-green shadow-[0_0_0_3px_rgba(6,214,160,0.2)]'
+                : 'bg-[var(--text-disabled)]'
+            }`}
+          />
           <span>{isLive ? 'LIVE' : 'OFF'}</span>
         </button>
       </div>
 
-      {/* Fila 2: Stats de transacciones */}
-      <div style={statsRowStyle}>
+      {/* Fila 2: Métricas de transacciones */}
+      <div className="flex items-center justify-between px-1 py-1 text-[11px] tabular-nums text-[var(--text-tertiary)]">
         <span>
-          <span style={statValueStyle}>{totalTransactions.toLocaleString('es-CO')}</span> TXN
+          <span className="font-bold text-[var(--text-secondary)]">
+            {totalTransactions.toLocaleString('es-CO')}
+          </span>{' '}
+          TXN
         </span>
         <span>
-          <span style={statValueStyle}>{isLive ? transactionsPerSecond : 0}</span>/s
+          <span className="font-bold text-[var(--text-secondary)]">
+            {isLive ? transactionsPerSecond : 0}
+          </span>
+          /s
         </span>
       </div>
 
@@ -245,33 +139,12 @@ export function SidebarFooter({
       <button
         type="button"
         onClick={toggleTheme}
-        style={themeButtonStyle}
         aria-label={`Cambiar a tema ${theme === 'dark' ? 'claro' : 'oscuro'}`}
-        onMouseEnter={(e) => {
-          (e.currentTarget as HTMLElement).style.background = 'var(--bg-tertiary)';
-          (e.currentTarget as HTMLElement).style.color = 'var(--text-primary)';
-        }}
-        onMouseLeave={(e) => {
-          (e.currentTarget as HTMLElement).style.background = 'transparent';
-          (e.currentTarget as HTMLElement).style.color = 'var(--text-secondary)';
-        }}
+        className="flex w-full cursor-pointer items-center justify-center gap-1.5 rounded-md border border-[var(--border)] bg-transparent px-3 py-1.5 font-sans text-xs font-semibold text-[var(--text-secondary)] transition-colors duration-150 outline-none hover:bg-[var(--bg-tertiary)] hover:text-[var(--text-primary)] focus-visible:shadow-[var(--focus-ring)]"
       >
         {theme === 'dark' ? <Sun size={12} /> : <Moon size={12} />}
         <span>Tema {theme === 'dark' ? 'claro' : 'oscuro'}</span>
       </button>
-
-      <style>{keyframes}</style>
     </div>
   );
 }
-
-// ==============================================================================
-// KEYFRAMES
-// ==============================================================================
-
-const keyframes = `
-  @keyframes sidebar-footer-pulse {
-    0%, 100% { opacity: 1; transform: scale(1); }
-    50%      { opacity: 0.6; transform: scale(1.3); }
-  }
-`;

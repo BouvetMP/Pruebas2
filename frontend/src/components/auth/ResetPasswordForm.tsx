@@ -1,8 +1,6 @@
-// ¿Qué? Formulario para restablecer contraseña usando un token de recuperación.
-// ¿Para qué? Reemplazar el formulario embebido en resetpassword.jsx con verificación
-//            de token, validación de fortaleza y contraseñas coincidentes.
-// ¿Impacto? Se usa dentro de ResetPasswordPage. Maneja el flujo completo:
-//           verificación → cambio → confirmación → redirect.
+// ¿Qué? Formulario para restablecer contraseña con token de recuperación.
+// ¿Para qué? Verificar token, validar fortaleza y confirmar nueva contraseña.
+// ¿Impacto? Usado en ResetPasswordPage. Errores con AlertCircle / AlertTriangle (sin emoji).
 
 import { useEffect, useState, type FormEvent } from 'react';
 import { Link, useNavigate, useSearchParams } from 'react-router-dom';
@@ -15,11 +13,6 @@ import { PasswordStrengthMeter, analyzePassword } from './PasswordStrengthMeter'
 import { PUBLIC_ROUTES } from '@constants/Navigation';
 import { ApiError } from '@api/Client';
 
-// ==============================================================================
-// TYPES
-// ==============================================================================
-
-/** Estados del flujo de reset password. */
 type ResetPasswordState = 'verifying' | 'invalid-token' | 'ready' | 'success';
 
 export interface ResetPasswordFormProps {
@@ -28,10 +21,6 @@ export interface ResetPasswordFormProps {
   redirectDelaySeconds?: number;
   className?: string;
 }
-
-// ==============================================================================
-// COMPONENTE
-// ==============================================================================
 
 export function ResetPasswordForm({
   onSuccess,
@@ -43,26 +32,17 @@ export function ResetPasswordForm({
   const navigate = useNavigate();
   const token = searchParams.get('token') ?? '';
 
-  // ==============================================================================
-  // ESTADO
-  // ==============================================================================
-
   const [state, setState] = useState<ResetPasswordState>('verifying');
-  const [tokenEmail, setTokenEmail] = useState<string>('');
-  const [tokenError, setTokenError] = useState<string>('');
+  const [tokenEmail, setTokenEmail] = useState('');
+  const [tokenError, setTokenError] = useState('');
 
   const [password, setPassword] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
   const [loading, setLoading] = useState(false);
 
-  // Errores
   const [passwordError, setPasswordError] = useState('');
   const [confirmError, setConfirmError] = useState('');
   const [globalError, setGlobalError] = useState('');
-
-  // ==============================================================================
-  // VERIFICACIÓN DEL TOKEN AL MONTAR
-  // ==============================================================================
 
   useEffect(() => {
     if (!token) {
@@ -76,7 +56,6 @@ export function ResetPasswordForm({
     const verify = async (): Promise<void> => {
       try {
         const result = await verifyResetToken(token);
-
         if (cancelled) return;
 
         if (result.valid && result.email) {
@@ -88,7 +67,6 @@ export function ResetPasswordForm({
         }
       } catch (err) {
         if (cancelled) return;
-
         setState('invalid-token');
 
         if (err instanceof ApiError) {
@@ -103,28 +81,18 @@ export function ResetPasswordForm({
       }
     };
 
-    verify();
-
+    void verify();
     return () => {
       cancelled = true;
     };
   }, [token]);
 
-  // ==============================================================================
-  // VALIDACIÓN
-  // ==============================================================================
-
-  /**
-   * Valida los campos del formulario.
-   */
   const validate = (): boolean => {
     let isValid = true;
-
     setPasswordError('');
     setConfirmError('');
     setGlobalError('');
 
-    // Validar fuerza de la contraseña
     const analysis = analyzePassword(password);
     if (!password) {
       setPasswordError('La contraseña es obligatoria.');
@@ -134,7 +102,6 @@ export function ResetPasswordForm({
       isValid = false;
     }
 
-    // Validar coincidencia
     if (!confirmPassword) {
       setConfirmError('Debes confirmar la contraseña.');
       isValid = false;
@@ -146,28 +113,18 @@ export function ResetPasswordForm({
     return isValid;
   };
 
-  // ==============================================================================
-  // HANDLER — Submit
-  // ==============================================================================
-
   const handleSubmit = async (e: FormEvent): Promise<void> => {
     e.preventDefault();
-
     if (!validate()) return;
 
     setLoading(true);
     setGlobalError('');
 
     try {
-      await resetPassword({
-        token,
-        nuevaContrasena: password,
-      });
-
+      await resetPassword({ token, nuevaContrasena: password });
       setState('success');
       onSuccess?.(tokenEmail);
 
-      // Redirect automático después del delay
       window.setTimeout(() => {
         navigate(PUBLIC_ROUTES.LOGIN, { replace: true });
       }, redirectDelaySeconds * 1000);
@@ -192,110 +149,34 @@ export function ResetPasswordForm({
     }
   };
 
-  // ==============================================================================
-  // ESTILOS COMPARTIDOS
-  // ==============================================================================
+  const backLinkClass =
+    'inline-flex items-center justify-center gap-1 text-xs font-medium text-[var(--text-secondary)] no-underline transition-colors hover:text-indigo-light focus-visible:text-indigo-light';
 
-  const wrapperStyle: React.CSSProperties = {
-    display: 'flex',
-    flexDirection: 'column',
-    gap: '18px',
-    fontFamily: 'Inter, sans-serif',
-  };
-
-  const iconStyle: React.CSSProperties = {
-    flexShrink: 0,
-    marginTop: '1px',
-  };
-
-  const backLinkStyle: React.CSSProperties = {
-    display: 'inline-flex',
-    alignItems: 'center',
-    gap: '4px',
-    fontSize: '12px',
-    color: 'var(--text-secondary)',
-    textDecoration: 'none',
-    fontWeight: 500,
-    transition: 'color 0.15s ease',
-    justifyContent: 'center',
-  };
-
-  // ==============================================================================
-  // RENDER — ESTADO: verifying (cargando)
-  // ==============================================================================
+  const formShell = `reset-password-form flex flex-col gap-4.5 font-sans ${className}`;
 
   if (state === 'verifying') {
     return (
-      <div
-        className={`reset-password-form-verifying ${className}`}
-        style={{
-          ...wrapperStyle,
-          alignItems: 'center',
-          padding: '40px 20px',
-        }}
-      >
+      <div className={`${formShell} items-center px-5 py-10`}>
         <Spinner size="lg" label="Verificando enlace..." />
       </div>
     );
   }
 
-  // ==============================================================================
-  // RENDER — ESTADO: invalid-token
-  // ==============================================================================
-
   if (state === 'invalid-token') {
-    const invalidCardStyle: React.CSSProperties = {
-      display: 'flex',
-      flexDirection: 'column',
-      alignItems: 'center',
-      gap: '16px',
-      padding: '24px',
-      background: 'rgba(239, 68, 68, 0.08)',
-      border: '1px solid rgba(239, 68, 68, 0.25)',
-      borderRadius: '12px',
-      textAlign: 'center',
-    };
-
-    const invalidIconStyle: React.CSSProperties = {
-      display: 'flex',
-      alignItems: 'center',
-      justifyContent: 'center',
-      width: '56px',
-      height: '56px',
-      borderRadius: '50%',
-      background: 'rgba(239, 68, 68, 0.15)',
-      color: '#EF4444',
-    };
-
     return (
-      <div className={`reset-password-form-invalid ${className}`} style={wrapperStyle}>
-        <div style={invalidCardStyle} role="alert" aria-live="assertive">
-          <div style={invalidIconStyle}>
-            <AlertTriangle size={28} strokeWidth={2} />
+      <div className={formShell} style={{ gap: '18px' }}>
+        <div
+          className="flex flex-col items-center gap-4 rounded-xl border border-[rgba(255,107,107,0.25)] bg-[rgba(255,107,107,0.08)] p-6 text-center"
+          role="alert"
+          aria-live="assertive"
+        >
+          <div className="flex h-14 w-14 items-center justify-center rounded-full bg-[rgba(255,107,107,0.15)] text-[var(--color-danger)]">
+            <AlertTriangle size={28} strokeWidth={2} aria-hidden="true" />
           </div>
-
-          <h3
-            style={{
-              fontSize: '16px',
-              fontWeight: 700,
-              color: 'var(--text-primary)',
-              margin: 0,
-              lineHeight: 1.3,
-            }}
-          >
+          <h3 className="m-0 text-base font-bold leading-snug text-[var(--text-primary)]">
             Enlace inválido
           </h3>
-
-          <p
-            style={{
-              fontSize: '13px',
-              color: 'var(--text-secondary)',
-              margin: 0,
-              lineHeight: 1.5,
-            }}
-          >
-            {tokenError}
-          </p>
+          <p className="m-0 text-[13px] leading-relaxed text-[var(--text-secondary)]">{tokenError}</p>
         </div>
 
         <Link to={PUBLIC_ROUTES.FORGOT_PASSWORD}>
@@ -304,18 +185,9 @@ export function ResetPasswordForm({
           </Button>
         </Link>
 
-        <div style={{ display: 'flex', justifyContent: 'center' }}>
-          <Link
-            to={PUBLIC_ROUTES.LOGIN}
-            style={backLinkStyle}
-            onMouseEnter={(e) => {
-              (e.currentTarget as HTMLElement).style.color = '#818CF8';
-            }}
-            onMouseLeave={(e) => {
-              (e.currentTarget as HTMLElement).style.color = 'var(--text-secondary)';
-            }}
-          >
-            <ArrowLeft size={14} />
+        <div className="flex justify-center">
+          <Link to={PUBLIC_ROUTES.LOGIN} className={backLinkClass}>
+            <ArrowLeft size={14} aria-hidden="true" />
             Volver al inicio de sesión
           </Link>
         </div>
@@ -323,60 +195,21 @@ export function ResetPasswordForm({
     );
   }
 
-  // ==============================================================================
-  // RENDER — ESTADO: success
-  // ==============================================================================
-
   if (state === 'success') {
-    const successCardStyle: React.CSSProperties = {
-      display: 'flex',
-      flexDirection: 'column',
-      alignItems: 'center',
-      gap: '16px',
-      padding: '24px',
-      background: 'rgba(52, 211, 153, 0.08)',
-      border: '1px solid rgba(52, 211, 153, 0.25)',
-      borderRadius: '12px',
-      textAlign: 'center',
-    };
-
-    const successIconStyle: React.CSSProperties = {
-      display: 'flex',
-      alignItems: 'center',
-      justifyContent: 'center',
-      width: '56px',
-      height: '56px',
-      borderRadius: '50%',
-      background: 'rgba(52, 211, 153, 0.15)',
-      color: '#34D399',
-    };
-
     return (
-      <div className={`reset-password-form-success ${className}`} style={wrapperStyle}>
-        <div style={successCardStyle} role="status" aria-live="polite">
-          <div style={successIconStyle}>
-            <CheckCircle size={28} strokeWidth={2} />
+      <div className={formShell} style={{ gap: '18px' }}>
+        <div
+          className="flex flex-col items-center gap-4 rounded-xl border border-[rgba(6,214,160,0.25)] bg-[rgba(6,214,160,0.08)] p-6 text-center"
+          role="status"
+          aria-live="polite"
+        >
+          <div className="flex h-14 w-14 items-center justify-center rounded-full bg-[rgba(6,214,160,0.15)] text-neon-green">
+            <CheckCircle size={28} strokeWidth={2} aria-hidden="true" />
           </div>
-
-          <h3
-            style={{
-              fontSize: '16px',
-              fontWeight: 700,
-              color: 'var(--text-primary)',
-              margin: 0,
-            }}
-          >
+          <h3 className="m-0 text-base font-bold text-[var(--text-primary)]">
             ¡Contraseña actualizada!
           </h3>
-
-          <p
-            style={{
-              fontSize: '13px',
-              color: 'var(--text-secondary)',
-              margin: 0,
-              lineHeight: 1.5,
-            }}
-          >
+          <p className="m-0 text-[13px] leading-relaxed text-[var(--text-secondary)]">
             Tu contraseña se cambió correctamente. Serás redirigido al inicio de sesión en unos
             segundos.
           </p>
@@ -391,66 +224,33 @@ export function ResetPasswordForm({
     );
   }
 
-  // ==============================================================================
-  // RENDER — ESTADO: ready (formulario)
-  // ==============================================================================
-
-  const errorAlertStyle: React.CSSProperties = {
-    display: 'flex',
-    alignItems: 'flex-start',
-    gap: '10px',
-    padding: '12px 14px',
-    background: 'rgba(239, 68, 68, 0.1)',
-    border: '1px solid rgba(239, 68, 68, 0.25)',
-    borderRadius: '8px',
-    fontSize: '12px',
-    color: '#EF4444',
-    fontWeight: 500,
-    lineHeight: 1.4,
-  };
-
-  const emailInfoStyle: React.CSSProperties = {
-    display: 'flex',
-    alignItems: 'center',
-    gap: '8px',
-    padding: '10px 12px',
-    background: 'var(--bg-tertiary)',
-    borderRadius: '8px',
-    fontSize: '12px',
-    color: 'var(--text-secondary)',
-  };
-
-  const emailValueStyle: React.CSSProperties = {
-    color: 'var(--text-primary)',
-    fontWeight: 700,
-    wordBreak: 'break-all',
-  };
-
   return (
     <form
-      onSubmit={handleSubmit}
-      className={`reset-password-form ${className}`}
-      style={wrapperStyle}
+      onSubmit={(e) => void handleSubmit(e)}
+      className={formShell}
+      style={{ gap: '18px' }}
       noValidate
       aria-label="Formulario de nueva contraseña"
     >
-      {/* Error global */}
       {globalError && (
-        <div style={errorAlertStyle} role="alert" aria-live="assertive">
-          <AlertCircle size={14} strokeWidth={2.5} style={iconStyle} />
+        <div
+          className="flex items-start gap-2.5 rounded-lg border border-[rgba(255,107,107,0.25)] bg-[rgba(255,107,107,0.1)] px-3.5 py-3 text-xs font-medium leading-snug text-[var(--color-danger)]"
+          role="alert"
+          aria-live="assertive"
+        >
+          <AlertCircle size={14} strokeWidth={2.5} className="mt-0.5 shrink-0" aria-hidden="true" />
           <span>{globalError}</span>
         </div>
       )}
 
-      {/* Email al que pertenece el token */}
-      <div style={emailInfoStyle}>
-        <KeyRound size={14} />
+      <div className="flex items-center gap-2 rounded-lg bg-[var(--bg-tertiary)] px-3 py-2.5 text-xs text-[var(--text-secondary)]">
+        <KeyRound size={14} className="shrink-0" aria-hidden="true" />
         <span>
-          Cambiando contraseña para: <span style={emailValueStyle}>{tokenEmail}</span>
+          Cambiando contraseña para:{' '}
+          <span className="break-all font-bold text-[var(--text-primary)]">{tokenEmail}</span>
         </span>
       </div>
 
-      {/* Nueva contraseña */}
       <div>
         <PasswordInput
           label="Nueva contraseña"
@@ -469,7 +269,6 @@ export function ResetPasswordForm({
         <PasswordStrengthMeter password={password} />
       </div>
 
-      {/* Confirmar contraseña */}
       <PasswordInput
         label="Confirmar contraseña"
         value={confirmPassword}
@@ -484,7 +283,6 @@ export function ResetPasswordForm({
         required
       />
 
-      {/* Botón de submit */}
       <Button
         type="submit"
         variant="primary"
@@ -496,20 +294,9 @@ export function ResetPasswordForm({
         {loading ? 'Cambiando contraseña...' : 'Cambiar contraseña'}
       </Button>
 
-      {/* Link de volver */}
-      <div style={{ display: 'flex', justifyContent: 'center' }}>
-        <Link
-          to={PUBLIC_ROUTES.LOGIN}
-          style={backLinkStyle}
-          tabIndex={loading ? -1 : 0}
-          onMouseEnter={(e) => {
-            (e.currentTarget as HTMLElement).style.color = '#818CF8';
-          }}
-          onMouseLeave={(e) => {
-            (e.currentTarget as HTMLElement).style.color = 'var(--text-secondary)';
-          }}
-        >
-          <ArrowLeft size={14} />
+      <div className="flex justify-center">
+        <Link to={PUBLIC_ROUTES.LOGIN} tabIndex={loading ? -1 : 0} className={backLinkClass}>
+          <ArrowLeft size={14} aria-hidden="true" />
           Volver al inicio de sesión
         </Link>
       </div>
