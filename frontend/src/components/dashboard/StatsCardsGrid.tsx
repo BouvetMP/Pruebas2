@@ -1,10 +1,8 @@
 // ¿Qué? Grid responsivo que organiza las StatsCards del Dashboard.
-// ¿Para qué? Encapsular la composición de las cards de métricas principales
-//            con los datos del hook useDashboardData.
-// ¿Impacto? Se usa exclusivamente en DashboardPage. Recibe los datos ya
-//           procesados y los renderiza con el layout correcto.
+// ¿Para qué? Encapsular la composición de las cards de métricas principales.
+// ¿Impacto? Muestra información transparente sobre el motor antifraude de 7 factores.
 
-import { DollarSign, AlertTriangle, Ban, Shield, Zap } from 'lucide-react';
+import { DollarSign, AlertTriangle, Ban, ShieldCheck, Zap } from 'lucide-react';
 import { StatsCard } from './StatsCards';
 import type { DashboardStats } from '@app-types';
 import { formatCurrency, formatPercent, formatNumber } from '@utils/Formatters';
@@ -82,13 +80,13 @@ export function StatsCardsGrid({
         onClick={onBlockedClick}
       />
 
-      {/* 4. Precisión del modelo IA */}
+      {/* 4. Estado del Motor Antifraude (Verídico) */}
       <StatsCard
-        icon={Shield}
-        value="98.4%"
-        label="Precisión IA"
+        icon={ShieldCheck}
+        value="Activo"
+        label="Motor Antifraude"
         variant="success"
-        subtitle="Modelo v2.1"
+        subtitle="7 factores ponderados"
       />
 
       {/* 5. Transacciones por segundo */}
@@ -98,7 +96,7 @@ export function StatsCardsGrid({
         label="TXN/seg"
         variant={isLive ? 'warning' : 'primary'}
         animated={isLive}
-        subtitle={isLive ? 'En tiempo real' : 'Sistema pausado'}
+        subtitle={isLive ? 'Simulado en vivo' : 'Sistema pausado'}
       />
     </div>
   );
