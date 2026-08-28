@@ -1,11 +1,11 @@
 // ¿Qué? Tab de perfil del usuario actual en la página de Settings.
-// ¿Para qué? Mostrar y permitir editar datos básicos del perfil y cambiar contraseña.
-// ¿Impacto? Accesible por todos los roles. Muestra nombre, email, rol y botón
-//           de cambiar contraseña.
+// ¿Para qué? Mostrar y permitir editar datos básicos del perfil (nombre, email).
+// ¿Impacto? Actualiza la información en BD mediante PATCH /api/auth/me y muestra alertas de éxito/error reales.
 
 import { useState } from 'react';
-import { User, Mail, Phone, KeyRound, Shield } from 'lucide-react';
+import { User, Mail, Phone, KeyRound, Shield, AlertCircle, CheckCircle2 } from 'lucide-react';
 import { useAuth } from '@context/AuthContext';
+import { updateProfile } from '@api/Auth';
 import { Card, CardHeader, CardBody } from '@components/ui/Card';
 import { Input } from '@components/ui/Input';
 import { Button } from '@components/ui/Button';
@@ -20,15 +20,48 @@ import { getRoleMetadata } from '@constants/Roles';
 
 export function ProfileTab() {
   const { user } = useAuth();
+  
+  // Estados de modales y UI
   const [passwordModalOpen, setPasswordModalOpen] = useState(false);
+  const [twoFA, setTwoFA] = useState(true); // Solo visual en MVP
 
+  // Estados del formulario
   const [name, setName] = useState(user?.nombre ?? '');
   const [email, setEmail] = useState(user?.email ?? '');
-  const [phone, setPhone] = useState('');
-  const [twoFA, setTwoFA] = useState(true);
+  const [phone, setPhone] = useState(''); // Visual (no guardado en BD MVP)
+
+  // Estados de petición API
+  const [saving, setSaving] = useState(false);
+  const [saveError, setSaveError] = useState('');
+  const [saveSuccess, setSaveSuccess] = useState('');
 
   const roleMeta = user?.rol ? getRoleMetadata(user.rol) : null;
   const roleColor = roleMeta?.color ?? '#6366F1';
+
+  // ==============================================================================
+  // HANDLER: Guardar Perfil (Día 3)
+  // ==============================================================================
+  const handleSaveProfile = async (): Promise<void> => {
+    setSaving(true);
+    setSaveError('');
+    setSaveSuccess('');
+
+    try {
+      const result = await updateProfile({
+        nombre_completo: name.trim(),
+        email: email.trim(),
+      });
+      setSaveSuccess(result.message);
+      
+      // Ocultar el mensaje de éxito después de 4 segundos
+      setTimeout(() => setSaveSuccess(''), 4000);
+      
+    } catch (err) {
+      setSaveError(err instanceof Error ? err.message : 'No se pudo guardar el perfil');
+    } finally {
+      setSaving(false);
+    }
+  };
 
   return (
     <div className="flex w-full max-w-2xl flex-col gap-5 font-sans">
@@ -66,6 +99,23 @@ export function ProfileTab() {
             </section>
 
             {/* ============================================================
+                MENSAJES DE ESTADO (Feedback de la API)
+                ============================================================ */}
+            {saveError && (
+              <div className="flex items-start gap-2 rounded-lg border border-[rgba(255,107,107,0.3)] bg-[rgba(255,107,107,0.1)] px-3.5 py-2.5 text-xs font-semibold text-[var(--color-danger)] animate-fade-in" role="alert">
+                <AlertCircle size={14} className="mt-0.5 shrink-0" aria-hidden="true" />
+                <span>{saveError}</span>
+              </div>
+            )}
+            
+            {saveSuccess && (
+              <div className="flex items-start gap-2 rounded-lg border border-[rgba(6,214,160,0.3)] bg-[rgba(6,214,160,0.1)] px-3.5 py-2.5 text-xs font-semibold text-[#06D6A0] animate-fade-in" role="status">
+                <CheckCircle2 size={14} className="mt-0.5 shrink-0" aria-hidden="true" />
+                <span>{saveSuccess}</span>
+              </div>
+            )}
+
+            {/* ============================================================
                 2. DATOS DE CONTACTO
                 ============================================================ */}
             <section className="flex flex-col gap-4" aria-label="Datos de contacto">
@@ -80,6 +130,7 @@ export function ProfileTab() {
                 value={name}
                 onChange={(e) => setName(e.target.value)}
                 leftIcon={<User size={14} />}
+                disabled={saving}
               />
 
               <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
@@ -89,6 +140,7 @@ export function ProfileTab() {
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
                   leftIcon={<Mail size={14} />}
+                  disabled={saving}
                 />
 
                 <Input
@@ -98,6 +150,8 @@ export function ProfileTab() {
                   onChange={(e) => setPhone(e.target.value)}
                   placeholder="+57 300 123 4567"
                   leftIcon={<Phone size={14} />}
+                  disabled={saving}
+                  helperText="Solo para fines de contacto interno"
                 />
               </div>
             </section>
@@ -120,6 +174,7 @@ export function ProfileTab() {
                   onChange={setTwoFA}
                   icon={<KeyRound size={14} />}
                   variant="success"
+                  disabled={saving}
                 />
               </div>
             </section>
@@ -132,17 +187,31 @@ export function ProfileTab() {
                 variant="ghost"
                 leftIcon={<KeyRound size={14} />}
                 onClick={() => setPasswordModalOpen(true)}
+                disabled={saving}
               >
                 Cambiar contraseña
               </Button>
 
-              <Button variant="primary">Guardar cambios</Button>
+              <Button 
+                variant="primary" 
+                onClick={() => void handleSaveProfile()} 
+                loading={saving}
+              >
+                Guardar cambios
+              </Button>
             </div>
           </div>
         </CardBody>
       </Card>
 
-      <ChangePasswordModal open={passwordModalOpen} onClose={() => setPasswordModalOpen(false)} />
+      <ChangePasswordModal 
+        open={passwordModalOpen} 
+        onClose={() => setPasswordModalOpen(false)}
+        onSuccess={() => {
+          setSaveSuccess('¡Contraseña actualizada exitosamente!');
+          setTimeout(() => setSaveSuccess(''), 4000);
+        }}
+      />
     </div>
   );
 }

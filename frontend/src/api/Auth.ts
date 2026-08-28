@@ -10,7 +10,7 @@
 // ¿Impacto? Estas funciones son consumidas por AuthContext, LoginPage,
 //           ForgotPasswordPage, ResetPasswordPage y Settings.
 
-import { get, post } from './Client';
+import { get, post, patch } from './Client';
 import type {
   // Payloads
   LoginPayload,
@@ -180,6 +180,71 @@ export function hasStoredToken(): boolean {
     console.warn('Error al verificar el token en localStorage:', error);
     return false;
   }
+}
+
+// ==============================================================================
+// PERFIL Y CONTRASEÑA (Día 3)
+// ==============================================================================
+
+export interface UpdateProfilePayload {
+  nombre_completo?: string;
+  email?: string;
+}
+
+export interface UpdateProfileResponse {
+  message: string;
+  user: {
+    id: number;
+    nombre: string;
+    email: string;
+    rol: string;
+    estado: boolean;
+  };
+}
+
+export interface ChangePasswordPayload {
+  contrasenaActual: string;
+  nuevaContrasena: string;
+}
+
+export interface ChangePasswordResponse {
+  message: string;
+}
+
+/**
+ * Actualiza nombre y/o email del usuario autenticado.
+ * Endpoint: PATCH /api/auth/me
+ */
+export async function updateProfile(
+  payload: UpdateProfilePayload,
+): Promise<UpdateProfileResponse> {
+  return patch<UpdateProfileResponse>('/auth/me', payload);
+}
+
+/**
+ * Cambia la contraseña del usuario autenticado (requiere contraseña actual).
+ * Endpoint: POST /api/auth/change-password
+ */
+export async function changePassword(
+  payload: ChangePasswordPayload,
+): Promise<ChangePasswordResponse> {
+  return post<ChangePasswordResponse>('/auth/change-password', payload);
+}
+
+/**
+ * Obtiene el usuario actual desde el backend.
+ * Endpoint: GET /api/auth/me
+ */
+export async function getMe(): Promise<{
+  id: number;
+  nombre: string;
+  email: string;
+  rol: string;
+  estado: boolean;
+  fecha_creacion?: string;
+  ultimo_acceso?: string | null;
+}> {
+  return get('/auth/me');
 }
 
 /**

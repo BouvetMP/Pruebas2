@@ -1,6 +1,6 @@
 // ¿Qué? Controlador HTTP del módulo de autenticación.
 // ¿Para qué? Extraer datos del request, validarlos y delegar la lógica al service.
-// ¿Impacto? Mantiene la capa HTTP delgada y tipada, sin lógica de negocio embebida.
+// ¿Impacto? Capa HTTP delgada; incluye perfil y cambio de contraseña (Día 3).
 
 import { Request, Response, NextFunction } from 'express';
 import { authService, AuthError } from './auth.service.js';
@@ -9,7 +9,9 @@ import {
   registerSchema,
   forgotPasswordSchema,
   resetPasswordSchema,
-} from './auth.schemas';
+  updateProfileSchema,
+  changePasswordSchema,
+} from './auth.schemas.js';
 import { AuthenticatedRequest } from '../../types/index.js';
 
 const handleError = (error: unknown, next: NextFunction) => {
@@ -23,8 +25,7 @@ export const authController = {
   async login(req: Request, res: Response, next: NextFunction) {
     try {
       const data = loginSchema.parse(req.body);
-      const result = await authService.login(data.email, data.password);
-      res.json(result);
+      res.json(await authService.login(data.email, data.password));
     } catch (error) {
       handleError(error, next);
     }
@@ -33,9 +34,7 @@ export const authController = {
   async register(req: AuthenticatedRequest, res: Response, next: NextFunction) {
     try {
       const data = registerSchema.parse(req.body);
-      const idGenerador = req.user!.id_usuario;
-      const result = await authService.register(data, idGenerador);
-      res.status(201).json(result);
+      res.status(201).json(await authService.register(data, req.user!.id_usuario));
     } catch (error) {
       handleError(error, next);
     }
@@ -44,8 +43,7 @@ export const authController = {
   async forgotPassword(req: Request, res: Response, next: NextFunction) {
     try {
       const data = forgotPasswordSchema.parse(req.body);
-      const result = await authService.forgotPassword(data.correo);
-      res.json(result);
+      res.json(await authService.forgotPassword(data.correo));
     } catch (error) {
       handleError(error, next);
     }
@@ -59,8 +57,7 @@ export const authController = {
         return;
       }
       const result = await authService.verifyResetToken(token);
-      const status = result.valid ? 200 : 401;
-      res.status(status).json(result);
+      res.status(result.valid ? 200 : 401).json(result);
     } catch (error) {
       handleError(error, next);
     }
@@ -69,8 +66,7 @@ export const authController = {
   async resetPassword(req: Request, res: Response, next: NextFunction) {
     try {
       const data = resetPasswordSchema.parse(req.body);
-      const result = await authService.resetPassword(data.token, data.nuevaContrasena);
-      res.json(result);
+      res.json(await authService.resetPassword(data.token, data.nuevaContrasena));
     } catch (error) {
       handleError(error, next);
     }
@@ -78,17 +74,33 @@ export const authController = {
 
   async me(req: AuthenticatedRequest, res: Response, next: NextFunction) {
     try {
-      const result = await authService.getMe(req.user!.id_usuario);
-      res.json(result);
+      res.json(await authService.getMe(req.user!.id_usuario));
     } catch (error) {
       handleError(error, next);
     }
   },
 
-  async listUsers(req: AuthenticatedRequest, res: Response, next: NextFunction) {
+  async updateProfile(req: AuthenticatedRequest, res: Response, next: NextFunction) {
     try {
-      const result = await authService.listSystemUsers();
-      res.json(result);
+      const data = updateProfileSchema.parse(req.body);
+      res.json(await authService.updateProfile(req.user!.id_usuario, data));
+    } catch (error) {
+      handleError(error, next);
+    }
+  },
+
+  async changePassword(req: AuthenticatedRequest, res: Response, next: NextFunction) {
+    try {
+      const data = changePasswordSchema.parse(req.body);
+      res.json(await authService.changePassword(req.user!.id_usuario, data));
+    } catch (error) {
+      handleError(error, next);
+    }
+  },
+
+  async listUsers(_req: AuthenticatedRequest, res: Response, next: NextFunction) {
+    try {
+      res.json(await authService.listSystemUsers());
     } catch (error) {
       handleError(error, next);
     }
