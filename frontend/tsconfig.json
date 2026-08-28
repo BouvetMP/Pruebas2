@@ -5,39 +5,31 @@
     "lib": ["ES2022", "DOM", "DOM.Iterable"],
     "module": "ESNext",
     "skipLibCheck": true,
-
     "moduleResolution": "bundler",
     "allowImportingTsExtensions": true,
     "resolveJsonModule": true,
     "isolatedModules": true,
-    "moduleDetection": "force",
     "noEmit": true,
     "jsx": "react-jsx",
-
+    "types": ["vite/client", "node"],
+    "paths": {
+      "@/*": ["./src/*"],
+      "@api/*": ["./src/api/*"],
+      "@assets/*": ["./src/assets/*"],
+      "@components/*": ["./src/components/*"],
+      "@constants/*": ["./src/constants/*"],
+      "@context/*": ["./src/context/*"],
+      "@hooks/*": ["./src/hooks/*"],
+      "@i18n/*": ["./src/i18n/*"],
+      "@pages/*": ["./src/pages/*"],
+      "@styles/*": ["./src/styles/*"],
+      "@app-types/*": ["./src/types/*"],
+      "@utils/*": ["./src/utils/*"]
+    },
     "strict": true,
     "noUnusedLocals": true,
     "noUnusedParameters": true,
-    "noFallthroughCasesInSwitch": true,
-    "noImplicitAny": true,
-    "noImplicitReturns": true,
-    "strictNullChecks": true,
-
-    "paths": {
-      "@/*":            ["./src/*"],
-      "@api/*":         ["./src/api/*"],
-      "@assets/*":      ["./src/assets/*"],
-      "@components/*":  ["./src/components/*"],
-      "@constants/*":   ["./src/constants/*"],
-      "@context/*":     ["./src/context/*"],
-      "@hooks/*":       ["./src/hooks/*"],
-      "@i18n/*":        ["./src/i18n/*"],
-      "@pages/*":       ["./src/pages/*"],
-      "@styles/*":      ["./src/styles/*"],
-      "@app-types/*":   ["./src/types/*"],
-      "@app-types":     ["./src/types/index.ts"],
-      "@utils/*":       ["./src/utils/*"]
-    }
+    "noFallthroughCasesInSwitch": true
   },
-  "include": ["src"],
-  "references": [{ "path": "./tsconfig.node.json" }]
+  "include": ["src/**/*"]
 }

@@ -1,12 +1,13 @@
 // ¿Qué? Punto de entrada de la aplicación React.
-// ¿Para qué? Montar el componente raíz App en el DOM.
-// ¿Impacto? Este es el primer archivo que se ejecuta al cargar la aplicación.
+// ¿Para qué? Montar la aplicación en el DOM e importar los estilos globales.
+// ¿Impacto? Primer archivo en ejecutarse al cargar el frontend.
 
 import React from 'react';
 import ReactDOM from 'react-dom/client';
 import App from './App';
 
-// Estilos globales (Tailwind + variables CSS)
+// Estilos de librerías globales + estilos del proyecto
+import 'leaflet/dist/leaflet.css';
 import './styles/index.css';
 
 // ==============================================================================

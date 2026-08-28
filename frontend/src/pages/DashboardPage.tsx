@@ -1,8 +1,6 @@
 // ¿Qué? Página principal del Dashboard del sistema TriDa.
-// ¿Para qué? Reemplazar dashboards.jsx con una versión modular que compone
-//            StatsCardsGrid, AlertsByLevelRings y RecentAlertsPanel.
-// ¿Impacto? Es la primera página que ve el usuario al entrar al sistema.
-//           Muestra el estado general de transacciones, alertas y métricas.
+// ¿Para qué? Reemplazar el Spinner con Skeletons usando los imports unificados de @components/ui.
+// ¿Impacto? Corrije errores de casing de TypeScript y mejora la velocidad de carga.
 
 import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
@@ -11,37 +9,21 @@ import { useBank } from '@context/BankContext';
 import { useDashboardData } from '@hooks/useDashboardData';
 import { useAlerts } from '@hooks/useAlerts';
 import { useFormattedClock } from '@hooks/useClock';
-import { Button } from '@components/ui/Button';
-import { Spinner } from '@components/ui/Spinner';
-import { EmptyState } from '@components/ui/EmptyState';
-import { StatsCardsGrid, AlertsByLevelRings, RecentAlertsPanel } from '@components/dashboard';
 
-// ==============================================================================
-// COMPONENTE
-// ==============================================================================
+// ── IMPORTS UNIFICADOS DE UI (Solución al error de casing) ──
+import { Button, EmptyState, Skeleton } from '@components/ui';
+import { StatsCardsGrid, AlertsByLevelRings, RecentAlertsPanel } from '@components/dashboard';
 
 export function DashboardPage() {
   const navigate = useNavigate();
   const { selectedBank, selectedBankInfo } = useBank();
   const { timeWithSeconds } = useFormattedClock();
 
-  // ==============================================================================
-  // METADATA
-  // ==============================================================================
-
   useEffect(() => {
     document.title = 'Dashboard — TriDa';
   }, []);
 
-  // ==============================================================================
-  // ESTADO LOCAL
-  // ==============================================================================
-
   const [isLive, setIsLive] = useState(true);
-
-  // ==============================================================================
-  // DATOS — Dashboard stats + alertas recientes (paralelo)
-  // ==============================================================================
 
   const {
     stats,
@@ -56,15 +38,7 @@ export function DashboardPage() {
     autoRefreshMs: 30_000,
   });
 
-  // ==============================================================================
-  // DATOS — Conteo de alertas por nivel
-  // ==============================================================================
-
   const { counts: alertCounts, loading: alertsLoading } = useAlerts(selectedBank);
-
-  // ==============================================================================
-  // HANDLERS
-  // ==============================================================================
 
   const handleRefresh = async (): Promise<void> => {
     await refetchDashboard();
@@ -86,10 +60,6 @@ export function DashboardPage() {
     navigate(`/alerts?level=${level}`);
   };
 
-  // ==============================================================================
-  // RESPONSIVE — breakpoint para sección inferior
-  // ==============================================================================
-
   const [isMobile, setIsMobile] = useState(window.innerWidth < 900);
 
   useEffect(() => {
@@ -99,22 +69,6 @@ export function DashboardPage() {
     window.addEventListener('resize', handleResize);
     return () => window.removeEventListener('resize', handleResize);
   }, []);
-
-  // ==============================================================================
-  // RENDER — LOADING
-  // ==============================================================================
-
-  if (dashboardLoading && !stats.totalTransactions) {
-    return (
-      <div className="flex min-h-screen flex-col gap-6 p-6 font-sans md:p-8">
-        <Spinner size="lg" label="Cargando dashboard..." centered />
-      </div>
-    );
-  }
-
-  // ==============================================================================
-  // RENDER — ERROR
-  // ==============================================================================
 
   if (dashboardError && !stats.totalTransactions) {
     return (
@@ -132,16 +86,36 @@ export function DashboardPage() {
     );
   }
 
-  // ==============================================================================
-  // RENDER — DASHBOARD
-  // ==============================================================================
+  if (dashboardLoading && !stats.totalTransactions) {
+    return (
+      <div className="flex min-h-full flex-col gap-6 p-6 font-sans md:gap-7 md:p-8">
+        <div className="flex flex-wrap items-center justify-between gap-4">
+          <div className="flex flex-col gap-2">
+            <Skeleton className="h-8 w-48" />
+            <Skeleton className="h-4 w-32" />
+          </div>
+          <div className="flex items-center gap-2">
+            <Skeleton className="h-8 w-24" />
+            <Skeleton className="h-8 w-20" />
+          </div>
+        </div>
+
+        <div className="grid grid-cols-[repeat(auto-fit,minmax(200px,1fr))] gap-3">
+          {Array.from({ length: 5 }).map((_, i) => (
+            <Skeleton key={i} className="h-24 w-full rounded-xl" />
+          ))}
+        </div>
+
+        <div className="grid grid-cols-1 items-start gap-5 lg:grid-cols-[1fr_300px]">
+          <Skeleton className="h-80 w-full rounded-xl" />
+          <Skeleton className="h-80 w-full rounded-xl" />
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className="flex min-h-full flex-col gap-6 p-6 font-sans md:gap-7 md:p-8">
-      {/* ================================================================
-          HEADER — Título + controles
-          ================================================================ */}
-
       <header className="flex flex-wrap items-start justify-between gap-4">
         <div className="flex min-w-0 flex-col gap-1">
           <h1 className="m-0 text-2xl font-extrabold tracking-tight text-[var(--text-primary)]">
@@ -158,19 +132,14 @@ export function DashboardPage() {
         </div>
 
         <div className="flex flex-wrap items-center gap-2">
-          {/* Reloj */}
           <span className="rounded-lg border border-[var(--border)] bg-[var(--bg-secondary)] px-3 py-1.5 text-xs font-semibold tabular-nums text-[var(--text-tertiary)]">
             {timeWithSeconds}
           </span>
 
-          {/* Indicador LIVE */}
           <button
             type="button"
             onClick={() => setIsLive(!isLive)}
-            aria-label={
-              isLive ? 'Sistema en vivo. Click para pausar' : 'Sistema pausado. Click para reanudar'
-            }
-            aria-pressed={isLive}
+            aria-label={isLive ? 'Pausar sistema' : 'Reanudar sistema'}
             className={`flex cursor-pointer items-center gap-1.5 rounded-lg border px-3 py-1.5 text-[10px] font-bold transition-all duration-150 ${
               isLive
                 ? 'border-[rgba(6,214,160,0.25)] bg-[rgba(6,214,160,0.1)] text-neon-green'
@@ -185,7 +154,6 @@ export function DashboardPage() {
             {isLive ? 'LIVE' : 'OFF'}
           </button>
 
-          {/* Refresh */}
           <Button
             variant="ghost"
             size="sm"
@@ -196,7 +164,6 @@ export function DashboardPage() {
             Actualizar
           </Button>
 
-          {/* Última actualización */}
           {lastUpdated && (
             <span className="text-[10px] italic text-[var(--text-tertiary)]">
               Actualizado: {lastUpdated.toLocaleTimeString('es-CO')}
@@ -204,10 +171,6 @@ export function DashboardPage() {
           )}
         </div>
       </header>
-
-      {/* ================================================================
-          STATS CARDS — métricas principales
-          ================================================================ */}
 
       <section aria-label="Métricas principales">
         <StatsCardsGrid
@@ -218,9 +181,6 @@ export function DashboardPage() {
           onBlockedClick={handleBlockedClick}
         />
       </section>
-      {/* ================================================================
-          SECCIÓN INFERIOR — Alertas recientes (izq) + Distribución (der)
-          ================================================================ */}
 
       <section
         aria-label="Alertas y distribución"
@@ -230,7 +190,6 @@ export function DashboardPage() {
             : 'grid grid-cols-[1fr_minmax(260px,320px)] items-start gap-5'
         }
       >
-        {/* Columna izquierda: panel de alertas recientes */}
         <div className="min-w-0">
           <RecentAlertsPanel
             alerts={recentAlerts}
@@ -241,16 +200,17 @@ export function DashboardPage() {
           />
         </div>
 
-        {/* Columna derecha: distribución por nivel */}
         <div className="flex flex-col gap-4 rounded-xl border border-[var(--border)] bg-[var(--bg-secondary)] p-5 shadow-glow-sm">
-          <div className="flex items-center justify-between gap-2">
-            <h2 className="m-0 text-[13px] font-bold text-[var(--text-primary)]">
-              Distribución de alertas
-            </h2>
-          </div>
+          <h2 className="m-0 text-[13px] font-bold text-[var(--text-primary)]">
+            Distribución de alertas
+          </h2>
 
           {alertsLoading ? (
-            <Spinner label="Cargando..." centered />
+            <div className="flex flex-col gap-3 py-2">
+              <Skeleton className="h-6 w-full" />
+              <Skeleton className="h-6 w-full" />
+              <Skeleton className="h-6 w-full" />
+            </div>
           ) : (
             <AlertsByLevelRings
               counts={alertCounts}

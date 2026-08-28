@@ -1,8 +1,6 @@
 // ¿Qué? Barrel export que centraliza todos los componentes UI base del design system.
-// ¿Para qué? Permitir importar múltiples componentes desde una sola ruta (@components/ui)
-//            en vez de tener que importar de cada archivo individualmente.
-// ¿Impacto? Simplifica los imports en componentes especializados, layouts y páginas.
-//           Si un componente se mueve de archivo, solo se actualiza esta re-exportación.
+// ¿Para qué? Permitir importar múltiples componentes desde una sola ruta (@components/ui).
+// ¿Impacto? Mantiene limpios los imports en páginas y layout.
 
 // ==============================================================================
 // FEEDBACK Y ESTADO
@@ -13,6 +11,12 @@ export type { SpinnerProps, SpinnerSize, SpinnerVariant } from './Spinner';
 
 export { EmptyState } from './EmptyState';
 export type { EmptyStateProps, EmptyStatePreset, EmptyStateVariant } from './EmptyState';
+
+export { Skeleton } from './Skeleton';
+export type { SkeletonProps } from './Skeleton';
+
+export { ToastProvider, useToast } from './Toast';
+export type { ToastType, ToastItem } from './Toast';
 
 // ==============================================================================
 // FORMULARIOS
