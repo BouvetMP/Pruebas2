@@ -1,59 +1,108 @@
-// ¿Qué? Servicio de consulta de transacciones.
-// ¿Para qué? Listar transacciones con filtro opcional por banco.
-// ¿Impacto? Fuente de datos de la tabla de transacciones del frontend.
-
-// ¿Qué? Servicio de transacciones integrado con la fórmula matemática de criticidad.
-// ¿Para qué? Procesar nuevas operaciones calculando dinámicamente el score y creando alertas.
-// ¿Impacto? Registra la transacción en PostgreSQL y activa el protocolo de prevención de fraude.
+// ¿Qué? Servicio de consulta y procesamiento de transacciones.
+// ¿Para qué? Registrar transacciones, consultar el modelo IA y generar alertas.
+// ¿Impacto? Conecta PostgreSQL + Backend + Random Forest de TriDa.
 
 import { prisma } from '../../db/prisma.js';
-import { riskScoringEngine } from './risk.service.js';
+import { config } from '../../config.js';
+
+interface ResultadoIA {
+  fraude: boolean;
+  score_riesgo: number;
+  nivel_riesgo: 'BAJO' | 'MEDIO' | 'ALTO';
+}
+
+async function consultarIA(data: any): Promise<ResultadoIA> {
+  const ahora = new Date();
+  const diaSemana = ahora.getDay();
+  const hora = ahora.getHours();
+
+  const response = await fetch(`${config.IA_URL}/predict`, {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify({
+      monto: Number(data.monto),
+      tipo_transaccion: data.tipo_transaccion,
+      dia_semana: diaSemana,
+      es_fin_de_semana: [0, 6].includes(diaSemana) ? 1 : 0,
+      es_madrugada: hora >= 23 || hora < 6 ? 1 : 0,
+      tiempo_de_procesamiento: data.tiempo_de_procesamiento ?? 2,
+      moneda: data.moneda,
+      canal: data.canal,
+    }),
+  });
+
+  if (!response.ok) {
+    throw new Error(`La IA respondió con HTTP ${response.status}`);
+  }
+
+  return (await response.json()) as ResultadoIA;
+}
 
 export const transactionsService = {
   async list(bancoCodigo?: string | null) {
-    return prisma.$queryRaw<any[]>`SELECT * FROM trida.fn_transacciones(${bancoCodigo ?? null})`;
+    return prisma.$queryRaw<any[]>`
+      SELECT * FROM trida.fn_transacciones(${bancoCodigo ?? null})
+    `;
   },
 
   async create(data: any) {
     // 1. Consultar contexto del cliente, dispositivo y ubicación
     const [dispositivo, ubicacion, historialAlertas] = await Promise.all([
-      prisma.dispositivo.findUnique({ where: { id_dispositivo: data.id_dispositivo } }),
-      prisma.historicoUbicacion.findUnique({ where: { id_ubicacion: data.id_ubicacion } }),
-      prisma.alerta.count({ where: { transaccion: { id_cliente: data.id_cliente } } }),
+      prisma.dispositivo.findUnique({
+        where: { id_dispositivo: data.id_dispositivo },
+      }),
+
+      prisma.historicoUbicacion.findUnique({
+        where: { id_ubicacion: data.id_ubicacion },
+      }),
+
+      prisma.alerta.count({
+        where: {
+          transaccion: {
+            id_cliente: data.id_cliente,
+          },
+        },
+      }),
     ]);
 
-    const fechaTx = new Date();
+    // 2. Consultar el modelo Random Forest de TriDa
+    const resultadoIA = await consultarIA(data);
 
-    // 2. Mapear datos a la interfaz de la Fórmula de Criticidad (F1 - F7)
-    const riskInput = {
-      montoActual: Number(data.monto),
-      montoPromedio: 500000, // Promedio base del cliente
-      desviacionEstandar: 200000,
+    const score = Number(resultadoIA.score_riesgo);
+    const fraude = Boolean(resultadoIA.fraude);
 
-      dispositivoConocido: !!dispositivo,
-      dispositivoConfiable: dispositivo ? dispositivo.tipo_dispositivo !== 'DESCONOCIDO' : false,
-      diasUsoDispositivo: dispositivo
-        ? Math.floor((fechaTx.getTime() - new Date(dispositivo.fecha_primer_uso).getTime()) / (1000 * 60 * 60 * 24))
-        : 0,
+    // 3. Determinar estado y nivel según el score de la IA
+    let estadoTransaccion:
+      | 'APROBADA'
+      | 'ALERTADA'
+      | 'BLOQUEADA';
 
-      distanciaKm: ubicacion?.ciudad === 'Cúcuta' ? 600 : 10,
-      tiempoTranscurridoHoras: 2,
+    let nivel:
+      | 'BAJA'
+      | 'MEDIA'
+      | 'ALTA'
+      | 'CRITICA';
 
-      horaTransaccion: fechaTx.getHours(),
+    if (score >= 95) {
+      estadoTransaccion = 'BLOQUEADA';
+      nivel = 'CRITICA';
+    } else if (score >= 80) {
+      estadoTransaccion = 'ALERTADA';
+      nivel = 'ALTA';
+    } else if (score >= 50) {
+      estadoTransaccion = 'ALERTADA';
+      nivel = 'MEDIA';
+    } else if (score >= 30) {
+      estadoTransaccion = 'ALERTADA';
+      nivel = 'BAJA';
+    } else {
+      estadoTransaccion = 'APROBADA';
+      nivel = 'BAJA';
+    }
 
-      anomaliasComportamiento: historialAlertas > 2 ? 3 : data.canal === 'atm' ? 1 : 0,
-
-      paisDestino: ubicacion?.pais ?? 'Colombia',
-      paisHabitual: 'Colombia',
-      esPaisVecino: false,
-      esPaisRiesgoMedio: false,
-      esPaisAltoRiesgo: ubicacion?.pais ? ubicacion.pais !== 'Colombia' : false,
-    };
-
-    // 3. Evaluar riesgo con la fórmula matemática: Score = Σ (Wᵢ × Fᵢ) × 100
-    const evaluacion = riskScoringEngine.evaluate(riskInput);
-
-    // 4. Guardar la transacción en la base de datos
+    // 4. Guardar la transacción en PostgreSQL
     const nuevaTx = await prisma.transaccion.create({
       data: {
         id_cliente: data.id_cliente,
@@ -64,27 +113,45 @@ export const transactionsService = {
         monto: data.monto,
         cuenta_origen: data.cuenta_origen,
         cuenta_destino: data.cuenta_destino,
-        score_riesgo: evaluacion.score,
-        estado_transaccion: evaluacion.estadoTransaccion,
+
+        // Resultado del Random Forest
+        score_riesgo: score,
+        estado_transaccion: estadoTransaccion,
+
         canal: data.canal,
         moneda: data.moneda,
       },
     });
 
-    // 5. Generar alerta si el score es mayor o igual a 30 (según tabla de decisiones)
+    // 5. Generar alerta cuando el score sea >= 30
     let alertaGenerada = null;
-    if (evaluacion.score >= 30) {
+
+    if (score >= 30) {
       alertaGenerada = await prisma.alerta.create({
         data: {
           id_transaccion: nuevaTx.id_transaccion,
-          nivel_criticidad: evaluacion.nivel,
-          factores_sospechosos: evaluacion.factoresSospechosos.join(' | '),
+          nivel_criticidad: nivel,
+          factores_sospechosos: fraude
+            ? 'Detectado por modelo Random Forest'
+            : 'Riesgo detectado por modelo Random Forest',
           estado_alerta: 'ACTIVA',
-          prioridad: evaluacion.score >= 80 ? 10 : 5,
+          prioridad: score >= 80 ? 10 : 5,
         },
       });
     }
 
-    return { transaccion: nuevaTx, evaluacionRiesgo: evaluacion, alerta: alertaGenerada };
+    // 6. Devolver resultado completo
+    return {
+      transaccion: nuevaTx,
+      evaluacionRiesgo: {
+        score,
+        fraude,
+        nivel,
+        estadoTransaccion,
+        nivelRiesgoIA: resultadoIA.nivel_riesgo,
+      },
+      alerta: alertaGenerada,
+    };
   },
 };
+

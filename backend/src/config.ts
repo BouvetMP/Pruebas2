@@ -5,7 +5,6 @@
 import dotenv from 'dotenv';
 import { z } from 'zod';
 
-
 dotenv.config();
 
 const envSchema = z.object({
@@ -14,7 +13,10 @@ const envSchema = z.object({
   JWT_SECRET: z.string().min(32),
   JWT_EXPIRES_IN: z.string().default('24h'),
   FRONTEND_URL: z.string().url().default('http://localhost:5173'),
-  NODE_ENV: z.enum(['development', 'production', 'test']).default('development'),
+  IA_URL: z.string().url().default('http://localhost:5000'),
+  NODE_ENV: z
+    .enum(['development', 'production', 'test'])
+    .default('development'),
   EMAIL_USER: z.string().optional(),
   EMAIL_PASS: z.string().optional(),
   EMAIL_FROM: z.string().default('TriDa <noreply@trida.com>'),
@@ -29,3 +31,4 @@ if (!_env.success) {
 }
 
 export const config = _env.data;
+
