@@ -1,8 +1,6 @@
 // ¿Qué? Cabecera del sidebar con logo, nombre del sistema y botón de colapsar.
-// ¿Para qué? Aislar la parte superior del sidebar (brand + toggle) del componente
-//            principal Sidebar.tsx para mejor mantenibilidad.
-// ¿Impacto? Solo se usa dentro del Sidebar. Reemplaza el bloque `sb-brand` inline
-//           del sidebar.jsx original.
+// ¿Para qué? Mostrar la marca e identidad visual de TriDa y permitir colapsar/expandir el sidebar.
+// ¿Impacto? Se usa exclusivamente dentro de Sidebar.tsx. Soporta teclado y responsive.
 
 import { PanelLeftClose, PanelLeftOpen } from 'lucide-react';
 import { Tooltip } from '@components/ui/Tooltip';
@@ -30,108 +28,30 @@ export function SidebarBrand({
   brandName = 'TriDa',
   tagline = 'Fraud Detection AI',
 }: SidebarBrandProps) {
-  // ==============================================================================
-  // ESTILOS
-  // ==============================================================================
-
-  const wrapperStyle: React.CSSProperties = {
-    display: 'flex',
-    alignItems: 'center',
-    justifyContent: collapsed ? 'center' : 'space-between',
-    gap: '10px',
-    padding: collapsed ? '16px 12px' : '16px',
-    borderBottom: '1px solid var(--border)',
-    fontFamily: 'Inter, sans-serif',
-    minHeight: '68px',
-    position: 'relative',
-  };
-
-  const brandInfoStyle: React.CSSProperties = {
-    display: 'flex',
-    alignItems: 'center',
-    gap: '10px',
-    flex: 1,
-    minWidth: 0,
-  };
-
-  const logoBaseStyle: React.CSSProperties = {
-    borderRadius: '8px',
-    flexShrink: 0,
-    objectFit: 'contain',
-  };
-
-  const logoExpandedStyle: React.CSSProperties = {
-    ...logoBaseStyle,
-    width: '32px',
-    height: '32px',
-  };
-
-  const logoCollapsedStyle: React.CSSProperties = {
-    ...logoBaseStyle,
-    width: '28px',
-    height: '28px',
-  };
-
-  const brandTextStyle: React.CSSProperties = {
-    display: 'flex',
-    flexDirection: 'column',
-    gap: '2px',
-    minWidth: 0,
-  };
-
-  const brandNameStyle: React.CSSProperties = {
-    fontSize: '15px',
-    fontWeight: 800,
-    color: 'var(--text-primary)',
-    lineHeight: 1,
-    letterSpacing: '-0.01em',
-  };
-
-  const taglineStyle: React.CSSProperties = {
-    fontSize: '10px',
-    color: 'var(--text-tertiary)',
-    fontWeight: 500,
-    lineHeight: 1,
-    textTransform: 'uppercase',
-    letterSpacing: '0.05em',
-  };
-
-  const toggleButtonStyle: React.CSSProperties = {
-    display: 'flex',
-    alignItems: 'center',
-    justifyContent: 'center',
-    width: '28px',
-    height: '28px',
-    background: 'transparent',
-    border: '1px solid var(--border)',
-    borderRadius: '6px',
-    color: 'var(--text-tertiary)',
-    cursor: 'pointer',
-    transition: 'background 0.15s ease, color 0.15s ease, border-color 0.15s ease',
-    flexShrink: 0,
-  };
-
-  // ==============================================================================
-  // RENDER
-  // ==============================================================================
-
   return (
-    <div className="sidebar-brand" style={wrapperStyle}>
-      {/* Modo expandido: logo + texto */}
+    <div
+      className={`sidebar-brand relative flex min-h-[68px] items-center border-b border-[var(--border)] font-sans ${
+        collapsed ? 'justify-center p-3' : 'justify-between gap-2.5 p-4'
+      }`}
+    >
+      {/* Modo expandido: logo + textos */}
       {!collapsed && (
-        <div style={brandInfoStyle}>
+        <div className="flex min-w-0 flex-1 items-center gap-2.5">
           <img
             src={logoSrc}
             alt={brandName}
-            style={logoExpandedStyle}
+            className="h-8 w-8 shrink-0 object-contain rounded-lg"
             onError={(e) => {
-              // Si el logo no carga, ocultarlo
               (e.currentTarget as HTMLImageElement).style.display = 'none';
             }}
           />
-          <div style={brandTextStyle}>
-            <span style={brandNameStyle}>{brandName}</span>
-            <span style={taglineStyle}>{tagline}</span>
+          <div className="flex min-w-0 flex-col gap-0.5">
+            <span className="text-base font-extrabold leading-none tracking-tight text-[var(--text-primary)]">
+              {brandName}
+            </span>
+            <span className="text-[10px] font-semibold uppercase tracking-wider text-[var(--text-tertiary)]">
+              {tagline}
+            </span>
           </div>
         </div>
       )}
@@ -141,7 +61,7 @@ export function SidebarBrand({
         <img
           src={logoSrc}
           alt={brandName}
-          style={logoCollapsedStyle}
+          className="h-7 w-7 shrink-0 object-contain rounded-lg"
           onError={(e) => {
             (e.currentTarget as HTMLImageElement).style.display = 'none';
           }}
@@ -156,19 +76,15 @@ export function SidebarBrand({
         <button
           type="button"
           onClick={onToggle}
-          style={{
-            ...toggleButtonStyle,
-            position: collapsed ? 'absolute' : 'static',
-            bottom: collapsed ? '-14px' : 'auto',
-            right: collapsed ? '50%' : 'auto',
-            transform: collapsed ? 'translateX(50%)' : 'none',
-            background: collapsed ? 'var(--bg-secondary)' : 'transparent',
-            zIndex: collapsed ? 5 : 'auto',
-          }}
           aria-label={collapsed ? 'Expandir barra lateral' : 'Colapsar barra lateral'}
           aria-expanded={!collapsed}
+          className={`flex items-center justify-center rounded-md border border-[var(--border)] text-[var(--text-tertiary)] transition-colors duration-150 outline-none hover:bg-[var(--bg-tertiary)] hover:text-[var(--text-primary)] focus-visible:shadow-[var(--focus-ring)] ${
+            collapsed
+              ? 'absolute -bottom-3.5 right-1/2 z-10 h-7 w-7 translate-x-1/2 bg-[var(--bg-secondary)]'
+              : 'h-7 w-7 shrink-0 bg-transparent'
+          }`}
         >
-          {collapsed ? <PanelLeftOpen size={14} /> : <PanelLeftClose size={14} />}
+          {collapsed ? <PanelLeftOpen size={14} aria-hidden="true" /> : <PanelLeftClose size={14} aria-hidden="true" />}
         </button>
       </Tooltip>
     </div>

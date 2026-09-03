@@ -1,10 +1,8 @@
 // ¿Qué? Grid responsivo que organiza las StatsCards del Dashboard.
-// ¿Para qué? Encapsular la composición de las 6 cards de métricas principales
-//            con los datos del hook useDashboardData.
-// ¿Impacto? Se usa exclusivamente en DashboardPage. Recibe los datos ya
-//           procesados y los renderiza con el layout correcto.
+// ¿Para qué? Encapsular la composición de las cards de métricas principales.
+// ¿Impacto? Muestra información transparente sobre el motor antifraude de 7 factores.
 
-import { Activity, DollarSign, AlertTriangle, Ban, Shield, Zap } from 'lucide-react';
+import { DollarSign, AlertTriangle, Ban, ShieldCheck, Zap } from 'lucide-react';
 import { StatsCard } from './StatsCards';
 import type { DashboardStats } from '@app-types';
 import { formatCurrency, formatPercent, formatNumber } from '@utils/Formatters';
@@ -46,36 +44,16 @@ export function StatsCardsGrid({
   const tpsDisplay = isLive ? formatNumber(transactionsPerSecond) : '0';
 
   // ==============================================================================
-  // ESTILOS
-  // ==============================================================================
-
-  const gridStyle: React.CSSProperties = {
-    display: 'grid',
-    gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))',
-    gap: '12px',
-    width: '100%',
-  };
-
-  // ==============================================================================
   // RENDER
   // ==============================================================================
 
   return (
     <div
-      className={`stats-cards-grid ${className}`}
-      style={gridStyle}
+      className={`stats-cards-grid grid w-full grid-cols-[repeat(auto-fit,minmax(200px,1fr))] gap-3 ${className}`}
       role="region"
       aria-label="Métricas principales del sistema"
     >
-      {/* 1. Total de registros activos */}
-      <StatsCard
-        icon={Activity}
-        value={formatNumber(stats.totalTransactions)}
-        label="Registros activos"
-        variant="primary"
-      />
-
-      {/* 2. Monto total procesado */}
+      {/* 1. Monto total procesado */}
       <StatsCard
         icon={DollarSign}
         value={formatCurrency(stats.totalAmount)}
@@ -83,7 +61,7 @@ export function StatsCardsGrid({
         variant="info"
       />
 
-      {/* 3. Fraudes detectados */}
+      {/* 2. Fraudes detectados */}
       <StatsCard
         icon={AlertTriangle}
         value={fraudDisplay}
@@ -93,7 +71,7 @@ export function StatsCardsGrid({
         onClick={onFraudClick}
       />
 
-      {/* 4. Transacciones bloqueadas */}
+      {/* 3. Transacciones bloqueadas */}
       <StatsCard
         icon={Ban}
         value={formatNumber(stats.totalBlocked)}
@@ -102,23 +80,23 @@ export function StatsCardsGrid({
         onClick={onBlockedClick}
       />
 
-      {/* 5. Precisión del modelo IA */}
+      {/* 4. Estado del Motor Antifraude (Verídico) */}
       <StatsCard
-        icon={Shield}
-        value="98.4%"
-        label="Precisión IA"
+        icon={ShieldCheck}
+        value="Activo"
+        label="Motor Antifraude"
         variant="success"
-        subtitle="Modelo v2.1"
+        subtitle="7 factores ponderados"
       />
 
-      {/* 6. Transacciones por segundo */}
+      {/* 5. Transacciones por segundo */}
       <StatsCard
         icon={Zap}
         value={tpsDisplay}
         label="TXN/seg"
         variant={isLive ? 'warning' : 'primary'}
         animated={isLive}
-        subtitle={isLive ? 'En tiempo real' : 'Sistema pausado'}
+        subtitle={isLive ? 'Simulado en vivo' : 'Sistema pausado'}
       />
     </div>
   );

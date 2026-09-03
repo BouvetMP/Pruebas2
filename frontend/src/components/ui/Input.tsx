@@ -1,16 +1,15 @@
 // ¿Qué? Componente de input con label, error, ícono y estados de validación.
-// ¿Para qué? Estandarizar los inputs del sistema con clases Tailwind.
-// ¿Impacto? Todos los formularios usan este componente, garantizando
-//           consistencia visual y cumplimiento de accesibilidad (WCAG 2.1 AA).
+// ¿Para qué? Estandarizar los inputs del sistema con clases Tailwind y A11y (WCAG 2.1 AA).
+// ¿Impacto? Todos los formularios usan este componente. Errores con AlertCircle de Lucide.
 
 import { forwardRef, useId, type InputHTMLAttributes, type ReactNode } from 'react';
+import { AlertCircle } from 'lucide-react';
 import { cn } from '@utils/cn';
 
 // ==============================================================================
 // TYPES
 // ==============================================================================
 
-/** Props del Input. */
 export interface InputProps extends Omit<InputHTMLAttributes<HTMLInputElement>, 'size'> {
   label?: string;
   helperText?: string;
@@ -44,7 +43,6 @@ export const Input = forwardRef<HTMLInputElement, InputProps>(
     },
     ref,
   ) => {
-    // Generar ID único si no se proporciona (para vincular label ↔ input).
     const generatedId = useId();
     const inputId = providedId ?? generatedId;
     const helperId = `${inputId}-helper`;
@@ -57,14 +55,12 @@ export const Input = forwardRef<HTMLInputElement, InputProps>(
       <div
         className={cn('flex flex-col gap-1.5 font-sans', fullWidth && 'w-full', wrapperClassName)}
       >
-        {/* ================================================================
-            LABEL
-            ================================================================ */}
+        {/* LABEL */}
         {label && (
           <label
             htmlFor={inputId}
             className={cn(
-              'text-xs font-semibold flex items-center gap-1',
+              'flex items-center gap-1 text-xs font-semibold',
               hasError ? 'text-[var(--color-danger)]' : 'text-[var(--text-secondary)]',
             )}
           >
@@ -77,16 +73,13 @@ export const Input = forwardRef<HTMLInputElement, InputProps>(
           </label>
         )}
 
-        {/* ================================================================
-            INPUT CONTAINER (posiciona íconos absolutos)
-            ================================================================ */}
+        {/* INPUT CONTAINER */}
         <div className="relative flex items-center">
-          {/* Ícono izquierdo */}
           {leftIcon && (
             <span
               className={cn(
-                'absolute left-2.5 top-1/2 -translate-y-1/2',
-                'flex items-center justify-center pointer-events-none',
+                'pointer-events-none absolute left-2.5 top-1/2 -translate-y-1/2',
+                'flex items-center justify-center',
                 hasError ? 'text-[var(--color-danger)]' : 'text-[var(--text-tertiary)]',
               )}
             >
@@ -94,7 +87,6 @@ export const Input = forwardRef<HTMLInputElement, InputProps>(
             </span>
           )}
 
-          {/* Input */}
           <input
             ref={ref}
             id={inputId}
@@ -103,35 +95,27 @@ export const Input = forwardRef<HTMLInputElement, InputProps>(
             aria-invalid={hasError}
             aria-describedby={hasError ? errorId : showHelper ? helperId : undefined}
             className={cn(
-              // Base
-              'w-full py-2.5 text-sm font-sans rounded-lg outline-none',
-              'text-[var(--text-primary)]',
-              'transition-colors duration-150',
+              'w-full rounded-lg py-2.5 font-sans text-sm outline-none',
+              'text-[var(--text-primary)] transition-colors duration-150',
 
-              // Background según estado
               disabled
-                ? 'bg-[var(--bg-tertiary)] cursor-not-allowed opacity-60'
-                : 'bg-[var(--bg-secondary)] cursor-text',
+                ? 'cursor-not-allowed bg-[var(--bg-tertiary)] opacity-60'
+                : 'cursor-text bg-[var(--bg-secondary)]',
 
-              // Borde según error
               hasError
                 ? 'border border-[var(--color-danger)]'
                 : 'border border-[var(--border)] focus:border-[var(--border-focus)]',
 
-              // Focus ring (solo sin error para no duplicar colores)
               !hasError && 'focus:ring-2 focus:ring-[var(--color-primary)]/20',
 
-              // Padding horizontal (ajustar por presencia de íconos)
               leftIcon ? 'pl-9' : 'pl-3.5',
               rightIcon ? 'pr-9' : 'pr-3.5',
 
-              // Clase externa
               className,
             )}
             {...rest}
           />
 
-          {/* Ícono derecho (pointer-events habilitado para botones como toggle password) */}
           {rightIcon && (
             <span
               className={cn(
@@ -145,24 +129,20 @@ export const Input = forwardRef<HTMLInputElement, InputProps>(
           )}
         </div>
 
-        {/* ================================================================
-            MENSAJES (error o helper, nunca ambos)
-            ================================================================ */}
-
-        {/* Error */}
+        {/* MENSAJES (Error unificado con Lucide) */}
         {hasError && (
           <span
             id={errorId}
             role="alert"
-            className="text-[11px] font-semibold text-[var(--color-danger)] mt-0.5"
+            className="mt-0.5 flex items-center gap-1 text-[11px] font-semibold text-[var(--color-danger)]"
           >
-            ⚠️ {error}
+            <AlertCircle size={13} className="shrink-0" aria-hidden="true" />
+            <span>{error}</span>
           </span>
         )}
 
-        {/* Helper */}
         {showHelper && (
-          <span id={helperId} className="text-[11px] text-[var(--text-tertiary)] mt-0.5">
+          <span id={helperId} className="mt-0.5 text-[11px] text-[var(--text-tertiary)]">
             {helperText}
           </span>
         )}

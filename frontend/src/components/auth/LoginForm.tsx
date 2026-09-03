@@ -1,7 +1,6 @@
-// ¿Qué? Formulario completo de inicio de sesión con validación y manejo de errores.
-// ¿Para qué? Reemplazar el formulario embebido en login.jsx con un componente
-//            reutilizable y tipado que consume AuthContext directamente.
-// ¿Impacto? Se usa dentro de LoginPage. Toda la lógica de login está encapsulada aquí.
+// ¿Qué? Formulario de inicio de sesión con validación y manejo de errores.
+// ¿Para qué? Autenticar al usuario vía AuthContext y redirigir a la app.
+// ¿Impacto? Usado en LoginPage. Errores con AlertCircle (sin emoji).
 
 import { useState, type FormEvent } from 'react';
 import { Link, useNavigate, useLocation } from 'react-router-dom';
@@ -14,10 +13,6 @@ import { isValidEmail } from '@utils/User';
 import { PUBLIC_ROUTES, DEFAULT_AUTHENTICATED_ROUTE } from '@constants/Navigation';
 import { ApiError } from '@api/Client';
 
-// ==============================================================================
-// TYPES
-// ==============================================================================
-
 export interface LoginFormProps {
   onSuccess?: () => void;
   onError?: (error: Error) => void;
@@ -25,10 +20,6 @@ export interface LoginFormProps {
   showForgotPasswordLink?: boolean;
   className?: string;
 }
-
-// ==============================================================================
-// COMPONENTE
-// ==============================================================================
 
 export function LoginForm({
   onSuccess,
@@ -41,31 +32,16 @@ export function LoginForm({
   const navigate = useNavigate();
   const location = useLocation();
 
-  // ==============================================================================
-  // ESTADO
-  // ==============================================================================
-
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [loading, setLoading] = useState(false);
 
-  // Errores de validación
   const [emailError, setEmailError] = useState('');
   const [passwordError, setPasswordError] = useState('');
   const [globalError, setGlobalError] = useState('');
 
-  // ==============================================================================
-  // VALIDACIÓN
-  // ==============================================================================
-
-  /**
-   * Valida los campos del formulario antes de enviar.
-   *
-   * @returns `true` si el form es válido.
-   */
   const validate = (): boolean => {
     let isValid = true;
-
     setEmailError('');
     setPasswordError('');
     setGlobalError('');
@@ -89,13 +65,8 @@ export function LoginForm({
     return isValid;
   };
 
-  // ==============================================================================
-  // HANDLERS
-  // ==============================================================================
-
   const handleSubmit = async (e: FormEvent): Promise<void> => {
     e.preventDefault();
-
     if (!validate()) return;
 
     setLoading(true);
@@ -103,16 +74,12 @@ export function LoginForm({
 
     try {
       await login(email.trim(), password);
-
       const from = (location.state as { from?: string })?.from;
       const destination = redirectTo ?? from ?? DEFAULT_AUTHENTICATED_ROUTE;
-
       onSuccess?.();
-
       navigate(destination, { replace: true });
     } catch (err) {
       const error = err as Error;
-
       let errorMessage = 'Error al iniciar sesión. Intenta de nuevo.';
 
       if (err instanceof ApiError) {
@@ -134,78 +101,29 @@ export function LoginForm({
     }
   };
 
-  /**
-   * Limpia el error global cuando el usuario empieza a escribir de nuevo.
-   */
   const clearGlobalError = (): void => {
     if (globalError) setGlobalError('');
   };
 
-  // ==============================================================================
-  // ESTILOS
-  // ==============================================================================
-
-  const formStyle: React.CSSProperties = {
-    display: 'flex',
-    flexDirection: 'column',
-    gap: '18px',
-    fontFamily: 'Inter, sans-serif',
-  };
-
-  const errorAlertStyle: React.CSSProperties = {
-    display: 'flex',
-    alignItems: 'flex-start',
-    gap: '10px',
-    padding: '12px 14px',
-    background: 'rgba(239, 68, 68, 0.1)',
-    border: '1px solid rgba(239, 68, 68, 0.25)',
-    borderRadius: '8px',
-    fontSize: '12px',
-    color: '#EF4444',
-    fontWeight: 500,
-    lineHeight: 1.4,
-  };
-
-  const errorIconStyle: React.CSSProperties = {
-    flexShrink: 0,
-    marginTop: '1px',
-  };
-
-  const forgotLinkContainerStyle: React.CSSProperties = {
-    display: 'flex',
-    justifyContent: 'center',
-    marginTop: '4px',
-  };
-
-  const forgotLinkStyle: React.CSSProperties = {
-    fontSize: '12px',
-    color: 'var(--text-secondary)',
-    textDecoration: 'none',
-    fontWeight: 500,
-    transition: 'color 0.15s ease',
-  };
-
-  // ==============================================================================
-  // RENDER
-  // ==============================================================================
-
   return (
     <form
-      onSubmit={handleSubmit}
-      className={`login-form ${className}`}
-      style={formStyle}
+      onSubmit={(e) => void handleSubmit(e)}
+      className={`login-form flex flex-col gap-4.5 font-sans ${className}`}
+      style={{ gap: '18px' }}
       noValidate
       aria-label="Formulario de inicio de sesión"
     >
-      {/* Error global */}
       {globalError && (
-        <div style={errorAlertStyle} role="alert" aria-live="assertive">
-          <AlertCircle size={14} strokeWidth={2.5} style={errorIconStyle} />
+        <div
+          className="flex items-start gap-2.5 rounded-lg border border-[rgba(255,107,107,0.25)] bg-[rgba(255,107,107,0.1)] px-3.5 py-3 text-xs font-medium leading-snug text-[var(--color-danger)]"
+          role="alert"
+          aria-live="assertive"
+        >
+          <AlertCircle size={14} strokeWidth={2.5} className="mt-0.5 shrink-0" aria-hidden="true" />
           <span>{globalError}</span>
         </div>
       )}
 
-      {/* Campo Email */}
       <Input
         label="Correo electrónico"
         type="email"
@@ -224,7 +142,6 @@ export function LoginForm({
         required
       />
 
-      {/* Campo Contraseña */}
       <PasswordInput
         label="Contraseña"
         value={password}
@@ -239,7 +156,6 @@ export function LoginForm({
         required
       />
 
-      {/* Botón de submit */}
       <Button
         type="submit"
         variant="primary"
@@ -251,19 +167,12 @@ export function LoginForm({
         {loading ? 'Iniciando sesión...' : 'Iniciar sesión'}
       </Button>
 
-      {/* Link a "¿Olvidaste tu contraseña?" */}
       {showForgotPasswordLink && (
-        <div style={forgotLinkContainerStyle}>
+        <div className="mt-1 flex justify-center">
           <Link
             to={PUBLIC_ROUTES.FORGOT_PASSWORD}
-            style={forgotLinkStyle}
             tabIndex={loading ? -1 : 0}
-            onMouseEnter={(e) => {
-              (e.currentTarget as HTMLElement).style.color = '#818CF8';
-            }}
-            onMouseLeave={(e) => {
-              (e.currentTarget as HTMLElement).style.color = 'var(--text-secondary)';
-            }}
+            className="text-xs font-medium text-[var(--text-secondary)] no-underline transition-colors hover:text-indigo-light focus-visible:text-indigo-light"
           >
             ¿Olvidaste tu contraseña?
           </Link>

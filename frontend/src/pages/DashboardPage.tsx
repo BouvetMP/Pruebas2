@@ -1,54 +1,29 @@
 // ¿Qué? Página principal del Dashboard del sistema TriDa.
-// ¿Para qué? Reemplazar dashboards.jsx con una versión modular que compone
-//            StatsCardsGrid, AlertsByLevelRings y RecentAlertsPanel.
-// ¿Impacto? Es la primera página que ve el usuario al entrar al sistema.
-//           Muestra el estado general de transacciones, alertas y métricas.
+// ¿Para qué? Reemplazar el Spinner con Skeletons usando los imports unificados de @components/ui.
+// ¿Impacto? Corrije errores de casing de TypeScript y mejora la velocidad de carga.
 
 import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { RefreshCw, Globe, Map } from 'lucide-react';
+import { RefreshCw } from 'lucide-react';
 import { useBank } from '@context/BankContext';
 import { useDashboardData } from '@hooks/useDashboardData';
 import { useAlerts } from '@hooks/useAlerts';
 import { useFormattedClock } from '@hooks/useClock';
-import { Button } from '@components/ui/Button';
-import { Spinner } from '@components/ui/Spinner';
-import { EmptyState } from '@components/ui/EmptyState';
+
+// ── IMPORTS UNIFICADOS DE UI (Solución al error de casing) ──
+import { Button, EmptyState, Skeleton } from '@components/ui';
 import { StatsCardsGrid, AlertsByLevelRings, RecentAlertsPanel } from '@components/dashboard';
-
-// ==============================================================================
-// TIPOS
-// ==============================================================================
-
-type ViewMode = 'globe' | 'map';
-
-// ==============================================================================
-// COMPONENTE
-// ==============================================================================
 
 export function DashboardPage() {
   const navigate = useNavigate();
   const { selectedBank, selectedBankInfo } = useBank();
   const { timeWithSeconds } = useFormattedClock();
 
-  // ==============================================================================
-  // METADATA
-  // ==============================================================================
-
   useEffect(() => {
     document.title = 'Dashboard — TriDa';
   }, []);
 
-  // ==============================================================================
-  // ESTADO LOCAL
-  // ==============================================================================
-
-  const [viewMode, setViewMode] = useState<ViewMode>('globe');
   const [isLive, setIsLive] = useState(true);
-
-  // ==============================================================================
-  // DATOS — Dashboard stats + alertas recientes (paralelo)
-  // ==============================================================================
 
   const {
     stats,
@@ -63,22 +38,10 @@ export function DashboardPage() {
     autoRefreshMs: 30_000,
   });
 
-  // ==============================================================================
-  // DATOS — Conteo de alertas por nivel (para los rings)
-  // ==============================================================================
-
   const { counts: alertCounts, loading: alertsLoading } = useAlerts(selectedBank);
-
-  // ==============================================================================
-  // HANDLERS
-  // ==============================================================================
 
   const handleRefresh = async (): Promise<void> => {
     await refetchDashboard();
-  };
-
-  const handleToggleView = (): void => {
-    setViewMode((prev) => (prev === 'globe' ? 'map' : 'globe'));
   };
 
   const handleFraudClick = (): void => {
@@ -97,128 +60,6 @@ export function DashboardPage() {
     navigate(`/alerts?level=${level}`);
   };
 
-  // ==============================================================================
-  // ESTILOS
-  // ==============================================================================
-
-  const pageStyle: React.CSSProperties = {
-    display: 'flex',
-    flexDirection: 'column',
-    gap: '20px',
-    padding: '24px',
-    minHeight: '100vh',
-    fontFamily: 'Inter, sans-serif',
-  };
-
-  const headerStyle: React.CSSProperties = {
-    display: 'flex',
-    alignItems: 'flex-start',
-    justifyContent: 'space-between',
-    gap: '16px',
-    flexWrap: 'wrap',
-  };
-
-  const headerLeftStyle: React.CSSProperties = {
-    display: 'flex',
-    flexDirection: 'column',
-    gap: '4px',
-  };
-
-  const titleStyle: React.CSSProperties = {
-    fontSize: '24px',
-    fontWeight: 800,
-    color: 'var(--text-primary)',
-    margin: 0,
-    letterSpacing: '-0.02em',
-  };
-
-  const subtitleStyle: React.CSSProperties = {
-    fontSize: '13px',
-    color: 'var(--text-secondary)',
-    margin: 0,
-    display: 'flex',
-    alignItems: 'center',
-    gap: '8px',
-  };
-
-  const headerRightStyle: React.CSSProperties = {
-    display: 'flex',
-    alignItems: 'center',
-    gap: '8px',
-    flexWrap: 'wrap',
-  };
-
-  const clockStyle: React.CSSProperties = {
-    fontSize: '12px',
-    fontWeight: 600,
-    color: 'var(--text-tertiary)',
-    fontVariantNumeric: 'tabular-nums',
-    padding: '6px 12px',
-    background: 'var(--bg-secondary)',
-    border: '1px solid var(--border)',
-    borderRadius: '8px',
-  };
-
-  const lastUpdatedStyle: React.CSSProperties = {
-    fontSize: '10px',
-    color: 'var(--text-tertiary)',
-    fontStyle: 'italic',
-  };
-
-  const liveIndicatorStyle: React.CSSProperties = {
-    display: 'flex',
-    alignItems: 'center',
-    gap: '6px',
-    fontSize: '10px',
-    fontWeight: 700,
-    color: isLive ? '#34D399' : 'var(--text-tertiary)',
-    padding: '6px 12px',
-    background: isLive ? 'rgba(52, 211, 153, 0.1)' : 'var(--bg-secondary)',
-    border: `1px solid ${isLive ? 'rgba(52, 211, 153, 0.25)' : 'var(--border)'}`,
-    borderRadius: '8px',
-    cursor: 'pointer',
-    transition: 'all 0.15s ease',
-  };
-
-  const liveDotStyle: React.CSSProperties = {
-    width: '6px',
-    height: '6px',
-    borderRadius: '50%',
-    background: isLive ? '#34D399' : '#6B7280',
-    animation: isLive ? 'dashboard-live-pulse 2s ease-in-out infinite' : 'none',
-  };
-
-  const bottomSectionStyle: React.CSSProperties = {
-    display: 'grid',
-    gridTemplateColumns: '280px 1fr',
-    gap: '20px',
-    alignItems: 'start',
-  };
-
-  const bottomSectionMobileStyle: React.CSSProperties = {
-    display: 'flex',
-    flexDirection: 'column',
-    gap: '20px',
-  };
-
-  const ringsContainerStyle: React.CSSProperties = {
-    background: 'var(--bg-secondary)',
-    border: '1px solid var(--border)',
-    borderRadius: '12px',
-    padding: '20px',
-    display: 'flex',
-    flexDirection: 'column',
-    gap: '16px',
-  };
-
-  const ringsTitleStyle: React.CSSProperties = {
-    fontSize: '13px',
-    fontWeight: 700,
-    color: 'var(--text-primary)',
-    margin: 0,
-  };
-
-  // Detectar si la ventana es angosta para responsive
   const [isMobile, setIsMobile] = useState(window.innerWidth < 900);
 
   useEffect(() => {
@@ -229,25 +70,9 @@ export function DashboardPage() {
     return () => window.removeEventListener('resize', handleResize);
   }, []);
 
-  // ==============================================================================
-  // RENDER — LOADING
-  // ==============================================================================
-
-  if (dashboardLoading && !stats.totalTransactions) {
-    return (
-      <div style={pageStyle}>
-        <Spinner size="lg" label="Cargando dashboard..." centered />
-      </div>
-    );
-  }
-
-  // ==============================================================================
-  // RENDER — ERROR
-  // ==============================================================================
-
   if (dashboardError && !stats.totalTransactions) {
     return (
-      <div style={pageStyle}>
+      <div className="flex min-h-screen flex-col gap-6 p-6 font-sans md:p-8">
         <EmptyState
           preset="error"
           description={dashboardError}
@@ -261,58 +86,74 @@ export function DashboardPage() {
     );
   }
 
-  // ==============================================================================
-  // RENDER — DASHBOARD
-  // ==============================================================================
+  if (dashboardLoading && !stats.totalTransactions) {
+    return (
+      <div className="flex min-h-full flex-col gap-6 p-6 font-sans md:gap-7 md:p-8">
+        <div className="flex flex-wrap items-center justify-between gap-4">
+          <div className="flex flex-col gap-2">
+            <Skeleton className="h-8 w-48" />
+            <Skeleton className="h-4 w-32" />
+          </div>
+          <div className="flex items-center gap-2">
+            <Skeleton className="h-8 w-24" />
+            <Skeleton className="h-8 w-20" />
+          </div>
+        </div>
+
+        <div className="grid grid-cols-[repeat(auto-fit,minmax(200px,1fr))] gap-3">
+          {Array.from({ length: 5 }).map((_, i) => (
+            <Skeleton key={i} className="h-24 w-full rounded-xl" />
+          ))}
+        </div>
+
+        <div className="grid grid-cols-1 items-start gap-5 lg:grid-cols-[1fr_300px]">
+          <Skeleton className="h-80 w-full rounded-xl" />
+          <Skeleton className="h-80 w-full rounded-xl" />
+        </div>
+      </div>
+    );
+  }
 
   return (
-    <div style={pageStyle}>
-      {/* ================================================================
-          HEADER — Título + controles + reloj
-          ================================================================ */}
-
-      <header style={headerStyle}>
-        <div style={headerLeftStyle}>
-          <h1 style={titleStyle}>Panel de Control</h1>
-          <p style={subtitleStyle}>
+    <div className="flex min-h-full flex-col gap-6 p-6 font-sans md:gap-7 md:p-8">
+      <header className="flex flex-wrap items-start justify-between gap-4">
+        <div className="flex min-w-0 flex-col gap-1">
+          <h1 className="m-0 text-2xl font-extrabold tracking-tight text-[var(--text-primary)]">
+            Panel de Control
+          </h1>
+          <p className="m-0 flex flex-wrap items-center gap-2 text-[13px] text-[var(--text-secondary)]">
             Detección de Fraude con IA
             {selectedBankInfo && selectedBankInfo.id !== 'all' && (
-              <span style={{ color: selectedBankInfo.color, fontWeight: 600 }}>
+              <span className="font-semibold" style={{ color: selectedBankInfo.color }}>
                 · {selectedBankInfo.name}
               </span>
             )}
           </p>
         </div>
 
-        <div style={headerRightStyle}>
-          {/* Reloj */}
-          <span style={clockStyle}>{timeWithSeconds}</span>
+        <div className="flex flex-wrap items-center gap-2">
+          <span className="rounded-lg border border-[var(--border)] bg-[var(--bg-secondary)] px-3 py-1.5 text-xs font-semibold tabular-nums text-[var(--text-tertiary)]">
+            {timeWithSeconds}
+          </span>
 
-          {/* Indicador LIVE */}
           <button
             type="button"
-            style={liveIndicatorStyle}
             onClick={() => setIsLive(!isLive)}
-            aria-label={
-              isLive ? 'Sistema en vivo. Click para pausar' : 'Sistema pausado. Click para reanudar'
-            }
-            aria-pressed={isLive}
+            aria-label={isLive ? 'Pausar sistema' : 'Reanudar sistema'}
+            className={`flex cursor-pointer items-center gap-1.5 rounded-lg border px-3 py-1.5 text-[10px] font-bold transition-all duration-150 ${
+              isLive
+                ? 'border-[rgba(6,214,160,0.25)] bg-[rgba(6,214,160,0.1)] text-neon-green'
+                : 'border-[var(--border)] bg-[var(--bg-secondary)] text-[var(--text-tertiary)]'
+            }`}
           >
-            <span style={liveDotStyle} />
+            <span
+              className={`h-1.5 w-1.5 rounded-full ${
+                isLive ? 'animate-pulse-slow bg-neon-green' : 'bg-[var(--text-disabled)]'
+              }`}
+            />
             {isLive ? 'LIVE' : 'OFF'}
           </button>
 
-          {/* Toggle Globe/Map */}
-          <Button
-            variant="ghost"
-            size="sm"
-            leftIcon={viewMode === 'globe' ? <Map size={14} /> : <Globe size={14} />}
-            onClick={handleToggleView}
-          >
-            {viewMode === 'globe' ? 'Mapa' : 'Globo'}
-          </Button>
-
-          {/* Refresh */}
           <Button
             variant="ghost"
             size="sm"
@@ -323,38 +164,53 @@ export function DashboardPage() {
             Actualizar
           </Button>
 
-          {/* Info de última actualización */}
           {lastUpdated && (
-            <span style={lastUpdatedStyle}>
+            <span className="text-[10px] italic text-[var(--text-tertiary)]">
               Actualizado: {lastUpdated.toLocaleTimeString('es-CO')}
             </span>
           )}
         </div>
       </header>
 
-      {/* ================================================================
-          STATS CARDS — 6 métricas principales
-          ================================================================ */}
+      <section aria-label="Métricas principales">
+        <StatsCardsGrid
+          stats={stats}
+          isLive={isLive}
+          transactionsPerSecond={isLive ? Math.floor(Math.random() * 8) + 3 : 0}
+          onFraudClick={handleFraudClick}
+          onBlockedClick={handleBlockedClick}
+        />
+      </section>
 
-      <StatsCardsGrid
-        stats={stats}
-        isLive={isLive}
-        transactionsPerSecond={isLive ? Math.floor(Math.random() * 8) + 3 : 0}
-        onFraudClick={handleFraudClick}
-        onBlockedClick={handleBlockedClick}
-      />
+      <section
+        aria-label="Alertas y distribución"
+        className={
+          isMobile
+            ? 'flex flex-col gap-5'
+            : 'grid grid-cols-[1fr_minmax(260px,320px)] items-start gap-5'
+        }
+      >
+        <div className="min-w-0">
+          <RecentAlertsPanel
+            alerts={recentAlerts}
+            loading={dashboardLoading}
+            onViewAll={handleViewAllAlerts}
+            isLive={isLive}
+            maxItems={15}
+          />
+        </div>
 
-      {/* ================================================================
-          SECCIÓN INFERIOR — Rings + Alertas recientes
-          ================================================================ */}
-
-      <div style={isMobile ? bottomSectionMobileStyle : bottomSectionStyle}>
-        {/* Columna izquierda: Rings de distribución */}
-        <div style={ringsContainerStyle}>
-          <h2 style={ringsTitleStyle}>Distribución de alertas</h2>
+        <div className="flex flex-col gap-4 rounded-xl border border-[var(--border)] bg-[var(--bg-secondary)] p-5 shadow-glow-sm">
+          <h2 className="m-0 text-[13px] font-bold text-[var(--text-primary)]">
+            Distribución de alertas
+          </h2>
 
           {alertsLoading ? (
-            <Spinner label="Cargando..." centered />
+            <div className="flex flex-col gap-3 py-2">
+              <Skeleton className="h-6 w-full" />
+              <Skeleton className="h-6 w-full" />
+              <Skeleton className="h-6 w-full" />
+            </div>
           ) : (
             <AlertsByLevelRings
               counts={alertCounts}
@@ -364,24 +220,7 @@ export function DashboardPage() {
             />
           )}
         </div>
-
-        {/* Columna derecha: Panel de alertas recientes */}
-        <RecentAlertsPanel
-          alerts={recentAlerts}
-          loading={dashboardLoading}
-          onViewAll={handleViewAllAlerts}
-          isLive={isLive}
-          maxItems={15}
-        />
-      </div>
-
-      {/* Animación global */}
-      <style>{`
-        @keyframes dashboard-live-pulse {
-          0%, 100% { opacity: 1; }
-          50%      { opacity: 0.4; }
-        }
-      `}</style>
+      </section>
     </div>
   );
 }

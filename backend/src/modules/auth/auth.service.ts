@@ -314,5 +314,107 @@ export const authService = {
         id_usuario_generador: u.id_usuario_generador ? Number(u.id_usuario_generador) : null,
       };
     });
+  },  // ── UPDATE PROFILE (Día 3) ─────────────────────────────────
+  async updateProfile(
+    idUsuario: number,
+    data: { nombre_completo?: string; email?: string },
+  ) {
+    const actual = await prisma.usuarioSistema.findUnique({
+      where: { id_usuario: idUsuario },
+    });
+
+    if (!actual || !actual.estado) {
+      throw new AuthError('Usuario no encontrado o inactivo', 404);
+    }
+
+    const nuevoNombre = data.nombre_completo?.trim() ?? actual.nombre_completo;
+    const nuevoEmail = (data.email?.trim() ?? actual.email).toLowerCase();
+
+    try {
+      const actualizado = await prisma.usuarioSistema.update({
+        where: { id_usuario: idUsuario },
+        data: {
+          nombre_completo: nuevoNombre,
+          email: nuevoEmail,
+        },
+      });
+
+      await prisma.logAuditoria
+        .create({
+          data: {
+            id_usuario: idUsuario,
+            tipo_accion: 'ACTUALIZAR_PERFIL',
+            entidad_afectada: 'usuarios_sistemas',
+            descripcion: 'Perfil actualizado (nombre/email) por el propio usuario',
+            id_identidad: idUsuario,
+            direccion_ip: '127.0.0.1',
+          },
+        })
+        .catch(() => null);
+
+      return {
+        message: 'Perfil actualizado correctamente',
+        user: {
+          id: actualizado.id_usuario,
+          nombre: actualizado.nombre_completo,
+          email: actualizado.email,
+          rol: actualizado.rol,
+          estado: actualizado.estado,
+        },
+      };
+    } catch (error: any) {
+      if (error?.code === 'P2002' || error?.code === '23505') {
+        throw new AuthError('Ya existe un usuario con ese email', 409);
+      }
+      throw error;
+    }
+  },
+
+  // ── CHANGE PASSWORD (logueado — Día 3) ─────────────────────
+  async changePassword(
+    idUsuario: number,
+    data: { contrasenaActual: string; nuevaContrasena: string },
+  ) {
+    const full = await prisma.usuarioSistema.findUnique({
+      where: { id_usuario: idUsuario },
+    });
+
+    if (!full || !full.estado) {
+      throw new AuthError('Usuario no encontrado o inactivo', 404);
+    }
+
+    const ok = await verifyPassword(data.contrasenaActual, full.password_hash);
+    if (!ok) {
+      throw new AuthError('La contraseña actual es incorrecta', 401);
+    }
+
+    if (data.contrasenaActual === data.nuevaContrasena) {
+      throw new AuthError('La nueva contraseña debe ser distinta a la actual', 400);
+    }
+
+    const hash = await hashPassword(data.nuevaContrasena);
+
+    const result = await prisma.$queryRaw<FnCambiarContrasenaRow[]>`
+      SELECT * FROM trida.fn_cambiar_contrasena(${full.email}::text, ${hash}::text)
+    `;
+
+    if (!result.length || result[0].actualizado === false) {
+      throw new AuthError('No se pudo actualizar la contraseña', 500);
+    }
+
+    await prisma.logAuditoria
+      .create({
+        data: {
+          id_usuario: idUsuario,
+          tipo_accion: 'CAMBIO_CONTRASENA',
+          entidad_afectada: 'usuarios_sistemas',
+          descripcion: 'Contraseña cambiada por el usuario autenticado',
+          id_identidad: idUsuario,
+          direccion_ip: '127.0.0.1',
+        },
+      })
+      .catch(() => null);
+
+    return { message: 'Contraseña actualizada correctamente' };
   },
 };

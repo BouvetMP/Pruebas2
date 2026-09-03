@@ -1096,6 +1096,189 @@ END;
 $$;
 
 -- ==============================================================================
+-- 22. fn_perfil_cliente — Perfilamiento dinámico para el Motor de Riesgo
+-- ==============================================================================
+DROP FUNCTION IF EXISTS trida.fn_perfil_cliente(INTEGER);
+
+CREATE FUNCTION trida.fn_perfil_cliente(p_id_cliente INTEGER)
+RETURNS TABLE (
+    total_transacciones BIGINT,
+    monto_promedio      NUMERIC(15, 2),
+    desviacion_estandar NUMERIC(15, 2),
+    ciudad_habitual     VARCHAR(100),
+    pais_habitual       VARCHAR(100)
+)
+LANGUAGE sql
+STABLE
+PARALLEL SAFE
+AS $$
+    SELECT 
+        COUNT(t.id_transaccion) AS total_transacciones,
+        COALESCE(AVG(t.monto), 0) AS monto_promedio,
+        COALESCE(STDDEV_POP(t.monto), 0) AS desviacion_estandar,
+        MODE() WITHIN GROUP (ORDER BY u.ciudad) AS ciudad_habitual,
+        MODE() WITHIN GROUP (ORDER BY u.pais) AS pais_habitual
+    FROM trida.transacciones t
+    LEFT JOIN trida.historico_de_ubicacion u ON t.id_ubicacion = u.id_ubicacion
+    WHERE t.id_cliente = p_id_cliente
+      AND t.estado_transaccion IN ('APROBADA', 'PENDIENTE');
+$$;
+
+-- ==============================================================================
+-- DÍA 4 — Paginación mínima honesta (transacciones + alertas)
+-- ==============================================================================
+
+-- 2. fn_transacciones (con limit/offset)
+DROP FUNCTION IF EXISTS trida.fn_transacciones(VARCHAR);
+DROP FUNCTION IF EXISTS trida.fn_transacciones(TEXT);
+DROP FUNCTION IF EXISTS trida.fn_transacciones(VARCHAR, INTEGER, INTEGER);
+
+CREATE FUNCTION trida.fn_transacciones(
+    p_banco_codigo VARCHAR DEFAULT NULL,
+    p_limit        INTEGER DEFAULT 500,
+    p_offset       INTEGER DEFAULT 0
+)
+RETURNS TABLE (
+    id_transaccion     INTEGER,
+    fecha_transaccion  TIMESTAMPTZ,
+    cliente            VARCHAR(150),
+    banco              VARCHAR(120),
+    banco_codigo       VARCHAR(50),
+    banco_color        VARCHAR(20),
+    tipo_transaccion   VARCHAR(50),
+    monto              NUMERIC(15, 2),
+    score_riesgo       NUMERIC(5, 1),
+    estado_transaccion VARCHAR(20),
+    canal              VARCHAR(20),
+    ciudad             VARCHAR(100),
+    pais               VARCHAR(100)
+)
+LANGUAGE sql
+STABLE
+PARALLEL SAFE
+AS $$
+    SELECT
+        t.id_transaccion,
+        t.fecha_transaccion,
+        c.nombre_completo AS cliente,
+        b.nombre  AS banco,
+        b.codigo  AS banco_codigo,
+        b.color   AS banco_color,
+        t.tipo_transaccion,
+        t.monto,
+        t.score_riesgo,
+        t.estado_transaccion,
+        t.canal,
+        u.ciudad,
+        u.pais
+    FROM trida.transacciones t
+    JOIN trida.clientes c               ON c.id_cliente   = t.id_cliente
+    JOIN trida.bancos b                 ON b.id_banco     = t.id_banco
+    JOIN trida.historico_de_ubicacion u ON u.id_ubicacion = t.id_ubicacion
+    WHERE p_banco_codigo IS NULL OR b.codigo = p_banco_codigo
+    ORDER BY t.fecha_transaccion DESC
+    LIMIT GREATEST(1, LEAST(COALESCE(p_limit, 500), 2000))
+    OFFSET GREATEST(0, COALESCE(p_offset, 0));
+$$;
+
+-- 2b. fn_transacciones_count
+DROP FUNCTION IF EXISTS trida.fn_transacciones_count(VARCHAR);
+
+CREATE FUNCTION trida.fn_transacciones_count(p_banco_codigo VARCHAR DEFAULT NULL)
+RETURNS BIGINT
+LANGUAGE sql
+STABLE
+PARALLEL SAFE
+AS $$
+    SELECT COUNT(*)::BIGINT
+    FROM trida.transacciones t
+    JOIN trida.bancos b ON b.id_banco = t.id_banco
+    WHERE p_banco_codigo IS NULL OR b.codigo = p_banco_codigo;
+$$;
+
+-- 3. fn_alertas (con limit/offset)
+DROP FUNCTION IF EXISTS trida.fn_alertas();
+DROP FUNCTION IF EXISTS trida.fn_alertas(VARCHAR);
+DROP FUNCTION IF EXISTS trida.fn_alertas(TEXT);
+DROP FUNCTION IF EXISTS trida.fn_alertas(VARCHAR, INTEGER, INTEGER);
+
+CREATE FUNCTION trida.fn_alertas(
+    p_banco_codigo VARCHAR DEFAULT NULL,
+    p_limit        INTEGER DEFAULT 500,
+    p_offset       INTEGER DEFAULT 0
+)
+RETURNS TABLE (
+    id_alerta            INTEGER,
+    nivel_criticidad     VARCHAR(10),
+    fecha_generacion     TIMESTAMPTZ,
+    factores_sospechosos TEXT,
+    estado_alerta        VARCHAR(20),
+    prioridad            SMALLINT,
+    cliente              VARCHAR(150),
+    id_transaccion       INTEGER,
+    monto                NUMERIC(15, 2),
+    score_riesgo         NUMERIC(5, 1),
+    tipo_transaccion     VARCHAR(50),
+    canal                VARCHAR(20),
+    estado_transaccion   VARCHAR(20),
+    banco                VARCHAR(120),
+    banco_codigo         VARCHAR(50),
+    banco_color          VARCHAR(20),
+    ciudad               VARCHAR(100),
+    dispositivo          VARCHAR(50)
+)
+LANGUAGE sql
+STABLE
+PARALLEL SAFE
+AS $$
+    SELECT
+        a.id_alerta,
+        a.nivel_criticidad,
+        a.fecha_generacion,
+        a.factores_sospechosos,
+        a.estado_alerta,
+        a.prioridad,
+        c.nombre_completo AS cliente,
+        t.id_transaccion,
+        t.monto,
+        t.score_riesgo,
+        t.tipo_transaccion,
+        t.canal,
+        t.estado_transaccion,
+        b.nombre  AS banco,
+        b.codigo  AS banco_codigo,
+        b.color   AS banco_color,
+        u.ciudad,
+        d.tipo_dispositivo AS dispositivo
+    FROM trida.alertas a
+    JOIN trida.transacciones t          ON t.id_transaccion = a.id_transaccion
+    JOIN trida.clientes c               ON c.id_cliente     = t.id_cliente
+    JOIN trida.bancos b                 ON b.id_banco       = t.id_banco
+    JOIN trida.historico_de_ubicacion u ON u.id_ubicacion   = t.id_ubicacion
+    JOIN trida.dispositivos d           ON d.id_dispositivo = t.id_dispositivo
+    WHERE p_banco_codigo IS NULL OR b.codigo = p_banco_codigo
+    ORDER BY a.fecha_generacion DESC
+    LIMIT GREATEST(1, LEAST(COALESCE(p_limit, 500), 2000))
+    OFFSET GREATEST(0, COALESCE(p_offset, 0));
+$$;
+
+-- 3b. fn_alertas_count
+DROP FUNCTION IF EXISTS trida.fn_alertas_count(VARCHAR);
+
+CREATE FUNCTION trida.fn_alertas_count(p_banco_codigo VARCHAR DEFAULT NULL)
+RETURNS BIGINT
+LANGUAGE sql
+STABLE
+PARALLEL SAFE
+AS $$
+    SELECT COUNT(*)::BIGINT
+    FROM trida.alertas a
+    JOIN trida.transacciones t ON t.id_transaccion = a.id_transaccion
+    JOIN trida.bancos b        ON b.id_banco       = t.id_banco
+    WHERE p_banco_codigo IS NULL OR b.codigo = p_banco_codigo;
+$$;
+
+-- ==============================================================================
 -- FIN schema.sql
 -- ==============================================================================
 -- NOTA: No se incluye el SELECT de prueba de fn_register ni el DELETE de

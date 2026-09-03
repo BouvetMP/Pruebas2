@@ -1,8 +1,6 @@
 // ¿Qué? Constantes y utilidades relacionadas al score de riesgo de fraude del sistema TriDa.
-// ¿Para qué? Centralizar los colores, labels y umbrales de riesgo para evitar duplicación
-//            entre módulos como Alerts, Transactions, Map, Dashboard y Users.
-// ¿Impacto? Cualquier cambio en la clasificación de riesgo debe hacerse aquí, y se refleja
-//           automáticamente en todos los componentes que consumen estas constantes.
+// ¿Para qué? Centralizar los colores, labels y umbrales de riesgo para evitar duplicación.
+// ¿Impacto? Sincronizado estrictamente con el motor de riesgo del backend (risk.service.ts).
 
 // ==============================================================================
 // TYPES / INTERFACES
@@ -42,34 +40,34 @@ export const RISK_LEVELS: Record<RiskLevel, RiskLevelMetadata> = {
   low: {
     label: 'Bajo',
     color: RISK_COLORS.low,
-    description: 'Operación completamente legítima',
+    description: 'Operación con bajo nivel de riesgo',
   },
   medium: {
     label: 'Medio',
     color: RISK_COLORS.medium,
-    description: 'Merece atención — revisión sugerida',
+    description: 'Riesgo moderado — requiere revisión',
   },
   high: {
     label: 'Alto',
     color: RISK_COLORS.high,
-    description: 'Alerta seria — requiere validación del analista',
+    description: 'Riesgo elevado — alerta generada',
   },
   critical: {
     label: 'Crítico',
     color: RISK_COLORS.critical,
-    description: 'Máxima alerta — bloqueo automático',
+    description: 'Riesgo crítico — bloqueo automático',
   },
 };
 
 // ==============================================================================
-// UMBRALES DE SCORE DE RIESGO
+// UMBRALES DE SCORE DE RIESGO (Coincidentes con risk.service.ts del backend)
 // ==============================================================================
 
 export const RISK_THRESHOLDS: Record<RiskLevel, RiskThreshold> = {
-  low: { min: 0, max: 29 },
-  medium: { min: 30, max: 59 },
-  high: { min: 60, max: 79 },
-  critical: { min: 80, max: 100 },
+  low: { min: 0, max: 49 },
+  medium: { min: 50, max: 79 },
+  high: { min: 80, max: 94 },
+  critical: { min: 95, max: 100 },
 };
 
 export const AUTO_BLOCK_THRESHOLD = 95;
@@ -81,13 +79,8 @@ export const AUTO_BLOCK_THRESHOLD = 95;
 /**
  * Determina el nivel de riesgo a partir de un score numérico.
  *
- * ¿Qué? Convierte un score (0-100) en un nivel de riesgo tipado.
- * ¿Para qué? Centralizar la lógica de clasificación de riesgo que estaba
- *            duplicada en `alerts.jsx`, `transactions.jsx`, `users.jsx` y `map.jsx`.
- * ¿Impacto? Cualquier ajuste de umbrales solo se hace aquí.
- *
- * @param score
- * @returns
+ * @param score - Puntaje de riesgo (0-100).
+ * @returns Nivel de riesgo tipado ('low' | 'medium' | 'high' | 'critical').
  */
 export function getRiskLevel(score: number): RiskLevel {
   if (score >= RISK_THRESHOLDS.critical.min) return 'critical';
@@ -98,45 +91,27 @@ export function getRiskLevel(score: number): RiskLevel {
 
 /**
  * Obtiene el color asociado a un nivel de riesgo.
- *
- * @param level - Nivel de riesgo.
- * @returns Color HEX.
  */
-
 export function getRiskColor(level: RiskLevel): string {
   return RISK_COLORS[level];
 }
 
 /**
  * Obtiene el color asociado directamente desde un score.
- *
- * @param score - Puntaje de riesgo entre 0 y 100.
- * @returns Color HEX.
  */
-
 export function getRiskColorFromScore(score: number): string {
   return RISK_COLORS[getRiskLevel(score)];
 }
 
 /**
  * Obtiene el label legible en español a partir de un score.
- *
- * @param score - Puntaje de riesgo entre 0 y 100.
- * @returns Etiqueta legible en español.
  */
 export function getRiskLabelFromScore(score: number): string {
   return RISK_LEVELS[getRiskLevel(score)].label;
 }
 
 /**
- * Determina si un score requiere bloqueo automático.
- *
- * ¿Qué? Compara el score con el umbral de bloqueo automático.
- * ¿Para qué? Que el frontend pueda mostrar UI diferenciada para transacciones bloqueadas.
- * ¿Impacto? Debe coincidir con la lógica del backend para evitar inconsistencias.
- *
- * @param score - Puntaje de riesgo entre 0 y 100.
- * @returns `true` si el score supera el umbral de bloqueo.
+ * Determina si un score requiere bloqueo automático (≥ 95).
  */
 export function shouldAutoBlock(score: number): boolean {
   return score >= AUTO_BLOCK_THRESHOLD;
