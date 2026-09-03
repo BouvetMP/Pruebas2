@@ -24,12 +24,13 @@ async function consultarIA(data: any): Promise<ResultadoIA> {
     body: JSON.stringify({
       monto: Number(data.monto),
       tipo_transaccion: data.tipo_transaccion,
+      hora: hora,
       dia_semana: diaSemana,
       es_fin_de_semana: [0, 6].includes(diaSemana) ? 1 : 0,
       es_madrugada: hora >= 23 || hora < 6 ? 1 : 0,
       tiempo_de_procesamiento: data.tiempo_de_procesamiento ?? 2,
       moneda: data.moneda,
-      canal: data.canal,
+    canal: data.canal,
     }),
   });
 
@@ -48,32 +49,14 @@ export const transactionsService = {
   },
 
   async create(data: any) {
-    // 1. Consultar contexto del cliente, dispositivo y ubicación
-    const [dispositivo, ubicacion, historialAlertas] = await Promise.all([
-      prisma.dispositivo.findUnique({
-        where: { id_dispositivo: data.id_dispositivo },
-      }),
 
-      prisma.historicoUbicacion.findUnique({
-        where: { id_ubicacion: data.id_ubicacion },
-      }),
-
-      prisma.alerta.count({
-        where: {
-          transaccion: {
-            id_cliente: data.id_cliente,
-          },
-        },
-      }),
-    ]);
-
-    // 2. Consultar el modelo Random Forest de TriDa
+    // 1. Consultar el modelo Random Forest de TriDa
     const resultadoIA = await consultarIA(data);
 
     const score = Number(resultadoIA.score_riesgo);
     const fraude = Boolean(resultadoIA.fraude);
 
-    // 3. Determinar estado y nivel según el score de la IA
+    // 2. Determinar estado y nivel según el score de la IA
     let estadoTransaccion:
       | 'APROBADA'
       | 'ALERTADA'
@@ -102,7 +85,7 @@ export const transactionsService = {
       nivel = 'BAJA';
     }
 
-    // 4. Guardar la transacción en PostgreSQL
+    // 3. Guardar la transacción en PostgreSQL
     const nuevaTx = await prisma.transaccion.create({
       data: {
         id_cliente: data.id_cliente,
@@ -123,7 +106,7 @@ export const transactionsService = {
       },
     });
 
-    // 5. Generar alerta cuando el score sea >= 30
+    // 4. Generar alerta cuando el score sea >= 30
     let alertaGenerada = null;
 
     if (score >= 30) {
@@ -140,7 +123,7 @@ export const transactionsService = {
       });
     }
 
-    // 6. Devolver resultado completo
+    // 5. Devolver resultado completo
     return {
       transaccion: nuevaTx,
       evaluacionRiesgo: {
